@@ -99,8 +99,3 @@ firebase deploy --only hosting
 - **Audio**: Web Audio API synthesizer
 - **Hosting**: Firebase Hosting (Google Cloud CDN)
 
----
-
-## 📜 License
-
-MIT License © 2026 Basil Shaji
