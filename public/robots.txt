@@ -18,6 +18,9 @@ User-agent: YandexBot
 Allow: /
 Allow: /assets/
 Allow: /static/
+Allow: /og-banner.jpg
+Allow: /og-banner.png
+Allow: /og-square.jpg
 Allow: /site.webmanifest
 Allow: /manifest.json
 Allow: /sitemap.xml
@@ -48,6 +51,9 @@ User-agent: RedditBot
 Allow: /
 Allow: /assets/
 Allow: /static/
+Allow: /og-banner.jpg
+Allow: /og-banner.png
+Allow: /og-square.jpg
 Disallow: /downloads/
 Disallow: /*.zip$
 Disallow: /*.exe$
@@ -94,6 +100,9 @@ User-agent: *
 Allow: /
 Allow: /assets/
 Allow: /static/
+Allow: /og-banner.jpg
+Allow: /og-banner.png
+Allow: /og-square.jpg
 Allow: /site.webmanifest
 Allow: /manifest.json
 Allow: /sitemap.xml
