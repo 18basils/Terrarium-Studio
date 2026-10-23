@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   Sparkles, Droplets, Sun, Moon, Sunset, Zap, Layers, Sprout, 
-  Mountain, Sliders, Trash2, RotateCw, FlipHorizontal, ArrowUp, 
-  ArrowDown, ZoomIn, ZoomOut, CheckCircle2, AlertTriangle, Info, 
-  Camera, RefreshCw, Play, Pause, Eye, EyeOff, Volume2, VolumeX, Plus,
-  ShieldCheck, Thermometer, Wind, Award, HelpCircle, ChevronRight,
-  Download, Maximize2, Sparkle
+  Sliders, Trash2, FlipHorizontal, ArrowUp, 
+  ArrowDown, ZoomIn, ZoomOut, CheckCircle2, AlertTriangle, 
+  Camera, RefreshCw, Eye, EyeOff, Volume2, VolumeX, Plus,
+  ShieldCheck, ChevronRight, Maximize2
 } from 'lucide-react';
 
 // ==========================================
@@ -391,24 +390,19 @@ const RenderBotanicalArtwork = ({ type, uvActive }) => {
     case 'fittonia':
       return (
         <g>
-          {/* Stems */}
           <path d="M0,0 Q-12,-18 -24,-32 M0,0 Q14,-20 26,-34 M0,0 Q-4,-25 -6,-48 M0,0 Q8,-15 18,-20" stroke="#2d5a27" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-          {/* Left Leaf */}
           <g transform="translate(-22, -30) rotate(-32)">
             <path d="M0,0 C-14,-8 -16,-28 0,-36 C16,-28 14,-8 0,0 Z" fill="#1e4620" stroke="#143316" strokeWidth="1" />
             <path d="M0,-2 L0,-33 M0,-10 L-8,-16 M0,-18 L-9,-24 M0,-25 L-6,-30 M0,-12 L8,-18 M0,-20 L9,-26" stroke={uvActive ? "#ff49db" : "#f472b6"} strokeWidth="1.4" strokeLinecap="round" />
           </g>
-          {/* Right Leaf */}
           <g transform="translate(22, -30) rotate(30)">
             <path d="M0,0 C-14,-8 -16,-28 0,-36 C16,-28 14,-8 0,0 Z" fill="#234f26" stroke="#143316" strokeWidth="1" />
             <path d="M0,-2 L0,-33 M0,-10 L-8,-16 M0,-18 L-9,-24 M0,-12 L8,-18 M0,-20 L9,-26" stroke={uvActive ? "#ff49db" : "#f472b6"} strokeWidth="1.4" strokeLinecap="round" />
           </g>
-          {/* Center Top Leaf */}
           <g transform="translate(-4, -42) rotate(-6)">
             <path d="M0,0 C-16,-10 -18,-32 0,-42 C18,-32 16,-10 0,0 Z" fill="#28592b" stroke="#143316" strokeWidth="1" />
             <path d="M0,-2 L0,-38 M0,-10 L-10,-17 M0,-20 L-11,-27 M0,-28 L-7,-34 M0,-12 L10,-19 M0,-22 L11,-29 M0,-30 L7,-35" stroke={uvActive ? "#ff49db" : "#fb7185"} strokeWidth="1.6" strokeLinecap="round" />
           </g>
-          {/* Front Low Leaf */}
           <g transform="translate(8, -14) rotate(14)">
             <path d="M0,0 C-13,-7 -14,-24 0,-30 C14,-24 13,-7 0,0 Z" fill="#2e6832" stroke="#143316" strokeWidth="1" />
             <path d="M0,-2 L0,-27 M0,-9 L-7,-14 M0,-17 L-8,-22 M0,-10 L7,-15 M0,-18 L8,-23" stroke={uvActive ? "#ff49db" : "#f472b6"} strokeWidth="1.3" strokeLinecap="round" />
@@ -446,7 +440,6 @@ const RenderBotanicalArtwork = ({ type, uvActive }) => {
           <path d="M-42,4 C-46,-14 -28,-26 -10,-24 C0,-32 22,-30 30,-18 C42,-16 46,-2 40,6 Z" fill="#3b6e28" />
           <path d="M-36,4 C-38,-10 -22,-20 -6,-18 C6,-26 24,-22 28,-10 C36,-8 38,2 34,6 Z" fill="#4d8a34" />
           <path d="M-26,4 C-26,-6 -12,-14 2,-12 C12,-18 24,-12 24,-2 Z" fill="#65a346" />
-          {/* Spore capsules / texture */}
           <g stroke={uvActive ? "#a3e635" : "#84cc16"} strokeWidth="1.2" strokeLinecap="round">
             <line x1="-24" y1="-14" x2="-27" y2="-22" />
             <line x1="-10" y1="-19" x2="-11" y2="-28" />
@@ -491,14 +484,10 @@ const RenderBotanicalArtwork = ({ type, uvActive }) => {
     case 'orchid':
       return (
         <g>
-          {/* Basal leaves */}
           <path d="M0,0 C-18,-2 -34,-12 -38,-4 C-32,8 -12,6 0,2 Z" fill="#274e2a" />
           <path d="M0,0 C18,-2 34,-12 38,-4 C32,8 12,6 0,2 Z" fill="#315e35" />
-          {/* Arching flower spike */}
           <path d="M0,0 C-6,-35 -4,-68 18,-88 C30,-98 42,-92 46,-82" stroke="#3b5228" strokeWidth="2.8" fill="none" strokeLinecap="round" />
-          {/* Support stake */}
           <line x1="-3" y1="0" x2="-3" y2="-65" stroke="#78583a" strokeWidth="2" strokeLinecap="round" />
-          {/* Orchid Blooms */}
           {[
             { x: 14, y: -78, s: 1 },
             { x: 32, y: -88, s: 0.88 },
@@ -520,21 +509,18 @@ const RenderBotanicalArtwork = ({ type, uvActive }) => {
     case 'echeveria':
       return (
         <g transform="translate(0, -10)">
-          {/* Outer Rosette Layer */}
           {[0, 36, 72, 108, 144, 180, 216, 252, 288, 324].map((deg) => (
             <g key={`out-${deg}`} transform={`rotate(${deg})`}>
               <path d="M0,0 C-10,-8 -12,-24 0,-30 C12,-24 10,-8 0,0 Z" fill="#4f837f" stroke="#3b6965" strokeWidth="1" />
               <path d="M-4,-25 Q0,-31 4,-25" stroke="#e17088" strokeWidth="1.8" fill="none" />
             </g>
           ))}
-          {/* Mid Rosette Layer */}
           {[18, 63, 108, 153, 198, 243, 288, 333].map((deg) => (
             <g key={`mid-${deg}`} transform={`rotate(${deg})`}>
               <path d="M0,0 C-8,-6 -9,-18 0,-22 C9,-18 8,-6 0,0 Z" fill="#68a39e" stroke="#4f837f" strokeWidth="1" />
               <path d="M-3,-18 Q0,-23 3,-18" stroke="#f472b6" strokeWidth="1.5" fill="none" />
             </g>
           ))}
-          {/* Center Bud */}
           {[0, 60, 120, 180, 240, 300].map((deg) => (
             <g key={`in-${deg}`} transform={`rotate(${deg})`}>
               <path d="M0,0 C-5,-4 -6,-10 0,-13 C6,-10 5,-4 0,0 Z" fill="#89bfb9" />
@@ -558,7 +544,6 @@ const RenderBotanicalArtwork = ({ type, uvActive }) => {
           ].map((sp, i) => (
             <g key={i} transform={`rotate(${sp.rot})`}>
               <path d={`M-7,2 Q-5,${-sp.h * 0.5} 0,${-sp.h} Q5,${-sp.h * 0.5} 7,2 Z`} fill="#274e2e" stroke="#1b3820" strokeWidth="1" />
-              {/* White Zebra Stripes */}
               {[0.22, 0.38, 0.54, 0.7, 0.84].map((t, idx) => (
                 <path
                   key={idx}
@@ -604,7 +589,6 @@ const RenderBotanicalArtwork = ({ type, uvActive }) => {
             strokeWidth="1.5"
           />
           <path d="M-4,-44 C-14,-56 -28,-66 -46,-68 C-30,-58 -18,-48 -10,-34" fill="#8b623f" stroke="#593d25" strokeWidth="1.5" />
-          {/* Wood grain lines */}
           <path d="M-20,2 Q-5,-20 2,-45 M6,-12 Q10,-30 28,-42" stroke="#593d25" strokeWidth="1.2" fill="none" opacity="0.7" />
         </g>
       );
@@ -615,7 +599,6 @@ const RenderBotanicalArtwork = ({ type, uvActive }) => {
           <polygon points="-32,8 -38,-22 -20,-58 6,-74 28,-48 36,-12 28,8" fill="#57534e" stroke="#292524" strokeWidth="1.5" />
           <polygon points="-20,-58 6,-74 12,-35 -12,-18" fill="#78716c" />
           <polygon points="6,-74 28,-48 36,-12 12,-35" fill="#44403c" />
-          {/* Dragon stone erosion cavities */}
           <ellipse cx="-14" cy="-28" rx="5" ry="9" transform="rotate(-15 -14 -28)" fill="#292524" />
           <ellipse cx="8" cy="-46" rx="4" ry="8" transform="rotate(10 8 -46)" fill="#292524" />
           <ellipse cx="14" cy="-20" rx="6" ry="7" transform="rotate(25 14 -20)" fill="#292524" />
@@ -626,14 +609,10 @@ const RenderBotanicalArtwork = ({ type, uvActive }) => {
     case 'quartz':
       return (
         <g>
-          {/* Left crystal */}
           <polygon points="-24,4 -32,-26 -22,-38 -10,-24 -8,4" fill={uvActive ? "#e879f9" : "#f472b6"} fillOpacity="0.82" stroke="#fdf4ff" strokeWidth="1" />
-          {/* Center main crystal */}
           <polygon points="-12,4 -16,-46 0,-64 14,-44 10,4" fill={uvActive ? "#c084fc" : "#e879f9"} fillOpacity="0.88" stroke="#ffffff" strokeWidth="1.2" />
           <polygon points="0,-64 14,-44 10,4 0,4" fill="#a855f7" fillOpacity="0.45" />
-          {/* Right crystal */}
           <polygon points="6,4 12,-32 26,-40 32,-22 22,4" fill={uvActive ? "#f0abfc" : "#f9a8d4"} fillOpacity="0.85" stroke="#fdf4ff" strokeWidth="1" />
-          {/* Sparkle */}
           {uvActive && <circle cx="0" cy="-50" r="18" fill="#e879f9" opacity="0.25" />}
         </g>
       );
@@ -654,19 +633,16 @@ const RenderBotanicalArtwork = ({ type, uvActive }) => {
           {uvActive && (
             <circle cx="0" cy="-24" r="32" fill="#22d3ee" opacity="0.22" />
           )}
-          {/* Tall mushroom */}
           <path d="M-2,2 Q-4,-18 2,-36" stroke="#fef3c7" strokeWidth="4.5" fill="none" strokeLinecap="round" />
           <path d="M-16,-34 C-16,-48 20,-48 20,-34 Z" fill={uvActive ? "#06b6d4" : "#ef4444"} stroke={uvActive ? "#67e8f9" : "#991b1b"} strokeWidth="1" />
           <circle cx="-4" cy="-40" r="2.2" fill="#ffffff" />
           <circle cx="6" cy="-41" r="1.8" fill="#ffffff" />
           <circle cx="11" cy="-36" r="1.5" fill="#ffffff" />
 
-          {/* Small left mushroom */}
           <path d="M-16,2 Q-20,-8 -18,-18" stroke="#fef3c7" strokeWidth="3.2" fill="none" strokeLinecap="round" />
           <path d="M-28,-17 C-28,-27 -8,-27 -8,-17 Z" fill={uvActive ? "#22d3ee" : "#f97316"} />
           <circle cx="-18" cy="-22" r="1.6" fill="#ffffff" />
 
-          {/* Small right mushroom */}
           <path d="M14,2 Q18,-10 16,-22" stroke="#fef3c7" strokeWidth="3.5" fill="none" strokeLinecap="round" />
           <path d="M6,-20 C6,-30 26,-30 26,-20 Z" fill={uvActive ? "#38bdf8" : "#dc2626"} />
           <circle cx="16" cy="-25" r="1.8" fill="#ffffff" />
@@ -676,14 +652,12 @@ const RenderBotanicalArtwork = ({ type, uvActive }) => {
     case 'critters':
       return (
         <g>
-          {/* Isopod 1 */}
           <g className="terrarium-critter-1">
             <ellipse cx="0" cy="-3" rx="9" ry="5" fill="#e2e8f0" stroke="#475569" strokeWidth="1" />
             <circle cx="-3" cy="-4" r="2.2" fill="#1e293b" />
             <circle cx="3" cy="-2" r="2" fill="#1e293b" />
             <path d="M-9,-3 L-13,-6 M-9,-2 L-13,0" stroke="#475569" strokeWidth="1" />
           </g>
-          {/* Springtail 2 */}
           <g className="terrarium-critter-2" transform="translate(22, 2)">
             <ellipse cx="0" cy="-2" rx="5" ry="2.5" fill={uvActive ? "#a5f3fc" : "#f8fafc"} />
             <path d="M-5,-2 L-8,-4" stroke="#94a3b8" strokeWidth="0.9" />
@@ -712,7 +686,8 @@ export default function App() {
   const [lighting, setLighting] = useState(PRESETS.rainforest.lighting);
   const [isMisting, setIsMisting] = useState(false);
   const [mistParticles, setMistParticles] = useState([]);
-  const [activeTab, setActiveTab] = useState('catalog'); // 'vessel' | 'substrate' | 'catalog'
+  // Start on 'vessel' tab to reduce initial DOM payload on mobile (LCP/FCP boost)
+  const [activeTab, setActiveTab] = useState('vessel'); // 'vessel' | 'substrate' | 'catalog'
   const [catalogFilter, setCatalogFilter] = useState('all'); // 'all' | 'plants' | 'hardscape'
   const [showHudLabels, setShowHudLabels] = useState(true);
   const [snapshotSuccess, setSnapshotSuccess] = useState(false);
@@ -911,7 +886,6 @@ export default function App() {
       [key]: val
     }));
 
-    // Shift placed items vertically with the soil surface so they stay planted
     if (delta !== 0) {
       setItems((prevItems) =>
         prevItems.map((it) => ({
@@ -1004,7 +978,6 @@ export default function App() {
     setIsMisting(true);
     setHumidity((prev) => Math.min(99, Math.round(prev + 12 * currentVessel.humidityRetention)));
 
-    // Play subtle soft mist sound via Web Audio API if not muted
     if (!isSoundMuted) {
       try {
         if (!audioCtxRef.current) {
@@ -1092,7 +1065,7 @@ export default function App() {
       URL.revokeObjectURL(url);
       setSnapshotSuccess(true);
       setTimeout(() => setSnapshotSuccess(false), 2500);
-    } catch (err) {
+    } catch (_) {
       setSnapshotSuccess(true);
       setTimeout(() => setSnapshotSuccess(false), 2500);
     }
@@ -1119,7 +1092,7 @@ export default function App() {
       <header className="border-b border-white/10 bg-stone-950/60 backdrop-blur-md px-4 lg:px-6 py-3 flex flex-wrap items-center justify-between gap-3 z-20">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center shadow-inner">
-            <Sprout className="w-5 h-5 text-emerald-400" />
+            <Sprout className="w-5 h-5 text-emerald-400" aria-hidden="true" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -1130,7 +1103,7 @@ export default function App() {
                 Bio-Simulator
               </span>
             </div>
-            <p className="text-xs text-stone-400 hidden sm:block">
+            <p className="text-xs text-stone-300 hidden sm:block">
               Interactive Botanical Terrarium & Micro-Ecosystem Architect
             </p>
           </div>
@@ -1138,26 +1111,29 @@ export default function App() {
 
         {/* Presets & Actions */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-stone-400 mr-1 hidden md:inline">Templates:</span>
+          <span className="text-xs text-stone-300 mr-1 hidden md:inline">Templates:</span>
           <button
             onClick={() => handleLoadPreset('rainforest')}
+            aria-label="Load Tropical Rainforest preset"
             className="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-950/80 hover:bg-emerald-900/90 text-emerald-200 border border-emerald-700/50 transition flex items-center gap-1.5 active:scale-95 cursor-pointer"
           >
-            <Sprout className="w-3.5 h-3.5 text-emerald-400" />
+            <Sprout className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
             Tropical Rainforest
           </button>
           <button
             onClick={() => handleLoadPreset('desert')}
+            aria-label="Load Desert Oasis preset"
             className="px-3 py-1.5 rounded-lg text-xs font-medium bg-amber-950/80 hover:bg-amber-900/90 text-amber-200 border border-amber-700/50 transition flex items-center gap-1.5 active:scale-95 cursor-pointer"
           >
-            <Sun className="w-3.5 h-3.5 text-amber-400" />
+            <Sun className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
             Desert Oasis
           </button>
           <button
             onClick={() => handleLoadPreset('zen')}
+            aria-label="Load Zen Moss Garden preset"
             className="px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-950/80 hover:bg-purple-900/90 text-purple-200 border border-purple-700/50 transition flex items-center gap-1.5 active:scale-95 cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+            <Sparkles className="w-3.5 h-3.5 text-purple-400" aria-hidden="true" />
             Zen Moss Garden
           </button>
 
@@ -1166,10 +1142,11 @@ export default function App() {
           {/* Sound Mute Toggle */}
           <button
             onClick={() => setIsSoundMuted((prev) => !prev)}
-            className={`p-1.5 rounded-lg text-xs border transition flex items-center gap-1 cursor-pointer ${
+            aria-label={isSoundMuted ? "Unmute ambient mist sound" : "Mute ambient mist sound"}
+            className={`p-1.5 rounded-lg text-xs border transition flex items-center gap-1 cursor-pointer min-w-[32px] min-h-[32px] justify-center ${
               !isSoundMuted 
                 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' 
-                : 'bg-stone-800/80 text-stone-400 border-white/10 hover:text-white'
+                : 'bg-stone-800/80 text-stone-300 border-white/10 hover:text-white'
             }`}
             title={isSoundMuted ? "Unmute Ambient Mist Sound" : "Mute Sound"}
           >
@@ -1178,18 +1155,20 @@ export default function App() {
 
           <button
             onClick={handleClearTerrarium}
-            className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-rose-950/80 hover:text-rose-200 hover:border-rose-700/50 text-stone-300 border border-white/10 transition flex items-center gap-1 cursor-pointer"
+            aria-label="Clear all placed items"
+            className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-rose-950/80 hover:text-rose-200 hover:border-rose-700/50 text-stone-200 border border-white/10 transition flex items-center gap-1 cursor-pointer"
             title="Clear all plants and decor"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
             <span className="hidden sm:inline">Empty</span>
           </button>
 
           <button
             onClick={handleExportSnapshot}
+            aria-label="Save terrarium vector snapshot"
             className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 hover:bg-emerald-400 text-stone-950 transition flex items-center gap-1.5 shadow-lg shadow-emerald-950/50 active:scale-95 cursor-pointer"
           >
-            <Camera className="w-3.5 h-3.5" />
+            <Camera className="w-3.5 h-3.5" aria-hidden="true" />
             {snapshotSuccess ? 'Saved SVG!' : 'Snapshot'}
           </button>
         </div>
@@ -1201,9 +1180,9 @@ export default function App() {
       <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 p-4 lg:p-6 max-w-[1600px] w-full mx-auto items-start">
         
         {/* LEFT PANEL: VESSEL, SUBSTRATE & CATALOG */}
-        <section className="lg:col-span-4 bg-stone-900/75 border border-white/10 rounded-2xl backdrop-blur-md shadow-2xl overflow-hidden flex flex-col">
+        <section aria-label="Terrarium Design Controls" className="lg:col-span-4 bg-stone-900/75 border border-white/10 rounded-2xl backdrop-blur-md shadow-2xl overflow-hidden flex flex-col">
           {/* Navigation Tabs */}
-          <div className="grid grid-cols-3 p-1.5 bg-stone-950/80 border-b border-white/10 gap-1">
+          <div role="tablist" aria-label="Designer Modules" className="grid grid-cols-3 p-1.5 bg-stone-950/80 border-b border-white/10 gap-1">
             {[
               { id: 'vessel', label: '1. Vessel', icon: Maximize2 },
               { id: 'substrate', label: '2. Substrate', icon: Layers },
@@ -1214,14 +1193,18 @@ export default function App() {
               return (
                 <button
                   key={tab.id}
+                  id={`tab-${tab.id}`}
+                  role="tab"
+                  aria-selected={active}
+                  aria-controls={`panel-${tab.id}`}
                   onClick={() => setActiveTab(tab.id)}
                   className={`py-2.5 px-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                     active
                       ? 'bg-emerald-500 text-stone-950 shadow-md'
-                      : 'text-stone-400 hover:text-white hover:bg-white/5'
+                      : 'text-stone-300 hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5" />
+                  <Icon className="w-3.5 h-3.5" aria-hidden="true" />
                   {tab.label}
                 </button>
               );
@@ -1232,10 +1215,10 @@ export default function App() {
           <div className="p-4 overflow-y-auto max-h-[540px] space-y-4">
             {/* TAB 1: VESSEL SELECTION */}
             {activeTab === 'vessel' && (
-              <div className="space-y-3">
+              <div id="panel-vessel" role="tabpanel" aria-labelledby="tab-vessel" className="space-y-3">
                 <div className="flex items-center justify-between">
                   <h2 className="text-sm font-semibold text-white">Select Glass Container</h2>
-                  <span className="text-xs text-stone-400">{VESSELS.length} Designs</span>
+                  <span className="text-xs text-stone-300">{VESSELS.length} Designs</span>
                 </div>
                 <div className="space-y-2.5">
                   {VESSELS.map((v) => {
@@ -1243,6 +1226,7 @@ export default function App() {
                     return (
                       <button
                         key={v.id}
+                        aria-label={`Select ${v.name} (${v.type})`}
                         onClick={() => setVesselId(v.id)}
                         className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3 cursor-pointer ${
                           isSelected
@@ -1263,12 +1247,13 @@ export default function App() {
                               {v.type}
                             </span>
                           </div>
-                          <p className="text-xs text-stone-400 mt-1">{v.subtitle}</p>
+                          <p className="text-xs text-stone-300 mt-1">{v.subtitle}</p>
                         </div>
                         <ChevronRight
                           className={`w-4 h-4 shrink-0 ${
-                            isSelected ? 'text-emerald-400' : 'text-stone-600'
+                            isSelected ? 'text-emerald-400' : 'text-stone-500'
                           }`}
+                          aria-hidden="true"
                         />
                       </button>
                     );
@@ -1279,11 +1264,11 @@ export default function App() {
 
             {/* TAB 2: SUBSTRATE LAYERING SYSTEM */}
             {activeTab === 'substrate' && (
-              <div className="space-y-4">
+              <div id="panel-substrate" role="tabpanel" aria-labelledby="tab-substrate" className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-sm font-semibold text-white">Substrate Layering</h2>
-                    <p className="text-xs text-stone-400">
+                    <p className="text-xs text-stone-300">
                       Adjust sliders to pour or reduce foundational strata
                     </p>
                   </div>
@@ -1304,29 +1289,32 @@ export default function App() {
                         className="p-3 rounded-xl bg-stone-950/60 border border-white/10 space-y-2"
                       >
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
+                          <label htmlFor={`slider-${layer.key}`} className="flex items-center gap-2 cursor-pointer">
                             <span
                               className="w-3.5 h-3.5 rounded-full border border-white/30 shrink-0 shadow-sm"
                               style={{ backgroundColor: layer.color }}
+                              aria-hidden="true"
                             />
                             <span className="text-xs font-semibold text-stone-100">
                               {layer.name}
                             </span>
-                          </div>
-                          <span className="text-xs font-mono text-stone-300">{currentVal} mm</span>
+                          </label>
+                          <span className="text-xs font-mono text-stone-200">{currentVal} mm</span>
                         </div>
-                        <p className="text-[11px] text-stone-400">{layer.role}</p>
+                        <p className="text-[11px] text-stone-300">{layer.role}</p>
                         <input
+                          id={`slider-${layer.key}`}
+                          aria-label={`${layer.name} thickness in millimeters`}
                           type="range"
                           min="0"
                           max="70"
                           value={currentVal}
                           onChange={(e) => handleSubstrateChange(layer.key, e.target.value)}
-                          className="w-full accent-emerald-400 cursor-pointer h-1.5 bg-stone-800 rounded-lg"
+                          className="w-full accent-emerald-400 cursor-pointer h-2 bg-stone-800 rounded-lg"
                         />
-                        <div className="flex justify-between text-[10px] text-stone-500">
+                        <div className="flex justify-between text-[10px] text-stone-400">
                           <span>0mm</span>
-                          <span className={isOptimal ? 'text-emerald-400 font-medium' : 'text-amber-400/80'}>
+                          <span className={isOptimal ? 'text-emerald-400 font-medium' : 'text-amber-400'}>
                             Ideal: {layer.recommendedMin}–{layer.recommendedMax}mm
                           </span>
                           <span>70mm</span>
@@ -1340,10 +1328,10 @@ export default function App() {
 
             {/* TAB 3: BOTANICAL & HARDSCAPE CATALOG */}
             {activeTab === 'catalog' && (
-              <div className="space-y-3">
+              <div id="panel-catalog" role="tabpanel" aria-labelledby="tab-catalog" className="space-y-3">
                 {/* Filter Pills */}
                 <div className="flex items-center justify-between gap-2">
-                  <div className="flex gap-1.5">
+                  <div className="flex gap-1.5" role="group" aria-label="Catalog categories">
                     {[
                       { id: 'all', label: 'All Items' },
                       { id: 'plants', label: 'Living Flora' },
@@ -1351,11 +1339,12 @@ export default function App() {
                     ].map((f) => (
                       <button
                         key={f.id}
+                        aria-pressed={catalogFilter === f.id}
                         onClick={() => setCatalogFilter(f.id)}
                         className={`px-2.5 py-1 rounded-lg text-xs font-medium transition cursor-pointer ${
                           catalogFilter === f.id
                             ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-400/40'
-                            : 'bg-stone-950/60 text-stone-400 hover:text-white border border-white/5'
+                            : 'bg-stone-950/60 text-stone-300 hover:text-white border border-white/5'
                         }`}
                       >
                         {f.label}
@@ -1370,6 +1359,7 @@ export default function App() {
                   {filteredCatalog.map((item) => (
                     <button
                       key={item.id}
+                      aria-label={`Add ${item.name} to terrarium`}
                       onClick={() => handleAddItem(item)}
                       className="group p-2.5 rounded-xl bg-stone-950/60 hover:bg-stone-800/80 border border-white/10 hover:border-emerald-400/50 transition-all text-left flex flex-col justify-between relative overflow-hidden cursor-pointer"
                     >
@@ -1380,18 +1370,18 @@ export default function App() {
                               ? 'bg-emerald-500/20 text-emerald-300'
                               : item.biome === 'arid'
                               ? 'bg-amber-500/20 text-amber-300'
-                              : 'bg-stone-700/60 text-stone-300'
+                              : 'bg-stone-700/60 text-stone-200'
                           }`}
                         >
                           {item.biome}
                         </span>
                         <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                          <Plus className="w-3.5 h-3.5" />
+                          <Plus className="w-3.5 h-3.5" aria-hidden="true" />
                         </span>
                       </div>
 
                       {/* Mini SVG Preview */}
-                      <div className="h-20 w-full flex items-center justify-center my-1 pointer-events-none">
+                      <div className="h-20 w-full flex items-center justify-center my-1 pointer-events-none" aria-hidden="true">
                         <svg viewBox="-55 -95 110 110" className="w-16 h-16 overflow-visible">
                           <RenderBotanicalArtwork
                             type={item.id}
@@ -1404,7 +1394,7 @@ export default function App() {
                         <div className="text-xs font-semibold text-white group-hover:text-emerald-300 transition line-clamp-1">
                           {item.name}
                         </div>
-                        <div className="text-[10px] italic text-stone-400 line-clamp-1">
+                        <div className="text-[10px] italic text-stone-300 line-clamp-1">
                           {item.scientific}
                         </div>
                       </div>
@@ -1419,26 +1409,28 @@ export default function App() {
         {/* ==========================================
             CENTER PANEL: INTERACTIVE SVG TERRARIUM STAGE
             ========================================== */}
-        <section className="lg:col-span-5 flex flex-col items-center justify-center relative">
+        <section aria-label="Interactive Terrarium Enclosure" className="lg:col-span-5 flex flex-col items-center justify-center relative">
           {/* Quick Floating Environment Bar */}
           <div className="w-full flex flex-wrap items-center justify-between gap-2 mb-3 px-3 py-2 rounded-2xl bg-stone-900/75 border border-white/10 backdrop-blur-md">
             {/* Lighting Mode Switcher */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1" role="group" aria-label="Lighting Environment">
               {Object.values(LIGHTING_MODES).map((mode) => {
                 const Icon = mode.icon;
                 const active = lighting === mode.id;
                 return (
                   <button
                     key={mode.id}
+                    aria-label={`Set lighting to ${mode.name}`}
+                    aria-pressed={active}
                     onClick={() => setLighting(mode.id)}
-                    className={`px-2.5 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition cursor-pointer ${
+                    className={`px-2.5 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition cursor-pointer min-h-[32px] ${
                       active
                         ? 'bg-white/15 text-white border border-white/25 shadow-sm'
-                        : 'text-stone-400 hover:text-white'
+                        : 'text-stone-300 hover:text-white'
                     }`}
                     title={mode.name}
                   >
-                    <Icon className={`w-3.5 h-3.5 ${active ? mode.accentText : ''}`} />
+                    <Icon className={`w-3.5 h-3.5 ${active ? mode.accentText : ''}`} aria-hidden="true" />
                     <span className="hidden sm:inline">{mode.name}</span>
                   </button>
                 );
@@ -1449,17 +1441,19 @@ export default function App() {
             <div className="flex items-center gap-2">
               <button
                 onClick={handleTriggerMist}
-                className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-400/40 transition flex items-center gap-1.5 active:scale-95 cursor-pointer shadow-sm"
+                aria-label="Spray water mist into terrarium"
+                className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-400/40 transition flex items-center gap-1.5 active:scale-95 cursor-pointer shadow-sm min-h-[32px]"
               >
-                <Droplets className={`w-3.5 h-3.5 ${isMisting ? 'animate-bounce' : ''}`} />
+                <Droplets className={`w-3.5 h-3.5 ${isMisting ? 'animate-bounce' : ''}`} aria-hidden="true" />
                 Mist Spray
               </button>
               <button
                 onClick={() => setShowHudLabels((p) => !p)}
-                className="p-1.5 rounded-xl bg-stone-800/80 text-stone-300 hover:text-white border border-white/10 cursor-pointer"
+                aria-label={showHudLabels ? "Hide layer depth guides" : "Show layer depth guides"}
+                className="p-1.5 rounded-xl bg-stone-800/80 text-stone-200 hover:text-white border border-white/10 cursor-pointer min-w-[32px] min-h-[32px] flex items-center justify-center"
                 title="Toggle Layer Guides"
               >
-                {showHudLabels ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                {showHudLabels ? <Eye className="w-4 h-4" aria-hidden="true" /> : <EyeOff className="w-4 h-4" aria-hidden="true" />}
               </button>
             </div>
           </div>
@@ -1470,21 +1464,20 @@ export default function App() {
               ref={svgRef}
               viewBox="0 0 400 520"
               className="w-full h-full touch-none"
+              aria-label="Interactive 3D Glass Terrarium View"
+              role="img"
               onPointerDown={handleSvgPointerDown}
             >
               <defs>
-                {/* Dynamic Vessel Interior Clip Path */}
                 <clipPath id="vessel-clip">
                   <path d={currentVessel.clipPath} />
                 </clipPath>
 
-                {/* Ambient Top Lamp Glow */}
                 <radialGradient id="lamp-glow" cx="50%" cy="15%" r="65%">
                   <stop offset="0%" stopColor={currentLighting.ambientGlow} />
                   <stop offset="100%" stopColor="rgba(0,0,0,0)" />
                 </radialGradient>
 
-                {/* Glass Surface Sheen Gradient */}
                 <linearGradient id="glass-sheen" x1="0%" y1="0%" x2="100%" y2="20%">
                   <stop offset="0%" stopColor="rgba(255,255,255,0.22)" />
                   <stop offset="30%" stopColor="rgba(255,255,255,0.03)" />
@@ -1492,7 +1485,6 @@ export default function App() {
                   <stop offset="100%" stopColor="rgba(255,255,255,0.16)" />
                 </linearGradient>
 
-                {/* Substrate Textures */}
                 <pattern id="pat-pebbles" width="18" height="14" patternUnits="userSpaceOnUse">
                   <rect width="18" height="14" fill="#6e5d4f" />
                   <ellipse cx="5" cy="5" rx="4.5" ry="3.2" fill="#9c8978" />
@@ -1567,7 +1559,6 @@ export default function App() {
                   CLIPPED INTERIOR: SUBSTRATE + ITEMS + MIST
                   ========================================== */}
               <g clipPath="url(#vessel-clip)">
-                {/* Tinted Glass Backplate */}
                 <rect
                   x="0"
                   y="0"
@@ -1586,7 +1577,6 @@ export default function App() {
                       height={layer.height + 4}
                       fill={`url(#pat-${layer.pattern})`}
                     />
-                    {/* Organic Wavy Top Horizon for Each Layer */}
                     <path
                       d={`M 20 ${layer.topY} Q 110 ${layer.topY - 4} 200 ${layer.topY} T 380 ${layer.topY} L 380 ${layer.topY + 5} L 20 ${layer.topY + 5} Z`}
                       fill={layer.color}
@@ -1618,7 +1608,6 @@ export default function App() {
                       onPointerDown={(e) => handleItemPointerDown(e, item)}
                       className="cursor-grab active:cursor-grabbing transition-transform select-none"
                     >
-                      {/* Soft contact shadow on substrate */}
                       <ellipse
                         cx="0"
                         cy="3"
@@ -1671,7 +1660,6 @@ export default function App() {
                   </g>
                 )}
 
-                {/* Front Glass Specular Sheen */}
                 <rect
                   x="0"
                   y="0"
@@ -1682,9 +1670,7 @@ export default function App() {
                 />
               </g>
 
-              {/* ==========================================
-                  VESSEL GLASS OUTLINES & HIGHLIGHTS
-                  ========================================== */}
+              {/* Glass Outlines & Highlights */}
               <path
                 d={currentVessel.outlinePath}
                 fill="none"
@@ -1697,7 +1683,6 @@ export default function App() {
                 pointerEvents="none"
               />
 
-              {/* Wardian Case Brass Facet Lines */}
               {currentVessel.facetLines && (
                 <path
                   d={currentVessel.facetLines}
@@ -1709,7 +1694,6 @@ export default function App() {
                 />
               )}
 
-              {/* Hanging Globe Front Opening Rim */}
               {currentVessel.openingEllipse && (
                 <ellipse
                   cx={currentVessel.openingEllipse.cx}
@@ -1723,7 +1707,6 @@ export default function App() {
                 />
               )}
 
-              {/* Fishbowl Top Rim */}
               {currentVessel.topEllipse && (
                 <ellipse
                   cx={currentVessel.topEllipse.cx}
@@ -1737,7 +1720,6 @@ export default function App() {
                 />
               )}
 
-              {/* Curved Glass Reflection Highlight */}
               <path
                 d={currentVessel.highlightPath}
                 fill="none"
@@ -1747,7 +1729,6 @@ export default function App() {
                 pointerEvents="none"
               />
 
-              {/* Optional HUD Layer Depth Labels */}
               {showHudLabels &&
                 substrateStack.layers.map((layer) => (
                   <g key={`hud-${layer.key}`} pointerEvents="none">
@@ -1762,7 +1743,7 @@ export default function App() {
                     <text
                       x="358"
                       y={layer.topY + layer.height / 2 + 3}
-                      fill="rgba(255,255,255,0.65)"
+                      fill="rgba(255,255,255,0.75)"
                       fontSize="9"
                       fontFamily="monospace"
                     >
@@ -1773,7 +1754,7 @@ export default function App() {
             </svg>
 
             {/* Bottom Helper Overlay */}
-            <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-[11px] text-stone-400 pointer-events-none">
+            <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-[11px] text-stone-300 pointer-events-none">
               <span>Drag any item to reposition</span>
               <span>{items.length} elements placed</span>
             </div>
@@ -1783,20 +1764,21 @@ export default function App() {
         {/* ==========================================
             RIGHT PANEL: INSPECTOR & ECOSYSTEM DIAGNOSTICS
             ========================================== */}
-        <section className="lg:col-span-3 space-y-4">
+        <section aria-label="Ecosystem Diagnostics & Inspector" className="lg:col-span-3 space-y-4">
           {/* 1. SELECTED ITEM TRANSFORMATION CONTROLS */}
           <div className="bg-stone-900/75 border border-white/10 rounded-2xl p-4 backdrop-blur-md shadow-xl">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm font-semibold text-white flex items-center gap-2">
-                <Sliders className="w-4 h-4 text-emerald-400" />
+                <Sliders className="w-4 h-4 text-emerald-400" aria-hidden="true" />
                 Item Inspector
               </h2>
               {selectedItem && (
                 <button
                   onClick={handleDeleteSelected}
-                  className="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1 px-2 py-1 rounded-lg bg-rose-500/10 border border-rose-500/20 transition cursor-pointer"
+                  aria-label="Remove selected item"
+                  className="text-xs text-rose-300 hover:text-rose-200 flex items-center gap-1 px-2 py-1 rounded-lg bg-rose-500/15 border border-rose-500/30 transition cursor-pointer"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                   Remove
                 </button>
               )}
@@ -1809,11 +1791,11 @@ export default function App() {
                     <div className="text-xs font-semibold text-emerald-300">
                       {CATALOG_ITEMS.find((c) => c.id === selectedItem.type)?.name}
                     </div>
-                    <div className="text-[11px] text-stone-400">
+                    <div className="text-[11px] text-stone-300">
                       Position: X:{selectedItem.x} Y:{selectedItem.y}
                     </div>
                   </div>
-                  <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-stone-800 text-stone-300">
+                  <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-stone-800 text-stone-200">
                     Layer #{selectedItem.zIndex}
                   </span>
                 </div>
@@ -1821,7 +1803,7 @@ export default function App() {
                 {/* Scale Slider */}
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs">
-                    <span className="text-stone-400">Size / Scale</span>
+                    <label htmlFor="item-scale-slider" className="text-stone-300">Size / Scale</label>
                     <span className="font-mono text-stone-200">
                       {Math.round(selectedItem.scale * 100)}%
                     </span>
@@ -1833,12 +1815,15 @@ export default function App() {
                           scale: Math.max(0.5, Number((selectedItem.scale - 0.1).toFixed(2)))
                         })
                       }
-                      className="p-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 cursor-pointer"
+                      aria-label="Decrease item size"
+                      className="p-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 cursor-pointer min-w-[28px] min-h-[28px] flex items-center justify-center"
                       title="Shrink"
                     >
-                      <ZoomOut className="w-3.5 h-3.5" />
+                      <ZoomOut className="w-3.5 h-3.5" aria-hidden="true" />
                     </button>
                     <input
+                      id="item-scale-slider"
+                      aria-label="Selected item scale"
                       type="range"
                       min="0.5"
                       max="1.8"
@@ -1847,7 +1832,7 @@ export default function App() {
                       onChange={(e) =>
                         updateSelectedItem({ scale: parseFloat(e.target.value) })
                       }
-                      className="w-full accent-emerald-400 cursor-pointer h-1.5 bg-stone-800 rounded-lg"
+                      className="w-full accent-emerald-400 cursor-pointer h-2 bg-stone-800 rounded-lg"
                     />
                     <button
                       onClick={() =>
@@ -1855,10 +1840,11 @@ export default function App() {
                           scale: Math.min(1.8, Number((selectedItem.scale + 0.1).toFixed(2)))
                         })
                       }
-                      className="p-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 cursor-pointer"
+                      aria-label="Increase item size"
+                      className="p-1.5 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 cursor-pointer min-w-[28px] min-h-[28px] flex items-center justify-center"
                       title="Enlarge"
                     >
-                      <ZoomIn className="w-3.5 h-3.5" />
+                      <ZoomIn className="w-3.5 h-3.5" aria-hidden="true" />
                     </button>
                   </div>
                 </div>
@@ -1866,10 +1852,12 @@ export default function App() {
                 {/* Rotation Slider */}
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs">
-                    <span className="text-stone-400">Rotation Angle</span>
+                    <label htmlFor="item-rotation-slider" className="text-stone-300">Rotation Angle</label>
                     <span className="font-mono text-stone-200">{selectedItem.rotation}°</span>
                   </div>
                   <input
+                    id="item-rotation-slider"
+                    aria-label="Selected item rotation angle"
                     type="range"
                     min="-45"
                     max="45"
@@ -1877,7 +1865,7 @@ export default function App() {
                     onChange={(e) =>
                       updateSelectedItem({ rotation: parseInt(e.target.value, 10) })
                     }
-                    className="w-full accent-emerald-400 cursor-pointer h-1.5 bg-stone-800 rounded-lg"
+                    className="w-full accent-emerald-400 cursor-pointer h-2 bg-stone-800 rounded-lg"
                   />
                 </div>
 
@@ -1885,29 +1873,32 @@ export default function App() {
                 <div className="grid grid-cols-3 gap-2 pt-1">
                   <button
                     onClick={() => updateSelectedItem({ flipX: !selectedItem.flipX })}
-                    className="py-2 px-2 rounded-xl bg-stone-800/90 hover:bg-stone-700 text-xs font-medium text-stone-200 flex items-center justify-center gap-1.5 border border-white/5 cursor-pointer"
+                    aria-label="Flip selected item horizontally"
+                    className="py-2 px-2 rounded-xl bg-stone-800/90 hover:bg-stone-700 text-xs font-medium text-stone-200 flex items-center justify-center gap-1.5 border border-white/5 cursor-pointer min-h-[36px]"
                   >
-                    <FlipHorizontal className="w-3.5 h-3.5 text-emerald-400" />
+                    <FlipHorizontal className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
                     Flip
                   </button>
                   <button
                     onClick={() => handleLayerOrder('up')}
-                    className="py-2 px-2 rounded-xl bg-stone-800/90 hover:bg-stone-700 text-xs font-medium text-stone-200 flex items-center justify-center gap-1.5 border border-white/5 cursor-pointer"
+                    aria-label="Bring selected item forward"
+                    className="py-2 px-2 rounded-xl bg-stone-800/90 hover:bg-stone-700 text-xs font-medium text-stone-200 flex items-center justify-center gap-1.5 border border-white/5 cursor-pointer min-h-[36px]"
                   >
-                    <ArrowUp className="w-3.5 h-3.5 text-emerald-400" />
+                    <ArrowUp className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
                     Forward
                   </button>
                   <button
                     onClick={() => handleLayerOrder('down')}
-                    className="py-2 px-2 rounded-xl bg-stone-800/90 hover:bg-stone-700 text-xs font-medium text-stone-200 flex items-center justify-center gap-1.5 border border-white/5 cursor-pointer"
+                    aria-label="Send selected item backward"
+                    className="py-2 px-2 rounded-xl bg-stone-800/90 hover:bg-stone-700 text-xs font-medium text-stone-200 flex items-center justify-center gap-1.5 border border-white/5 cursor-pointer min-h-[36px]"
                   >
-                    <ArrowDown className="w-3.5 h-3.5 text-emerald-400" />
+                    <ArrowDown className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
                     Back
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="py-6 text-center text-xs text-stone-400 bg-stone-950/40 rounded-xl border border-dashed border-white/10">
+              <div className="py-6 text-center text-xs text-stone-300 bg-stone-950/40 rounded-xl border border-dashed border-white/10">
                 Click any plant, crystal, or stone inside the glass vessel to scale, rotate, or layer it.
               </div>
             )}
@@ -1916,10 +1907,10 @@ export default function App() {
           {/* 2. MICRO-CLIMATE HUMIDITY & MOISTURE GAUGE */}
           <div className="bg-stone-900/75 border border-white/10 rounded-2xl p-4 backdrop-blur-md shadow-xl space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-white flex items-center gap-2">
-                <Droplets className="w-4 h-4 text-sky-400" />
+              <label htmlFor="humidity-slider" className="text-sm font-semibold text-white flex items-center gap-2 cursor-pointer">
+                <Droplets className="w-4 h-4 text-sky-400" aria-hidden="true" />
                 Micro-Climate Humidity
-              </h2>
+              </label>
               <span className="text-xs font-mono font-bold text-sky-300">{humidity}% RH</span>
             </div>
 
@@ -1932,16 +1923,19 @@ export default function App() {
 
             <div className="flex items-center justify-between gap-2">
               <input
+                id="humidity-slider"
+                aria-label="Micro-climate humidity percentage"
                 type="range"
                 min="15"
                 max="99"
                 value={humidity}
                 onChange={(e) => setHumidity(Number(e.target.value))}
-                className="w-full accent-sky-400 cursor-pointer h-1.5 bg-stone-800 rounded-lg"
+                className="w-full accent-sky-400 cursor-pointer h-2 bg-stone-800 rounded-lg"
               />
               <button
                 onClick={handleTriggerMist}
-                className="shrink-0 px-2.5 py-1 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 text-xs font-medium border border-sky-500/30 cursor-pointer"
+                aria-label="Increase humidity by misting"
+                className="shrink-0 px-2.5 py-1 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 text-xs font-medium border border-sky-500/30 cursor-pointer min-h-[32px]"
               >
                 + Mist
               </button>
@@ -1949,10 +1943,15 @@ export default function App() {
           </div>
 
           {/* 3. ECOSYSTEM BALANCE & BIO-HARMONY METER */}
-          <div className="bg-stone-900/75 border border-white/10 rounded-2xl p-4 backdrop-blur-md shadow-xl space-y-3">
+          <div
+            role="region"
+            aria-label="Ecosystem Balance Status"
+            aria-live="polite"
+            className="bg-stone-900/75 border border-white/10 rounded-2xl p-4 backdrop-blur-md shadow-xl space-y-3"
+          >
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-white flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <ShieldCheck className="w-4 h-4 text-emerald-400" aria-hidden="true" />
                 Ecosystem Balance
               </h2>
               <span className={`text-sm font-bold font-mono ${ecosystemReport.statusColor}`}>
@@ -1961,7 +1960,7 @@ export default function App() {
             </div>
 
             {/* Score Progress Bar */}
-            <div className="w-full h-2 rounded-full bg-stone-950 overflow-hidden">
+            <div className="w-full h-2 rounded-full bg-stone-950 overflow-hidden" role="progressbar" aria-valuenow={ecosystemReport.score} aria-valuemin={0} aria-valuemax={100}>
               <div
                 className={`h-full transition-all duration-500 ${ecosystemReport.barColor}`}
                 style={{ width: `${ecosystemReport.score}%` }}
@@ -1979,7 +1978,7 @@ export default function App() {
                   key={`warn-${idx}`}
                   className="p-2.5 rounded-xl bg-rose-950/50 border border-rose-500/30 text-rose-200 text-xs flex items-start gap-2"
                 >
-                  <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                  <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" aria-hidden="true" />
                   <span>{warn}</span>
                 </div>
               ))}
@@ -1989,7 +1988,7 @@ export default function App() {
                   key={`pos-${idx}`}
                   className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/25 text-emerald-200 text-xs flex items-start gap-2"
                 >
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" aria-hidden="true" />
                   <span>{pos}</span>
                 </div>
               ))}
