@@ -8,9 +8,6 @@
   <a href="https://terrariumstudio.web.app">
     <img src="https://img.shields.io/badge/Live_Demo-terrariumstudio.web.app-10b981?style=for-the-badge&logo=firebase&logoColor=white" alt="Live Demo" />
   </a>
-  <a href="./LICENSE.md">
-    <img src="https://img.shields.io/badge/License-MIT-emerald.svg?style=for-the-badge" alt="MIT License" />
-  </a>
   <a href="./SECURITY.md">
     <img src="https://img.shields.io/badge/Security-Policy-blue.svg?style=for-the-badge" alt="Security Policy" />
   </a>
@@ -55,7 +52,7 @@
 - [⌨️ Keyboard Shortcuts & Canvas Precision Controls](#-keyboard-shortcuts--canvas-precision-controls)
 - [🚀 Quick Start & Local Development](#-quick-start--local-development)
 - [🛠️ Tech Stack](#️-tech-stack)
-- [📄 Community Guidelines & License](#-community-guidelines--license)
+- [📄 Community Guidelines & Policies](#-community-guidelines--policies)
 - [👨‍💻 Author & Maintainer](#-author--maintainer)
 
 ---
@@ -309,11 +306,10 @@ npx firebase-tools deploy --only hosting --project terrariumstudio
 
 ---
 
-## 📄 Community Guidelines & License
+## 📄 Community Guidelines & Policies
 
 | Document | Purpose | Link |
 | :------- | :------ | :--- |
-| ⚖️ **License** | Official MIT permissive open-source license | [`LICENSE.md`](./LICENSE.md) |
 | 🛡️ **Security Policy** | Vulnerability disclosure, response timeline & architecture | [`SECURITY.md`](./SECURITY.md) |
 | 🤝 **Contributing Guide** | Development setup, code conventions & PR workflow | [`CONTRIBUTING.md`](./CONTRIBUTING.md) |
 
