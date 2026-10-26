@@ -6,7 +6,8 @@ import {
   Camera, RefreshCw, Eye, EyeOff, Volume2, VolumeX, Plus,
   ShieldCheck, ChevronRight, Maximize2, Minimize2,
   Undo2, Redo2, Share2, Copy, Save, Bookmark, Check, X, Download, FolderHeart, ExternalLink, FileDown, Upload,
-  Play, Pause, Clock, CloudRain, Wind
+  Play, Pause, Clock, CloudRain, Wind,
+  BookOpen, ShoppingBag, ClipboardCheck, Printer, Search, RotateCcw, Info
 } from 'lucide-react';
 
 // ==========================================
@@ -148,6 +149,15 @@ const CATALOG_ITEMS = [
     scientific: 'Fittonia albivenis',
     category: 'plants',
     biome: 'tropical',
+    family: 'Acanthaceae',
+    origin: 'Peruvian Rainforest Understory',
+    light: 'Bright indirect to filtered dappled shade',
+    watering: 'High moisture, keep soil evenly damp; sensitive to drought',
+    soilPreference: 'ABG Tropical Bio-Soil + Sphagnum barrier',
+    careDifficulty: 'Beginner Friendly',
+    companionTip: 'Pairs exquisitely with cushion moss and ferns; collapses visibly when thirsty as a bio-indicator.',
+    nurseryUnit: '1x 2-inch nursery pot (4-6 rooted stems)',
+    approxCost: '$5 - $8',
     idealHumidity: [65, 95],
     defaultScale: 1,
     description: 'Vibrant pink-veined foliage that thrives in closed humid jars.',
@@ -158,6 +168,15 @@ const CATALOG_ITEMS = [
     scientific: 'Hypoestes phyllostachya',
     category: 'plants',
     biome: 'tropical',
+    family: 'Acanthaceae',
+    origin: 'Madagascar Tropical Woodland',
+    light: 'Medium to bright indirect light',
+    watering: 'Moderate to high moisture; pinch growing tips to encourage bushy form',
+    soilPreference: 'Moist organic bio-mix with activated charcoal',
+    careDifficulty: 'Beginner Friendly',
+    companionTip: 'Provides striking pink/magenta splash against dark stones and emerald mosses.',
+    nurseryUnit: '1x 2-inch starter pot',
+    approxCost: '$4 - $7',
     idealHumidity: [60, 90],
     defaultScale: 1,
     description: 'Playful spotted magenta leaves adding bright canopy contrast.',
@@ -168,6 +187,15 @@ const CATALOG_ITEMS = [
     scientific: 'Leucobryum glaucum',
     category: 'plants',
     biome: 'tropical',
+    family: 'Leucobryaceae',
+    origin: 'Temperate & Subtropical Ancient Forests',
+    light: 'Low to medium indirect light; avoid scorching direct sun',
+    watering: 'High atmospheric humidity; mist regularly with low-mineral water',
+    soilPreference: 'Directly atop damp ABG soil or sphagnum bed',
+    careDifficulty: 'Easy / Low Maintenance',
+    companionTip: 'The quintessential terrarium groundcover; buffers humidity and protects root zones.',
+    nurseryUnit: '1x live cushion pad (~50g, 3-4" diameter)',
+    approxCost: '$6 - $10',
     idealHumidity: [55, 95],
     defaultScale: 1.05,
     description: 'Lush, velvety emerald mounds that anchor hardscape edges.',
@@ -178,6 +206,15 @@ const CATALOG_ITEMS = [
     scientific: 'Nephrolepis exaltata',
     category: 'plants',
     biome: 'tropical',
+    family: 'Nephrolepidaceae',
+    origin: 'Humid Subtropical Canopies & Riverbanks',
+    light: 'Filtered shade to dappled ambient light',
+    watering: 'Consistent moisture without stagnant waterlogging',
+    soilPreference: 'Loose, airy tropical peat & leaf mold with leca drainage',
+    careDifficulty: 'Intermediate',
+    companionTip: 'Gives vertical architecture and woodland depth; unfurls fresh chartreuse fronds over time.',
+    nurseryUnit: '1x 2.5-inch mini fern starter',
+    approxCost: '$6 - $9',
     idealHumidity: [60, 95],
     defaultScale: 1.1,
     description: 'Graceful arching fronds that create classic woodland depth.',
@@ -188,6 +225,15 @@ const CATALOG_ITEMS = [
     scientific: 'Phalaenopsis minima',
     category: 'plants',
     biome: 'tropical',
+    family: 'Orchidaceae',
+    origin: 'Southeast Asian Montane Cloud Forests',
+    light: 'Gentle morning light or filtered canopy grow-lamp',
+    watering: 'Mist aerial root nodes; never allow water to sit inside crown overnight',
+    soilPreference: 'Pure long-fiber sphagnum moss wrapped on spiderwood',
+    careDifficulty: 'Intermediate / Collector',
+    companionTip: 'Mount onto spiderwood branch or lava rock; benefits greatly from gentle air ventilation.',
+    nurseryUnit: '1x blooming-size miniature specimen',
+    approxCost: '$14 - $22',
     idealHumidity: [65, 90],
     defaultScale: 1.05,
     description: 'Delicate epiphyte blooms that bring vertical elegance.',
@@ -198,6 +244,15 @@ const CATALOG_ITEMS = [
     scientific: 'Echeveria elegans',
     category: 'plants',
     biome: 'arid',
+    family: 'Crassulaceae',
+    origin: 'Semi-Desert Highlands of Hidalgo, Mexico',
+    light: 'High direct sunlight or 12h bright full-spectrum LED',
+    watering: 'Very sparse; allow soil to dry completely for 1-2 weeks between waterings',
+    soilPreference: '70% grit/pumice/coarse sand + 30% inorganic soil; requires open bowl',
+    careDifficulty: 'Easy in open bowls / Fatal in closed jars',
+    companionTip: 'NEVER plant in a closed apothecary jar; pair with Haworthia & desert sand in wide bubble bowls.',
+    nurseryUnit: '1x 2-inch succulent plug',
+    approxCost: '$4 - $7',
     idealHumidity: [15, 45],
     defaultScale: 1,
     description: 'Sculptural blue-green succulent requiring low humidity & good drainage.',
@@ -208,6 +263,15 @@ const CATALOG_ITEMS = [
     scientific: 'Haworthiopsis attenuata',
     category: 'plants',
     biome: 'arid',
+    family: 'Asphodelaceae',
+    origin: 'Eastern Cape Province, South Africa',
+    light: 'Bright indirect to partial sun; more shade-tolerant than Echeveria',
+    watering: 'Deep soak once every 2-3 weeks; drench and dry cycle',
+    soilPreference: 'Gritty cactus mix with activated charcoal & leca base',
+    careDifficulty: 'Very Resilient / Beginner Friendly',
+    companionTip: 'Ideal structural plant for open aerium bowls and desert rock arrangements.',
+    nurseryUnit: '1x 2-inch zebra plant rosette',
+    approxCost: '$5 - $8',
     idealHumidity: [15, 50],
     defaultScale: 1,
     description: 'Striped architectural succulent tolerant of indirect light.',
@@ -218,65 +282,18 @@ const CATALOG_ITEMS = [
     scientific: 'Tillandsia ionantha',
     category: 'plants',
     biome: 'epiphyte',
+    family: 'Bromeliaceae',
+    origin: 'Central America (Guatemala & Mexico) Cloud Cliffs',
+    light: 'Bright filtered sunlight with good air circulation',
+    watering: 'Mist 2-3x weekly or brief 10-minute water soak, shake dry upside down',
+    soilPreference: 'No soil required! Mount directly on wood, stone, or crystal',
+    careDifficulty: 'Easy / Zero Substrate',
+    companionTip: 'Leaves blush vivid crimson prior to violet tubular flowers; perfect epiphyte accent.',
+    nurseryUnit: '1x live tillandsia cluster (2-3")',
+    approxCost: '$5 - $9',
     idealHumidity: [35, 80],
     defaultScale: 0.95,
     description: 'Rootless epiphyte that perches on driftwood or stone.',
-  },
-
-  // HARDSCAPE & CRITTERS
-  {
-    id: 'driftwood',
-    name: 'Spiderwood Branch',
-    scientific: 'Rhododendron root',
-    category: 'hardscape',
-    biome: 'neutral',
-    defaultScale: 1.15,
-    description: 'Twisted golden timber providing natural climbing structure.',
-  },
-  {
-    id: 'dragon_stone',
-    name: 'Ohko Dragon Stone',
-    scientific: 'Argillaceous clay stone',
-    category: 'hardscape',
-    biome: 'neutral',
-    defaultScale: 1.1,
-    description: 'Craggy, eroded stone with cavities perfect for moss pockets.',
-  },
-  {
-    id: 'quartz',
-    name: 'Amethyst & Rose Quartz',
-    scientific: 'Crystalline silica',
-    category: 'hardscape',
-    biome: 'neutral',
-    defaultScale: 0.95,
-    description: 'Translucent mineral cluster that catches grow-light rays.',
-  },
-  {
-    id: 'river_stones',
-    name: 'Zen River Pebbles',
-    scientific: 'Polished basalt',
-    category: 'hardscape',
-    biome: 'neutral',
-    defaultScale: 1,
-    description: 'Smooth water-worn stones for pathways and soil borders.',
-  },
-  {
-    id: 'mushrooms',
-    name: 'Canopy Forest Fungi',
-    scientific: 'Mycena chlorophos',
-    category: 'hardscape',
-    biome: 'tropical',
-    defaultScale: 0.95,
-    description: 'Whimsical fruiting bodies that glow softly under UV light.',
-  },
-  {
-    id: 'critters',
-    name: 'Bioactive Clean-Up Crew',
-    scientific: 'Collembola & Dairy Cow Isopods',
-    category: 'critters',
-    biome: 'tropical',
-    defaultScale: 1,
-    description: 'Living micro-fauna that roam the substrate and consume decaying matter!',
   },
   {
     id: 'venus_flytrap',
@@ -284,6 +301,15 @@ const CATALOG_ITEMS = [
     scientific: 'Dionaea muscipula',
     category: 'plants',
     biome: 'carnivorous',
+    family: 'Droseraceae',
+    origin: 'Coastal Bogs of North & South Carolina, USA',
+    light: 'Intense bright light / direct grow lighting (14 hours daily)',
+    watering: 'Pure distilled, reverse osmosis, or rainwater ONLY; keep bottom tray wet',
+    soilPreference: 'Zero-nutrient 50/50 peat moss and perlite; fertilizer is lethal',
+    careDifficulty: 'Specialist / Intermediate',
+    companionTip: 'Sensitive cilia trigger bi-lobed traps in 100ms; avoid touching traps unnecessarily.',
+    nurseryUnit: '1x live potted trap specimen (3-5 traps)',
+    approxCost: '$9 - $15',
     idealHumidity: [65, 95],
     defaultScale: 1.1,
     description: 'Fascinating carnivorous bog plant with sensitive trigger-cilia traps.',
@@ -294,6 +320,15 @@ const CATALOG_ITEMS = [
     scientific: 'Drosera capensis',
     category: 'plants',
     biome: 'carnivorous',
+    family: 'Droseraceae',
+    origin: 'Fynbos Bogs of the Western Cape, South Africa',
+    light: 'Bright indirect to direct grow light',
+    watering: 'Pure distilled or RO water; tray method (keep substrate constantly soaked)',
+    soilPreference: 'Unfertilized pure peat moss and horticultural quartz sand',
+    careDifficulty: 'Intermediate / Vigorous Grower',
+    companionTip: 'Glistening adhesive mucilage traps fungus gnats naturally, acting as biological pest control!',
+    nurseryUnit: '1x 2-inch live sundew starter pot',
+    approxCost: '$8 - $14',
     idealHumidity: [70, 95],
     defaultScale: 1.05,
     description: 'Carnivorous tentacles tipped with glistening mucilage dew beads that catch the light.',
@@ -304,9 +339,128 @@ const CATALOG_ITEMS = [
     scientific: 'Peperomia prostrata',
     category: 'plants',
     biome: 'tropical',
+    family: 'Piperaceae',
+    origin: 'Brazilian Rainforest Cloud Floor',
+    light: 'Gentle medium to bright indirect light',
+    watering: 'Allow top layer of sphagnum to dry slightly before misting; avoids root rot',
+    soilPreference: 'Light, airy blend of sphagnum moss, perlite, and fine bark',
+    careDifficulty: 'Intermediate / Trailing Beauty',
+    companionTip: 'Cascades gracefully over driftwood and rock cliffs with exquisite turtle-shell patterns.',
+    nurseryUnit: '1x 2-inch rooted trailing pot (several vines)',
+    approxCost: '$8 - $13',
     idealHumidity: [55, 85],
     defaultScale: 1.0,
     description: 'Charming trailing succulent vine with intricate turtle-shell leaf markings.',
+  },
+
+  // HARDSCAPE & CRITTERS
+  {
+    id: 'driftwood',
+    name: 'Spiderwood Branch',
+    scientific: 'Rhododendron root',
+    category: 'hardscape',
+    biome: 'neutral',
+    family: 'Natural Hardscape / Botanicals',
+    origin: 'Natural dried branched root wood',
+    light: 'Neutral / Non-living',
+    watering: 'Boil or soak before first enclosure placement to sink and leach tannins',
+    soilPreference: 'Anchored into drainage layer or wedged against glass',
+    careDifficulty: 'Zero Maintenance',
+    companionTip: 'Ideal climbing trellis for creeping vines and moss pad attachment.',
+    nurseryUnit: '1x 4-6" curated specimen branch',
+    approxCost: '$7 - $12',
+    defaultScale: 1.15,
+    description: 'Twisted golden timber providing natural climbing structure.',
+  },
+  {
+    id: 'dragon_stone',
+    name: 'Ohko Dragon Stone',
+    scientific: 'Argillaceous clay stone',
+    category: 'hardscape',
+    biome: 'neutral',
+    family: 'Aquascaping Mineral',
+    origin: 'Ancient weathered river clay beds',
+    light: 'Neutral / Non-living',
+    watering: 'Inert; does not alter water pH or hardness',
+    soilPreference: 'Resting on substrate or drainage barrier',
+    careDifficulty: 'Zero Maintenance',
+    companionTip: 'Natural porous crater-like pockmarks are ideal for pressing live moss plugs into.',
+    nurseryUnit: '1x small hand-picked stone (200-350g)',
+    approxCost: '$5 - $9',
+    defaultScale: 1.1,
+    description: 'Craggy, eroded stone with cavities perfect for moss pockets.',
+  },
+  {
+    id: 'quartz',
+    name: 'Amethyst & Rose Quartz',
+    scientific: 'Crystalline silica',
+    category: 'hardscape',
+    biome: 'neutral',
+    family: 'Crystalline Mineral',
+    origin: 'Hydrothermal quartz vein geodes',
+    light: 'Reflects and refracts grow light beams',
+    watering: 'Completely insoluble and safe for bio-terrariums',
+    soilPreference: 'Decorative focal accent',
+    careDifficulty: 'Zero Maintenance',
+    companionTip: 'Creates a mystical subterranean aesthetic, especially under twilight or UV lighting.',
+    nurseryUnit: '1x raw mineral cluster (1.5-2.5")',
+    approxCost: '$6 - $11',
+    defaultScale: 0.95,
+    description: 'Translucent mineral cluster that catches grow-light rays.',
+  },
+  {
+    id: 'river_stones',
+    name: 'Zen River Pebbles',
+    scientific: 'Polished basalt',
+    category: 'hardscape',
+    biome: 'neutral',
+    family: 'Fluvial Mineral',
+    origin: 'Natural riverbed tumbling',
+    light: 'Neutral / Non-living',
+    watering: 'Non-reactive / smooth surface',
+    soilPreference: 'Substrate surface pathway',
+    careDifficulty: 'Zero Maintenance',
+    companionTip: 'Used to craft stepping-stone paths, retaining walls, or gravel borders.',
+    nurseryUnit: '1x bag of 5-8 hand-selected pebbles',
+    approxCost: '$3 - $5',
+    defaultScale: 1,
+    description: 'Smooth water-worn stones for pathways and soil borders.',
+  },
+  {
+    id: 'mushrooms',
+    name: 'Canopy Forest Fungi',
+    scientific: 'Mycena chlorophos',
+    category: 'hardscape',
+    biome: 'tropical',
+    family: 'Mycenaceae',
+    origin: 'Subtropical Asian rainforest rotten timber',
+    light: 'Bioluminescent fruiting body; glows softly under UV blue light',
+    watering: 'Requires high ambient humidity (>80%) and damp decaying wood',
+    soilPreference: 'Damp ABG soil rich in decaying organic cellulose',
+    careDifficulty: 'Novelty / Organic Wonder',
+    companionTip: 'Symbiotic decomposer that breaks down organic matter alongside micro-fauna.',
+    nurseryUnit: '1x inoculated mini-spore wood plug',
+    approxCost: '$8 - $14',
+    defaultScale: 0.95,
+    description: 'Whimsical fruiting bodies that glow softly under UV light.',
+  },
+  {
+    id: 'critters',
+    name: 'Bioactive Clean-Up Crew',
+    scientific: 'Collembola & Dairy Cow Isopods',
+    category: 'critters',
+    biome: 'tropical',
+    family: 'Entomobryidae & Porcellionidae',
+    origin: 'Global forest floor detritus ecosystems',
+    light: 'Cryptic; roam leaf litter and substrate root pockets',
+    watering: 'Require continuous high moisture in drainage layer to breathe via gills/cuticle',
+    soilPreference: 'Deep organic ABG bio-soil with leaf litter and wood bark',
+    careDifficulty: 'Self-Sustaining Colony',
+    companionTip: 'Essential ecosystem engineers! They consume decaying plant leaves and mold before it spreads.',
+    nurseryUnit: '1x starter culture (~50 springtails + 10 isopods)',
+    approxCost: '$10 - $16',
+    defaultScale: 1,
+    description: 'Living micro-fauna that roam the substrate and consume decaying matter!',
   },
   {
     id: 'water_pool',
@@ -314,6 +468,15 @@ const CATALOG_ITEMS = [
     scientific: 'Aquifer reservoir',
     category: 'hardscape',
     biome: 'neutral',
+    family: 'Aquatic Feature',
+    origin: 'Spring reservoir feature',
+    light: 'Creates dynamic caustics under daylight mode',
+    watering: 'Self-contained water feature; buffers humidity in open and closed containers',
+    soilPreference: 'Embedded into drainage and pebble foundation',
+    careDifficulty: 'Zero Maintenance',
+    companionTip: 'Maintains steady atmospheric evaporation and provides an aquifer look.',
+    nurseryUnit: '1x sculpted resin/glass reservoir dish',
+    approxCost: '$6 - $10',
     defaultScale: 1.2,
     description: 'Clear reflective water pocket providing natural humidity buffering and caustics.',
   },
@@ -323,6 +486,15 @@ const CATALOG_ITEMS = [
     scientific: 'Porous vesicular basalt',
     category: 'hardscape',
     biome: 'neutral',
+    family: 'Igneous Rock',
+    origin: 'Solidified volcanic basalt lava',
+    light: 'Matte dark charcoal finish; high contrast with bright moss',
+    watering: 'Porous capillaries soak up moisture and wick it to plant roots',
+    soilPreference: 'Anchored directly into drainage or soil base',
+    careDifficulty: 'Zero Maintenance',
+    companionTip: 'Its vesicular micro-pores cultivate beneficial nitrifying bio-filtration bacteria.',
+    nurseryUnit: '1x porous volcanic specimen (200-300g)',
+    approxCost: '$4 - $8',
     defaultScale: 1.15,
     description: 'Dark, textured volcanic rock ideal for anchoring moss and beneficial bacteria.',
   },
@@ -332,6 +504,15 @@ const CATALOG_ITEMS = [
     scientific: 'Silicified mineral timber',
     category: 'hardscape',
     biome: 'neutral',
+    family: 'Fossilized Mineral',
+    origin: 'Triassic fossilized river timber',
+    light: 'Highlights striated ring textures under warm lighting',
+    watering: 'Extremely dense stone; completely water-inert',
+    soilPreference: 'Firmly seated into drainage or soil boundary',
+    careDifficulty: 'Zero Maintenance',
+    companionTip: 'Adds timeless geological antiquity and rich warm ochre banding to the landscape.',
+    nurseryUnit: '1x fossilized stone specimen (250-400g)',
+    approxCost: '$8 - $14',
     defaultScale: 1.1,
     description: 'Fossilized prehistoric wood with striated rings and rich ochre grain.',
   }
@@ -481,7 +662,7 @@ const PRESETS = {
 // 2. PROCEDURAL BOTANICAL & HARDSCAPE SVGs
 // ==========================================
 
-const RenderBotanicalArtwork = ({ type, uvActive }) => {
+const RenderBotanicalArtwork = ({ type, uvActive, growthStage = 0 }) => {
   switch (type) {
     case 'fittonia':
       return (
@@ -546,6 +727,14 @@ const RenderBotanicalArtwork = ({ type, uvActive }) => {
           <circle cx="-11" cy="-28" r="1.5" fill="#bef264" />
           <circle cx="8" cy="-31" r="1.5" fill="#bef264" />
           <circle cx="24" cy="-23" r="1.5" fill="#bef264" />
+          {growthStage >= 2 && (
+            <g stroke={uvActive ? "#a3e635" : "#84cc16"} strokeWidth="1.2" strokeLinecap="round">
+              <line x1="-16" y1="-18" x2="-18" y2="-34" />
+              <circle cx="-18" cy="-34" r="2.2" fill={uvActive ? "#bef264" : "#a3e635"} />
+              <line x1="14" y1="-20" x2="16" y2="-36" />
+              <circle cx="16" cy="-36" r="2.2" fill={uvActive ? "#bef264" : "#a3e635"} />
+            </g>
+          )}
         </g>
       );
 
@@ -574,6 +763,11 @@ const RenderBotanicalArtwork = ({ type, uvActive }) => {
               })}
             </g>
           ))}
+          {growthStage >= 1 && (
+            <g transform="translate(0, -4)">
+              <path d="M0,0 Q-8,-20 -5,-30 Q-2,-36 3,-32 Q6,-28 2,-25 Q-1,-27 0,-29" stroke="#86efac" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+            </g>
+          )}
         </g>
       );
 
@@ -599,6 +793,15 @@ const RenderBotanicalArtwork = ({ type, uvActive }) => {
               <circle cx="0" cy="2" r="2" fill="#facc15" />
             </g>
           ))}
+          {growthStage >= 2 && (
+            <g transform="translate(52, -68) scale(0.65)">
+              <ellipse cx="0" cy="-7" rx="5" ry="8" fill={uvActive ? "#f5d0fe" : "#fdf4ff"} />
+              <ellipse cx="-8" cy="-2" rx="8" ry="6" transform="rotate(-15)" fill={uvActive ? "#f0abfc" : "#fae8ff"} />
+              <ellipse cx="8" cy="-2" rx="8" ry="6" transform="rotate(15)" fill={uvActive ? "#f0abfc" : "#fae8ff"} />
+              <circle cx="0" cy="2" r="3.5" fill="#db2777" />
+              <circle cx="0" cy="1" r="1.5" fill="#facc15" />
+            </g>
+          )}
         </g>
       );
 
@@ -1020,6 +1223,24 @@ export default function App() {
   const [isAmbientSoundActive, setIsAmbientSoundActive] = useState(false);
   const [soundVolume, setSoundVolume] = useState(0.5);
   const ambientNodesRef = useRef({ windSource: null, windGain: null, cricketOsc: null, cricketGain: null });
+
+  // Phase 3: Botanical Intelligence & Care Encyclopedia State
+  const [isCareModalOpen, setIsCareModalOpen] = useState(false);
+  const [selectedCareItem, setSelectedCareItem] = useState(null);
+  const [careSearchQuery, setCareSearchQuery] = useState('');
+  const [careFilterBiome, setCareFilterBiome] = useState('all');
+
+  // Phase 3: Real-World "BOM" Nursery Shopping List Generator State
+  const [isBOMModalOpen, setIsBOMModalOpen] = useState(false);
+  const [checkedBOMItems, setCheckedBOMItems] = useState([]);
+
+  // Phase 3: Time-Lapse Flora Growth & Sprouting Scrubber (0 = Day 1, 1 = 3 Mo, 2 = 6 Mo, 3 = 1 Yr)
+  const [growthStage, setGrowthStage] = useState(0);
+
+  // Phase 3: Touch Pinch-to-Zoom & Canvas Viewport State
+  const [zoomScale, setZoomScale] = useState(1.0);
+  const [isPinching, setIsPinching] = useState(false);
+  const touchDistRef = useRef(0);
 
   // Web Audio Context & Synthesizer Engine
   const initAudioContext = () => {
@@ -1781,6 +2002,174 @@ export default function App() {
     };
   };
 
+  // Phase 3: Touch Pinch-to-Zoom Event Handlers
+  const handleTouchStart = (e) => {
+    if (e.touches && e.touches.length === 2) {
+      setIsPinching(true);
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      touchDistRef.current = dist;
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.touches && e.touches.length === 2 && touchDistRef.current > 0) {
+      e.preventDefault();
+      const newDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const delta = (newDist - touchDistRef.current) / 220;
+      setZoomScale((prev) => Math.min(2.0, Math.max(0.75, Number((prev + delta).toFixed(2)))));
+      touchDistRef.current = newDist;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsPinching(false);
+    touchDistRef.current = 0;
+  };
+
+  // Phase 3: Real-World Nursery BOM Calculation Engine
+  const bomData = useMemo(() => {
+    // 1. Substrates
+    const substrateItems = [
+      {
+        id: 'sub-pebbles',
+        name: 'Leca / Hydro-Gravel',
+        spec: 'Expanded clay false-bottom pebbles (8-16mm)',
+        grams: Math.round(substrates.pebbles * 12.5),
+        liters: (substrates.pebbles * 0.02).toFixed(2),
+        costEst: '$3 - $5',
+        role: 'Drainage basin prevents roots rotting in standing water'
+      },
+      {
+        id: 'sub-charcoal',
+        name: 'Horticultural Activated Charcoal',
+        spec: 'Steam-activated granular hardwood carbon',
+        grams: Math.round(substrates.charcoal * 8.5),
+        liters: (substrates.charcoal * 0.012).toFixed(2),
+        costEst: '$2 - $4',
+        role: 'Absorbs bacterial toxins, sulfur odors and mold spores'
+      },
+      {
+        id: 'sub-moss',
+        name: 'Long-Fiber Sphagnum Barrier',
+        spec: 'Dried premium Grade-AAA Sphagnum moss',
+        grams: Math.round(substrates.moss * 3.2),
+        liters: (substrates.moss * 0.015).toFixed(2),
+        costEst: '$2 - $4',
+        role: 'Physical mesh barrier separating bio-soil from leca'
+      },
+      {
+        id: 'sub-soil',
+        name: 'Tropical Bio-Soil (ABG Mix)',
+        spec: 'Milled tree fern fiber, peat, fine charcoal & orchid bark',
+        grams: Math.round(substrates.soil * 14.5),
+        liters: (substrates.soil * 0.025).toFixed(2),
+        costEst: '$4 - $7',
+        role: 'Airy, bioactive organic rooting matrix'
+      },
+      ...(substrates.sand > 0 ? [{
+        id: 'sub-sand',
+        name: 'Washed Silica Desert Sand',
+        spec: 'Fine inert quartz sand (0.5-1.0mm)',
+        grams: Math.round(substrates.sand * 16.0),
+        liters: (substrates.sand * 0.02).toFixed(2),
+        costEst: '$2 - $4',
+        role: 'Decorative arid top dressing or mineral strata'
+      }] : [])
+    ];
+
+    const totalSubstrateGrams = substrateItems.reduce((acc, it) => acc + it.grams, 0);
+
+    // 2. Glass Vessel
+    const vesselCost = currentVessel.id === 'wardian' ? '$28 - $42'
+      : currentVessel.id === 'apothecary' ? '$18 - $26'
+      : currentVessel.id === 'flask' ? '$16 - $24'
+      : currentVessel.id === 'globe' ? '$14 - $22'
+      : '$12 - $18';
+
+    const vesselItem = {
+      id: `vessel-${currentVessel.id}`,
+      name: currentVessel.name,
+      spec: currentVessel.subtitle,
+      costEst: vesselCost,
+      type: 'vessel'
+    };
+
+    // 3. Specimen Aggregation (Flora, Hardscape & Critters)
+    const counts = {};
+    items.forEach((it) => {
+      counts[it.type] = (counts[it.type] || 0) + 1;
+    });
+
+    const specimenItems = Object.entries(counts).map(([typeId, count]) => {
+      const cat = CATALOG_ITEMS.find((c) => c.id === typeId);
+      return {
+        id: `specimen-${typeId}`,
+        typeId,
+        name: cat?.name || typeId,
+        scientific: cat?.scientific || '',
+        count,
+        unit: cat?.nurseryUnit || '1x nursery specimen',
+        costEst: cat?.approxCost || '$5 - $10',
+        category: cat?.category || 'plants',
+        family: cat?.family || ''
+      };
+    });
+
+    const allItems = [vesselItem, ...substrateItems, ...specimenItems];
+
+    return {
+      vesselItem,
+      substrateItems,
+      specimenItems,
+      totalSubstrateGrams,
+      allItems
+    };
+  }, [substrates, items, currentVessel]);
+
+  const handleCopyBOMChecklist = async () => {
+    try {
+      const substrateText = bomData.substrateItems
+        .map((s) => `  - [${checkedBOMItems.includes(s.id) ? 'x' : ' '}] ${s.name}: ${s.grams}g (~${s.liters} L) - Est. ${s.costEst}`)
+        .join('\n');
+
+      const specimenText = bomData.specimenItems
+        .map((sp) => `  - [${checkedBOMItems.includes(sp.id) ? 'x' : ' '}] ${sp.count}x ${sp.name} (${sp.unit}) - Est. ${sp.costEst}`)
+        .join('\n');
+
+      const text = `🌿 VerdantGlass Studio - Nursery Bill of Materials & Shopping List
+Enclosure: ${bomData.vesselItem.name} (${bomData.vesselItem.spec}) [Est. ${bomData.vesselItem.costEst}]
+
+Substrates & Drainage (Total: ~${bomData.totalSubstrateGrams}g):
+${substrateText}
+
+Living Flora, Hardscape & Fauna:
+${specimenText}
+
+Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
+
+      await navigator.clipboard.writeText(text);
+      showToast('Nursery checklist copied to clipboard!', 'success');
+    } catch (_) {
+      showToast('Checklist ready (Copy failed in this context)', 'info');
+    }
+  };
+
+  const handlePrintBOM = () => {
+    window.print();
+  };
+
+  const toggleBOMItem = (id) => {
+    setCheckedBOMItems((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
+
   const handleSvgPointerDown = () => {
     setSelectedItemId(null);
   };
@@ -2277,6 +2666,31 @@ export default function App() {
             <span className="hidden sm:inline">Share</span>
           </button>
 
+          {/* Botanical Field Guide / Care Encyclopedia */}
+          <button
+            onClick={() => {
+              setSelectedCareItem(null);
+              setIsCareModalOpen(true);
+            }}
+            aria-label="Open Botanical Field Guide & Care Encyclopedia"
+            className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-stone-700 text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
+            title="Botanical Field Guide & Care Encyclopedia"
+          >
+            <BookOpen className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
+            <span className="hidden sm:inline">Field Guide</span>
+          </button>
+
+          {/* Nursery BOM & Shopping List Generator */}
+          <button
+            onClick={() => setIsBOMModalOpen(true)}
+            aria-label="Generate Nursery Bill of Materials & Shopping List"
+            className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-stone-700 text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
+            title="Real-World Nursery Shopping List & Substrate Masses"
+          >
+            <ShoppingBag className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
+            <span className="hidden sm:inline">Nursery BOM</span>
+          </button>
+
           {/* Procedural Soundscape Toggle */}
           <button
             onClick={() => {
@@ -2746,15 +3160,89 @@ export default function App() {
             </div>
           </div>
 
+          {/* Time-Lapse Growth Scrubber & Canvas Zoom Bar */}
+          <div className={`flex flex-wrap items-center justify-between gap-2 w-full ${isZenMode ? 'max-w-[540px]' : 'max-w-[460px]'} px-1 transition-all duration-500`}>
+            {/* Time-Lapse Growth Scrubber */}
+            <div className="flex items-center gap-1 bg-stone-900/80 px-2.5 py-1 rounded-xl border border-white/10 shadow-sm">
+              <Sprout className="w-3.5 h-3.5 text-emerald-400 shrink-0" aria-hidden="true" />
+              <span className="text-[11px] text-stone-300 font-medium hidden sm:inline mr-1">Time-Lapse:</span>
+              {[
+                { stage: 0, label: 'Day 1' },
+                { stage: 1, label: '3 Mo' },
+                { stage: 2, label: '6 Mo' },
+                { stage: 3, label: '1 Yr' }
+              ].map((st) => (
+                <button
+                  key={st.stage}
+                  onClick={() => {
+                    setGrowthStage(st.stage);
+                    showToast(
+                      st.stage === 0 ? 'Day 1: Freshly Planted'
+                      : st.stage === 1 ? '3 Months: Rooted & Acclimated'
+                      : st.stage === 2 ? '6 Months: Lush Canopy Spread'
+                      : '1 Year: Mature Micro-Jungle!',
+                      'info'
+                    );
+                  }}
+                  className={`px-2 py-0.5 rounded-lg text-[11px] font-medium transition cursor-pointer ${
+                    growthStage === st.stage
+                      ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-500/40 font-semibold'
+                      : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800'
+                  }`}
+                  title={`Simulate botanical development: ${st.label}`}
+                >
+                  {st.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Canvas Zoom & Reset Controls */}
+            <div className="flex items-center gap-1 bg-stone-900/80 p-1 rounded-xl border border-white/10 shadow-sm">
+              <button
+                onClick={() => setZoomScale((prev) => Math.max(0.75, Number((prev - 0.15).toFixed(2))))}
+                aria-label="Zoom out terrarium canvas"
+                className="p-1 rounded-lg text-stone-300 hover:text-white hover:bg-stone-800 transition cursor-pointer min-w-[24px] flex items-center justify-center"
+                title="Zoom Out"
+              >
+                <ZoomOut className="w-3.5 h-3.5" aria-hidden="true" />
+              </button>
+              <span className="text-[11px] font-mono text-stone-300 min-w-[34px] text-center select-none">
+                {Math.round(zoomScale * 100)}%
+              </span>
+              <button
+                onClick={() => setZoomScale((prev) => Math.min(2.0, Number((prev + 0.15).toFixed(2))))}
+                aria-label="Zoom in terrarium canvas"
+                className="p-1 rounded-lg text-stone-300 hover:text-white hover:bg-stone-800 transition cursor-pointer min-w-[24px] flex items-center justify-center"
+                title="Zoom In"
+              >
+                <ZoomIn className="w-3.5 h-3.5" aria-hidden="true" />
+              </button>
+              {zoomScale !== 1.0 && (
+                <button
+                  onClick={() => setZoomScale(1.0)}
+                  aria-label="Reset zoom to 100%"
+                  className="p-1 rounded-lg text-emerald-400 hover:text-emerald-300 hover:bg-stone-800 transition cursor-pointer"
+                  title="Reset View (100%)"
+                >
+                  <RotateCcw className="w-3 h-3" aria-hidden="true" />
+                </button>
+              )}
+            </div>
+          </div>
+
           {/* Interactive SVG Canvas */}
           <div className={`relative w-full ${isZenMode ? 'max-w-[540px]' : 'max-w-[460px]'} aspect-[400/520] rounded-3xl bg-stone-950/40 border border-white/10 backdrop-blur-sm shadow-2xl flex items-center justify-center overflow-hidden transition-all duration-500`}>
             <svg
               ref={svgRef}
               viewBox="0 0 400 520"
               className="w-full h-full touch-none"
+              style={{ transform: `scale(${zoomScale})`, transition: isPinching ? 'none' : 'transform 0.2s ease-out' }}
               aria-label="Interactive 3D Glass Terrarium View"
               role="img"
               onPointerDown={handleSvgPointerDown}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             >
               <defs>
                 <clipPath id="vessel-clip">
@@ -2887,12 +3375,15 @@ export default function App() {
                       ? -1
                       : 1;
 
+                  const isLivingPlant = item.type !== 'driftwood' && item.type !== 'dragon_stone' && item.type !== 'quartz' && item.type !== 'river_stones' && item.type !== 'critters' && item.type !== 'water_pool' && item.type !== 'lava_rock' && item.type !== 'petrified_wood';
+                  const growthMultiplier = isLivingPlant ? (1 + growthStage * 0.12) : 1;
+
                   return (
                     <g
                       key={item.uid}
                       transform={`translate(${item.x + roamX}, ${item.y}) rotate(${item.rotation}) scale(${
-                        item.scale * roamFlip
-                      }, ${item.scale})`}
+                        item.scale * roamFlip * growthMultiplier
+                      }, ${item.scale * growthMultiplier})`}
                       onPointerDown={(e) => handleItemPointerDown(e, item)}
                       className="cursor-grab active:cursor-grabbing transition-transform select-none"
                     >
@@ -2907,6 +3398,7 @@ export default function App() {
                       <RenderBotanicalArtwork
                         type={item.type}
                         uvActive={currentLighting.uvActive}
+                        growthStage={growthStage}
                       />
 
                       {/* Selection Bounding Halo */}
@@ -3212,6 +3704,19 @@ export default function App() {
                     Back
                   </button>
                 </div>
+
+                {/* Botanical Care Dossier Quick Button */}
+                <button
+                  onClick={() => {
+                    const cat = CATALOG_ITEMS.find((c) => c.id === selectedItem.type);
+                    setSelectedCareItem(cat || null);
+                    setIsCareModalOpen(true);
+                  }}
+                  className="w-full py-2 px-3 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/80 text-xs font-semibold text-emerald-300 border border-emerald-600/40 transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-sm"
+                >
+                  <BookOpen className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
+                  <span>View Botanical Care Dossier</span>
+                </button>
               </div>
             ) : (
               <div className="py-6 text-center text-xs text-stone-300 bg-stone-950/40 rounded-xl border border-dashed border-white/10">
@@ -3309,6 +3814,40 @@ export default function App() {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* 4. REAL-WORLD UTILITY QUICK ACTIONS */}
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={() => {
+                setSelectedCareItem(null);
+                setIsCareModalOpen(true);
+              }}
+              className="p-3 rounded-2xl bg-stone-900/75 border border-white/10 hover:border-emerald-500/40 text-left transition flex flex-col justify-between cursor-pointer group active:scale-95 shadow-md"
+            >
+              <div className="flex items-center justify-between">
+                <BookOpen className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" aria-hidden="true" />
+                <ChevronRight className="w-3.5 h-3.5 text-stone-500 group-hover:text-stone-300" aria-hidden="true" />
+              </div>
+              <div className="mt-2">
+                <div className="text-xs font-semibold text-white">Care Guide</div>
+                <div className="text-[10px] text-stone-400">14 botanical dossiers</div>
+              </div>
+            </button>
+
+            <button
+              onClick={() => setIsBOMModalOpen(true)}
+              className="p-3 rounded-2xl bg-stone-900/75 border border-white/10 hover:border-amber-500/40 text-left transition flex flex-col justify-between cursor-pointer group active:scale-95 shadow-md"
+            >
+              <div className="flex items-center justify-between">
+                <ShoppingBag className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" aria-hidden="true" />
+                <ChevronRight className="w-3.5 h-3.5 text-stone-500 group-hover:text-stone-300" aria-hidden="true" />
+              </div>
+              <div className="mt-2">
+                <div className="text-xs font-semibold text-white">Nursery BOM</div>
+                <div className="text-[10px] text-stone-400">Grams & shopping list</div>
+              </div>
+            </button>
           </div>
         </section>
         )}
@@ -3728,6 +4267,480 @@ export default function App() {
               >
                 <Download className="w-4 h-4" aria-hidden="true" />
                 <span>{isRenderingExport ? 'Rendering Artwork...' : 'Download Artwork'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
+          BOTANICAL CARE ENCYCLOPEDIA & FIELD GUIDE MODAL
+          ========================================== */}
+      {isCareModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="care-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md animate-in fade-in"
+        >
+          <div className="relative w-full max-w-4xl bg-stone-900/95 border border-white/10 rounded-2xl shadow-2xl p-5 sm:p-6 text-stone-100 flex flex-col max-h-[90vh]">
+            {/* Header */}
+            <div className="flex items-start justify-between pb-4 border-b border-white/10">
+              <div>
+                <h2 id="care-modal-title" className="text-lg font-bold text-white flex items-center gap-2">
+                  <BookOpen className="w-5 h-5 text-emerald-400" aria-hidden="true" />
+                  Botanical Field Guide & Care Encyclopedia
+                </h2>
+                <p className="text-xs text-stone-300 mt-0.5">
+                  Taxonomy, light & humidity tolerances, natural habitats, and companion planting guidelines for all 14 terrarium species.
+                </p>
+              </div>
+              <button
+                onClick={() => setIsCareModalOpen(false)}
+                aria-label="Close field guide dialog"
+                className="p-1.5 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition cursor-pointer"
+              >
+                <X className="w-5 h-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            {/* Filter and Search Bar */}
+            <div className="py-3 border-b border-white/10 flex flex-wrap items-center justify-between gap-2.5">
+              <div className="relative flex-1 min-w-[200px]">
+                <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
+                <input
+                  type="text"
+                  placeholder="Search by plant name, botanical family, or origin..."
+                  value={careSearchQuery}
+                  onChange={(e) => setCareSearchQuery(e.target.value)}
+                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-stone-950 border border-white/10 rounded-xl text-stone-100 placeholder:text-stone-500 focus:outline-none focus:border-emerald-400"
+                />
+              </div>
+
+              <div className="flex items-center gap-1 overflow-x-auto py-0.5">
+                {[
+                  { id: 'all', label: 'All Items' },
+                  { id: 'tropical', label: 'Tropical' },
+                  { id: 'arid', label: 'Arid / Succulents' },
+                  { id: 'carnivorous', label: 'Carnivorous' },
+                  { id: 'hardscape', label: 'Hardscape' },
+                  { id: 'critters', label: 'Bioactive' }
+                ].map((bf) => (
+                  <button
+                    key={bf.id}
+                    onClick={() => setCareFilterBiome(bf.id)}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-medium transition cursor-pointer whitespace-nowrap ${
+                      careFilterBiome === bf.id
+                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-semibold'
+                        : 'text-stone-400 hover:text-white hover:bg-stone-800'
+                    }`}
+                  >
+                    {bf.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Content Split: Item List on Left, Active Dossier on Right */}
+            {(() => {
+              const activeList = CATALOG_ITEMS.filter((item) => {
+                const matchesBiome =
+                  careFilterBiome === 'all'
+                    ? true
+                    : careFilterBiome === 'hardscape'
+                    ? item.category === 'hardscape'
+                    : careFilterBiome === 'critters'
+                    ? item.category === 'critters'
+                    : item.biome === careFilterBiome;
+
+                const q = careSearchQuery.toLowerCase().trim();
+                const matchesSearch =
+                  !q ||
+                  item.name.toLowerCase().includes(q) ||
+                  item.scientific.toLowerCase().includes(q) ||
+                  (item.family && item.family.toLowerCase().includes(q)) ||
+                  (item.origin && item.origin.toLowerCase().includes(q));
+
+                return matchesBiome && matchesSearch;
+              });
+
+              const activeDossier = selectedCareItem || activeList[0] || CATALOG_ITEMS[0];
+
+              return (
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 overflow-hidden py-3">
+                  {/* Left Column: List of items */}
+                  <div className="md:col-span-5 overflow-y-auto space-y-2 pr-1 max-h-[58vh]">
+                    {activeList.length === 0 ? (
+                      <div className="text-center py-10 text-stone-400 text-xs">
+                        No species found matching "{careSearchQuery}".
+                      </div>
+                    ) : (
+                      activeList.map((entry) => {
+                        const isSelected = activeDossier.id === entry.id;
+                        return (
+                          <div
+                            key={entry.id}
+                            onClick={() => setSelectedCareItem(entry)}
+                            className={`p-3 rounded-xl border transition cursor-pointer flex items-center justify-between gap-2.5 ${
+                              isSelected
+                                ? 'bg-emerald-950/60 border-emerald-500/50 shadow-md'
+                                : 'bg-stone-950/40 border-white/5 hover:border-white/15 hover:bg-stone-900/60'
+                            }`}
+                          >
+                            <div className="space-y-0.5">
+                              <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                                <span>{entry.name}</span>
+                                {entry.biome === 'tropical' && (
+                                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                                    Tropical
+                                  </span>
+                                )}
+                                {entry.biome === 'arid' && (
+                                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                                    Arid
+                                  </span>
+                                )}
+                                {entry.biome === 'carnivorous' && (
+                                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/15 text-rose-300 border border-rose-500/30">
+                                    Carnivore
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-[11px] italic text-stone-400 font-serif">
+                                {entry.scientific}
+                              </div>
+                              <div className="text-[10px] text-stone-500">
+                                {entry.family || entry.category}
+                              </div>
+                            </div>
+                            <ChevronRight className={`w-4 h-4 shrink-0 transition ${isSelected ? 'text-emerald-400 translate-x-0.5' : 'text-stone-600'}`} />
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+
+                  {/* Right Column: Detailed Botanical Dossier */}
+                  <div className="md:col-span-7 bg-stone-950/80 border border-white/10 rounded-xl p-4 overflow-y-auto max-h-[58vh] space-y-3.5">
+                    {/* Title & Classification */}
+                    <div className="flex items-start justify-between gap-3 pb-3 border-b border-white/10">
+                      <div>
+                        <span className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                          {activeDossier.family || 'Botanical Specimen'}
+                        </span>
+                        <h3 className="text-base font-bold text-white mt-1">{activeDossier.name}</h3>
+                        <p className="text-xs italic text-stone-400 font-serif">{activeDossier.scientific}</p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          handleAddItem(activeDossier.id);
+                          showToast(`Placed ${activeDossier.name} in terrarium!`, 'success');
+                        }}
+                        className="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer active:scale-95 shrink-0"
+                      >
+                        <Plus className="w-3.5 h-3.5" aria-hidden="true" />
+                        <span>Place in Vessel</span>
+                      </button>
+                    </div>
+
+                    {/* Specimen Metrics Grid */}
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      {/* Light */}
+                      <div className="p-2.5 rounded-xl bg-stone-900/90 border border-white/5 space-y-1">
+                        <div className="flex items-center gap-1.5 text-amber-300 font-semibold text-[11px]">
+                          <Sun className="w-3.5 h-3.5 text-amber-400" />
+                          <span>Light Exposure</span>
+                        </div>
+                        <p className="text-[11px] text-stone-300">{activeDossier.light || 'Filtered ambient or grow light'}</p>
+                      </div>
+
+                      {/* Watering */}
+                      <div className="p-2.5 rounded-xl bg-stone-900/90 border border-white/5 space-y-1">
+                        <div className="flex items-center gap-1.5 text-sky-300 font-semibold text-[11px]">
+                          <Droplets className="w-3.5 h-3.5 text-sky-400" />
+                          <span>Watering Regimen</span>
+                        </div>
+                        <p className="text-[11px] text-stone-300">{activeDossier.watering || 'Maintain even moisture'}</p>
+                      </div>
+
+                      {/* Substrate */}
+                      <div className="p-2.5 rounded-xl bg-stone-900/90 border border-white/5 space-y-1">
+                        <div className="flex items-center gap-1.5 text-emerald-300 font-semibold text-[11px]">
+                          <Layers className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Rooting Medium</span>
+                        </div>
+                        <p className="text-[11px] text-stone-300">{activeDossier.soilPreference || 'Airy tropical substrate'}</p>
+                      </div>
+
+                      {/* Care Difficulty */}
+                      <div className="p-2.5 rounded-xl bg-stone-900/90 border border-white/5 space-y-1">
+                        <div className="flex items-center gap-1.5 text-purple-300 font-semibold text-[11px]">
+                          <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
+                          <span>Care Rating</span>
+                        </div>
+                        <p className="text-[11px] text-stone-300">{activeDossier.careDifficulty || 'Beginner Friendly'}</p>
+                      </div>
+                    </div>
+
+                    {/* Ideal Humidity Range Gauge (for plants) */}
+                    {activeDossier.idealHumidity && (
+                      <div className="p-2.5 rounded-xl bg-stone-900/90 border border-white/5 space-y-1.5">
+                        <div className="flex items-center justify-between text-[11px]">
+                          <span className="text-stone-300 font-semibold flex items-center gap-1">
+                            <Droplets className="w-3 h-3 text-sky-400" />
+                            Ideal Humidity Range
+                          </span>
+                          <span className="font-mono text-sky-300">
+                            {activeDossier.idealHumidity[0]}% – {activeDossier.idealHumidity[1]}% RH
+                          </span>
+                        </div>
+                        <div className="relative w-full h-2 rounded-full bg-stone-950 overflow-hidden border border-white/10">
+                          <div
+                            className="absolute top-0 bottom-0 bg-emerald-400 rounded-full opacity-80"
+                            style={{
+                              left: `${activeDossier.idealHumidity[0]}%`,
+                              width: `${activeDossier.idealHumidity[1] - activeDossier.idealHumidity[0]}%`
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Companion Rules & Horticultural Advice */}
+                    {activeDossier.companionTip && (
+                      <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/20 text-xs space-y-1">
+                        <div className="font-semibold text-emerald-300 flex items-center gap-1.5">
+                          <Info className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                          <span>Companion Planting & Biome Synergy</span>
+                        </div>
+                        <p className="text-[11px] text-emerald-100/90 leading-relaxed">
+                          {activeDossier.companionTip}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Physical Procurement & Origin */}
+                    <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-white/5">
+                      <div>
+                        <span className="text-stone-400">Natural Habitat:</span>
+                        <div className="text-stone-200 font-medium">{activeDossier.origin || 'Global'}</div>
+                      </div>
+                      <div>
+                        <span className="text-stone-400">Nursery Unit Size:</span>
+                        <div className="text-stone-200 font-medium">{activeDossier.nurseryUnit || '1x unit'}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
+          REAL-WORLD NURSERY BILL OF MATERIALS (BOM) MODAL
+          ========================================== */}
+      {isBOMModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="bom-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/85 backdrop-blur-md animate-in fade-in"
+        >
+          <div className="relative w-full max-w-3xl bg-stone-900/95 border border-white/10 rounded-2xl shadow-2xl p-5 sm:p-6 text-stone-100 flex flex-col max-h-[90vh]">
+            {/* Header */}
+            <div className="flex items-start justify-between pb-4 border-b border-white/10">
+              <div>
+                <h2 id="bom-modal-title" className="text-lg font-bold text-white flex items-center gap-2">
+                  <ShoppingBag className="w-5 h-5 text-amber-400" aria-hidden="true" />
+                  Nursery Bill of Materials & Substrate Mass Calculator
+                </h2>
+                <p className="text-xs text-stone-300 mt-0.5">
+                  Calculated physical substrate grams, liters, and itemized specimen checklist for building your real-world terrarium.
+                </p>
+              </div>
+              <button
+                onClick={() => setIsBOMModalOpen(false)}
+                aria-label="Close nursery shopping list dialog"
+                className="p-1.5 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition cursor-pointer"
+              >
+                <X className="w-5 h-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            {/* Checklist Content */}
+            <div className="flex-1 overflow-y-auto py-4 space-y-4 pr-1">
+              {/* Summary Stats Cards */}
+              <div className="grid grid-cols-3 gap-2.5">
+                <div className="p-3 rounded-xl bg-stone-950/70 border border-white/10 text-center">
+                  <div className="text-[10px] text-stone-400 uppercase tracking-wider">Substrate Mass</div>
+                  <div className="text-lg font-bold text-emerald-400 font-mono mt-0.5">
+                    {bomData.totalSubstrateGrams}g
+                  </div>
+                  <div className="text-[10px] text-stone-500">{(bomData.totalSubstrateGrams / 1000).toFixed(2)} kg dry weight</div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-stone-950/70 border border-white/10 text-center">
+                  <div className="text-[10px] text-stone-400 uppercase tracking-wider">Total Flora & Decor</div>
+                  <div className="text-lg font-bold text-sky-400 font-mono mt-0.5">
+                    {items.length} pcs
+                  </div>
+                  <div className="text-[10px] text-stone-500">{bomData.specimenItems.length} unique varieties</div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-stone-950/70 border border-white/10 text-center">
+                  <div className="text-[10px] text-stone-400 uppercase tracking-wider">Shopping Progress</div>
+                  <div className="text-lg font-bold text-amber-400 font-mono mt-0.5">
+                    {checkedBOMItems.length}/{bomData.allItems.length}
+                  </div>
+                  <div className="text-[10px] text-stone-500">
+                    {checkedBOMItems.length === bomData.allItems.length && bomData.allItems.length > 0 ? 'All items acquired! 🎉' : 'Checklist active'}
+                  </div>
+                </div>
+              </div>
+
+              {/* 1. Glass Enclosure */}
+              <div className="space-y-1.5">
+                <div className="text-xs font-semibold text-stone-300 uppercase tracking-wider">1. Glass Enclosure Vessel</div>
+                <div
+                  onClick={() => toggleBOMItem(bomData.vesselItem.id)}
+                  className={`p-3 rounded-xl border transition cursor-pointer flex items-center justify-between gap-3 ${
+                    checkedBOMItems.includes(bomData.vesselItem.id)
+                      ? 'bg-emerald-950/30 border-emerald-500/30 opacity-70'
+                      : 'bg-stone-950/50 border-white/10 hover:border-white/20'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <input
+                      type="checkbox"
+                      checked={checkedBOMItems.includes(bomData.vesselItem.id)}
+                      onChange={() => toggleBOMItem(bomData.vesselItem.id)}
+                      className="rounded accent-emerald-500 w-4 h-4 cursor-pointer"
+                    />
+                    <div>
+                      <div className={`text-xs font-bold ${checkedBOMItems.includes(bomData.vesselItem.id) ? 'line-through text-stone-400' : 'text-white'}`}>
+                        {bomData.vesselItem.name}
+                      </div>
+                      <div className="text-[11px] text-stone-400">{bomData.vesselItem.spec}</div>
+                    </div>
+                  </div>
+                  <span className="text-xs font-mono font-medium text-stone-300">{bomData.vesselItem.costEst}</span>
+                </div>
+              </div>
+
+              {/* 2. Substrate Layers */}
+              <div className="space-y-1.5">
+                <div className="text-xs font-semibold text-stone-300 uppercase tracking-wider">2. Substrates, Drainage & Filtration Medium</div>
+                <div className="space-y-1.5">
+                  {bomData.substrateItems.map((sub) => {
+                    const isChecked = checkedBOMItems.includes(sub.id);
+                    return (
+                      <div
+                        key={sub.id}
+                        onClick={() => toggleBOMItem(sub.id)}
+                        className={`p-3 rounded-xl border transition cursor-pointer flex items-center justify-between gap-3 ${
+                          isChecked
+                            ? 'bg-emerald-950/30 border-emerald-500/30 opacity-70'
+                            : 'bg-stone-950/50 border-white/10 hover:border-white/20'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => toggleBOMItem(sub.id)}
+                            className="rounded accent-emerald-500 w-4 h-4 cursor-pointer"
+                          />
+                          <div>
+                            <div className={`text-xs font-bold ${isChecked ? 'line-through text-stone-400' : 'text-white'}`}>
+                              {sub.name}
+                            </div>
+                            <div className="text-[11px] text-stone-400">{sub.spec}</div>
+                            <div className="text-[10px] text-stone-500">{sub.role}</div>
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <div className="text-xs font-mono font-bold text-emerald-400">{sub.grams}g</div>
+                          <div className="text-[10px] text-stone-400 font-mono">~{sub.liters} L</div>
+                          <div className="text-[10px] text-stone-500">{sub.costEst}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 3. Living Flora & Hardscape Specimens */}
+              <div className="space-y-1.5">
+                <div className="text-xs font-semibold text-stone-300 uppercase tracking-wider">3. Living Flora, Botanicals & Hardscape Specimens</div>
+                {bomData.specimenItems.length === 0 ? (
+                  <div className="p-4 rounded-xl bg-stone-950/40 border border-dashed border-white/10 text-center text-xs text-stone-400">
+                    No flora or hardscape placed yet. Add plants from the catalog to populate your shopping list.
+                  </div>
+                ) : (
+                  <div className="space-y-1.5">
+                    {bomData.specimenItems.map((specimen) => {
+                      const isChecked = checkedBOMItems.includes(specimen.id);
+                      return (
+                        <div
+                          key={specimen.id}
+                          onClick={() => toggleBOMItem(specimen.id)}
+                          className={`p-3 rounded-xl border transition cursor-pointer flex items-center justify-between gap-3 ${
+                            isChecked
+                              ? 'bg-emerald-950/30 border-emerald-500/30 opacity-70'
+                            : 'bg-stone-950/50 border-white/10 hover:border-white/20'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => toggleBOMItem(specimen.id)}
+                              className="rounded accent-emerald-500 w-4 h-4 cursor-pointer"
+                            />
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className={`text-xs font-bold ${isChecked ? 'line-through text-stone-400' : 'text-white'}`}>
+                                  {specimen.count}x {specimen.name}
+                                </span>
+                                <span className="text-[10px] px-1.5 py-0.2 rounded bg-stone-800 text-stone-300">
+                                  {specimen.category}
+                                </span>
+                              </div>
+                              <div className="text-[11px] italic text-stone-400 font-serif">{specimen.scientific}</div>
+                              <div className="text-[10px] text-stone-500">Unit: {specimen.unit}</div>
+                            </div>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <div className="text-xs font-mono font-medium text-stone-300">{specimen.costEst} /ea</div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={handlePrintBOM}
+                className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-stone-800 hover:bg-stone-700 text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
+              >
+                <Printer className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Print Checklist</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleCopyBOMChecklist}
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-stone-950 transition flex items-center gap-1.5 shadow-lg shadow-emerald-950/60 cursor-pointer active:scale-95"
+              >
+                <ClipboardCheck className="w-4 h-4" aria-hidden="true" />
+                <span>Copy Checklist to Clipboard</span>
               </button>
             </div>
           </div>
