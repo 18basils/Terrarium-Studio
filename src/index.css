@@ -29,3 +29,29 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
+
+/* Phase 4: Botanical Care Passport & BOM Print Styles */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #1c1917 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .printable-certificate {
+    background: #ffffff !important;
+    color: #1c1917 !important;
+    border: 2px solid #b45309 !important;
+    box-shadow: none !important;
+    padding: 24px !important;
+  }
+  .printable-certificate * {
+    color: #1c1917 !important;
+    border-color: #e7e5e4 !important;
+  }
+  .printable-certificate table th {
+    background: #f5f5f4 !important;
+    color: #44403c !important;
+  }
+}

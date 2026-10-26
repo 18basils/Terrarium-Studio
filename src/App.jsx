@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+import QRCode from 'qrcode';
 import { 
   Sparkles, Droplets, Sun, Moon, Sunset, Zap, Layers, Sprout, 
   Sliders, Trash2, FlipHorizontal, ArrowUp, 
   ArrowDown, ZoomIn, ZoomOut, CheckCircle2, AlertTriangle, 
   Camera, RefreshCw, Eye, EyeOff, Volume2, VolumeX, Plus,
-  ShieldCheck, ChevronRight, Maximize2, Minimize2,
+  ShieldCheck, ChevronRight, ChevronLeft, Maximize2, Minimize2,
   Undo2, Redo2, Share2, Copy, Save, Bookmark, Check, X, Download, FolderHeart, ExternalLink, FileDown, Upload,
   Play, Pause, Clock, CloudRain, Wind,
-  BookOpen, ShoppingBag, ClipboardCheck, Printer, Search, RotateCcw, Info, Globe
+  BookOpen, ShoppingBag, ClipboardCheck, Printer, Search, RotateCcw, Info, Globe,
+  Wand2, Lock, Unlock, CopyPlus, Thermometer, Grid, FileText, QrCode, Palette
 } from 'lucide-react';
 
 // ==========================================
@@ -85,8 +87,122 @@ const VESSELS = [
     soilBaseY: 465,
     soilMaxHeight: 155,
     highlightPath: 'M 168 175 L 75 395 C 68 415 78 440 108 445',
+  },
+  {
+    id: 'paludarium',
+    name: 'Paludarium Waterfall Tank',
+    subtitle: 'Half-aquatic front shelf with stone waterfall ledge & mist basin',
+    type: 'semi-closed',
+    humidityRetention: 1.15,
+    clipPath: 'M 60 90 L 340 90 L 340 465 L 60 465 Z',
+    outlinePath: 'M 60 90 L 340 90 L 340 465 L 60 465 Z',
+    facetLines: 'M 60 90 L 340 90 M 60 465 L 340 465 M 60 300 L 220 300 L 220 465',
+    lidType: 'open-top',
+    soilBaseY: 465,
+    soilMaxHeight: 165,
+    highlightPath: 'M 72 105 L 72 445',
+  },
+  {
+    id: 'horizontal_bottle',
+    name: 'Horizontal Cylinder ("Ship-in-Bottle")',
+    subtitle: 'Panoramic horizontal apothecary cylinder with side cork stopper',
+    type: 'closed',
+    humidityRetention: 1.2,
+    clipPath: 'M 65 210 C 65 155 95 135 180 135 L 315 135 C 345 135 365 155 365 210 L 365 375 C 365 425 345 448 315 448 L 180 448 C 95 448 65 425 65 375 Z',
+    outlinePath: 'M 65 210 C 65 155 95 135 180 135 L 315 135 C 345 135 365 155 365 210 L 365 375 C 365 425 345 448 315 448 L 180 448 C 95 448 65 425 65 375 Z',
+    neckPath: 'M 365 270 L 388 270 L 388 318 L 365 318',
+    lidPath: 'M 386 266 L 398 266 L 398 322 L 386 322 Z',
+    lidType: 'cork-side',
+    soilBaseY: 448,
+    soilMaxHeight: 135,
+    highlightPath: 'M 85 155 L 295 155',
+  },
+  {
+    id: 'hex_lantern',
+    name: 'Hexagonal Conservatory Lantern',
+    subtitle: 'Gothic Victorian faceted brass lantern with steeple roof & hanging ring',
+    type: 'semi-closed',
+    humidityRetention: 1.05,
+    clipPath: 'M 200 45 L 320 120 L 335 390 L 270 465 L 130 465 L 65 390 L 80 120 Z',
+    outlinePath: 'M 200 45 L 320 120 L 335 390 L 270 465 L 130 465 L 65 390 L 80 120 Z',
+    facetLines: 'M 200 45 L 200 150 M 80 120 L 200 150 L 320 120 M 200 150 L 200 410 M 65 390 L 200 410 L 335 390 M 200 410 L 130 465 M 200 410 L 270 465',
+    lidType: 'brass-steeple',
+    steepleRing: 'M 200 20 A 10 10 0 1 1 200 40 A 10 10 0 1 1 200 20',
+    soilBaseY: 465,
+    soilMaxHeight: 160,
+    highlightPath: 'M 95 140 L 78 375',
   }
 ];
+
+const GLASS_TINTS = {
+  clear: {
+    id: 'clear',
+    name: 'Borosilicate Clear',
+    sheen: 'rgba(255,255,255,0.22)',
+    vesselTint: 'rgba(255,255,255,0.02)',
+    filter: 'none'
+  },
+  amber: {
+    id: 'amber',
+    name: 'Apothecary Amber',
+    sheen: 'rgba(251,191,36,0.32)',
+    vesselTint: 'rgba(180,83,9,0.14)',
+    filter: 'sepia(35%) saturate(140%) hue-rotate(-20deg)'
+  },
+  seaglass: {
+    id: 'seaglass',
+    name: 'Emerald Sea-Glass',
+    sheen: 'rgba(52,211,153,0.32)',
+    vesselTint: 'rgba(5,150,105,0.12)',
+    filter: 'hue-rotate(55deg) saturate(125%)'
+  },
+  smoked: {
+    id: 'smoked',
+    name: 'Obsidian Noir',
+    sheen: 'rgba(148,163,184,0.25)',
+    vesselTint: 'rgba(15,23,42,0.26)',
+    filter: 'contrast(110%) brightness(92%)'
+  }
+};
+
+const PEDESTAL_BASES = {
+  walnut: {
+    id: 'walnut',
+    name: 'Walnut Hardwood',
+    rimColor: '#291d15',
+    topColor: '#3d2b1f',
+    stroke: '#423023'
+  },
+  brass: {
+    id: 'brass',
+    name: 'Brushed Brass',
+    rimColor: '#854d0e',
+    topColor: '#ca8a04',
+    stroke: '#eab308'
+  },
+  marble: {
+    id: 'marble',
+    name: 'Carrara Marble',
+    rimColor: '#cbd5e1',
+    topColor: '#f1f5f9',
+    stroke: '#94a3b8'
+  },
+  led_halo: {
+    id: 'led_halo',
+    name: 'Illuminated LED Halo',
+    rimColor: '#0f172a',
+    topColor: '#1e293b',
+    stroke: '#06b6d4',
+    glow: 'rgba(6, 182, 212, 0.6)'
+  },
+  none: {
+    id: 'none',
+    name: 'Bare Glass (No Base)',
+    rimColor: 'transparent',
+    topColor: 'transparent',
+    stroke: 'transparent'
+  }
+};
 
 const SUBSTRATE_CONFIG = [
   {
@@ -236,6 +352,11 @@ const CATALOG_ITEMS = [
     approxCost: '$5 - $8',
     idealHumidity: [65, 95],
     defaultScale: 1,
+    cultivars: [
+      { id: 'pink', name: 'Sakura Pink', color: '#f472b6', veinColor: '#f472b6', leafColor: '#14532d' },
+      { id: 'ruby', name: 'Ruby Red', color: '#ef4444', veinColor: '#f87171', leafColor: '#14532d' },
+      { id: 'white', name: 'White Anne', color: '#f8fafc', veinColor: '#f1f5f9', leafColor: '#166534' }
+    ],
     description: 'Vibrant pink-veined foliage that thrives in closed humid jars.',
   },
   {
@@ -495,6 +616,12 @@ const CATALOG_ITEMS = [
     usdRange: [6, 11],
     approxCost: '$6 - $11',
     defaultScale: 0.95,
+    cultivars: [
+      { id: 'amethyst', name: 'Amethyst Purple', color: '#c084fc', facetColor: '#a855f7', stroke: '#7e22ce' },
+      { id: 'rose', name: 'Rose Quartz', color: '#fbcfe8', facetColor: '#f472b6', stroke: '#db2777' },
+      { id: 'clear', name: 'Milky White', color: '#f8fafc', facetColor: '#e2e8f0', stroke: '#94a3b8' },
+      { id: 'citrine', name: 'Citrine Gold', color: '#fef08a', facetColor: '#eab308', stroke: '#ca8a04' }
+    ],
     description: 'Translucent mineral cluster that catches grow-light rays.',
   },
   {
@@ -590,6 +717,11 @@ const CATALOG_ITEMS = [
     usdRange: [4, 8],
     approxCost: '$4 - $8',
     defaultScale: 1.15,
+    cultivars: [
+      { id: 'basalt', name: 'Basalt Black', color: '#292524', stoneColor: '#1c1917', highlight: '#44403c' },
+      { id: 'red', name: 'Scoria Red', color: '#991b1b', stoneColor: '#7f1d1d', highlight: '#b91c1c' },
+      { id: 'pumice', name: 'Pumice Grey', color: '#78716c', stoneColor: '#57534e', highlight: '#a8a29e' }
+    ],
     description: 'Dark, textured volcanic rock ideal for anchoring moss and beneficial bacteria.',
   },
   {
@@ -753,34 +885,157 @@ const PRESETS = {
   }
 };
 
+const AUTO_SCAPES = [
+  {
+    id: 'amazonian_canopy',
+    name: 'Amazonian Canopy',
+    subtitle: 'High humidity cloud forest with lush ferns, creeping fittonia & moss',
+    vesselId: 'apothecary',
+    humidity: 86,
+    temperature: 24,
+    lighting: 'day',
+    glassTint: 'clear',
+    pedestalType: 'walnut',
+    substrates: { pebbles: 28, charcoal: 14, moss: 18, soil: 46, sand: 0 },
+    items: [
+      { uid: 'as-1', type: 'driftwood', x: 210, y: 320, scale: 1.35, rotation: 10, flipX: false, zIndex: 1 },
+      { uid: 'as-2', type: 'fern', x: 145, y: 330, scale: 1.25, rotation: -8, flipX: false, zIndex: 2 },
+      { uid: 'as-3', type: 'orchid', x: 245, y: 315, scale: 1.2, rotation: 6, flipX: true, zIndex: 3 },
+      { uid: 'as-4', type: 'fittonia', x: 190, y: 355, scale: 1.1, rotation: 0, flipX: false, zIndex: 4, cultivar: 'ruby' },
+      { uid: 'as-5', type: 'cushion_moss', x: 140, y: 365, scale: 1.2, rotation: 0, flipX: false, zIndex: 5 },
+      { uid: 'as-6', type: 'cushion_moss', x: 250, y: 362, scale: 1.15, rotation: 0, flipX: true, zIndex: 6 },
+      { uid: 'as-7', type: 'critters', x: 190, y: 375, scale: 1, rotation: 0, flipX: false, zIndex: 7 }
+    ]
+  },
+  {
+    id: 'carnivorous_mist_bog',
+    name: 'Carnivorous Mist Bog',
+    subtitle: 'Acidic sphagnum bog with sundew, flytrap, and damp petrified timber',
+    vesselId: 'flask',
+    humidity: 90,
+    temperature: 22,
+    lighting: 'sunset',
+    glassTint: 'seaglass',
+    pedestalType: 'brass',
+    substrates: { pebbles: 26, charcoal: 16, moss: 22, soil: 40, sand: 0 },
+    items: [
+      { uid: 'as-8', type: 'petrified_wood', x: 180, y: 340, scale: 1.2, rotation: -6, flipX: false, zIndex: 1 },
+      { uid: 'as-9', type: 'venus_flytrap', x: 225, y: 345, scale: 1.15, rotation: 4, flipX: true, zIndex: 2 },
+      { uid: 'as-10', type: 'sundew', x: 155, y: 355, scale: 1.1, rotation: -8, flipX: false, zIndex: 3 },
+      { uid: 'as-11', type: 'cushion_moss', x: 200, y: 365, scale: 1.3, rotation: 0, flipX: false, zIndex: 4 },
+      { uid: 'as-12', type: 'critters', x: 180, y: 372, scale: 0.9, rotation: 0, flipX: false, zIndex: 5 }
+    ]
+  },
+  {
+    id: 'kyoto_zen_garden',
+    name: 'Kyoto Zen Moss Garden',
+    subtitle: 'Minimalist Japanese sanctuary with river stones, weeping moss & bonsai lantern',
+    vesselId: 'wardian',
+    humidity: 74,
+    temperature: 20,
+    lighting: 'golden',
+    glassTint: 'clear',
+    pedestalType: 'walnut',
+    substrates: { pebbles: 24, charcoal: 12, moss: 20, soil: 36, sand: 14 },
+    items: [
+      { uid: 'as-13', type: 'zen_lantern', x: 220, y: 335, scale: 1.2, rotation: 0, flipX: false, zIndex: 1 },
+      { uid: 'as-14', type: 'river_stones', x: 160, y: 360, scale: 1.1, rotation: -6, flipX: false, zIndex: 2 },
+      { uid: 'as-15', type: 'cushion_moss', x: 195, y: 362, scale: 1.4, rotation: 0, flipX: false, zIndex: 3 },
+      { uid: 'as-16', type: 'cushion_moss', x: 140, y: 366, scale: 1.1, rotation: 0, flipX: true, zIndex: 4 },
+      { uid: 'as-17', type: 'peperomia', x: 250, y: 345, scale: 1.05, rotation: 8, flipX: false, zIndex: 5 }
+    ]
+  },
+  {
+    id: 'sonoran_obsidian_canyon',
+    name: 'Sonoran Obsidian Canyon',
+    subtitle: 'Arid desert gulch with volcanic lava rock, rosette succulents & air plants',
+    vesselId: 'fishbowl',
+    humidity: 25,
+    temperature: 28,
+    lighting: 'day',
+    glassTint: 'smoked',
+    pedestalType: 'marble',
+    substrates: { pebbles: 24, charcoal: 6, moss: 0, soil: 24, sand: 46 },
+    items: [
+      { uid: 'as-18', type: 'lava_rock', x: 230, y: 345, scale: 1.35, rotation: 12, flipX: true, zIndex: 1, cultivar: 'basalt' },
+      { uid: 'as-19', type: 'echeveria', x: 165, y: 365, scale: 1.25, rotation: -4, flipX: false, zIndex: 2 },
+      { uid: 'as-20', type: 'haworthia', x: 210, y: 360, scale: 1.15, rotation: 4, flipX: false, zIndex: 3 },
+      { uid: 'as-21', type: 'tillandsia', x: 255, y: 320, scale: 1.05, rotation: 18, flipX: false, zIndex: 4 },
+      { uid: 'as-22', type: 'river_stones', x: 195, y: 375, scale: 1.0, rotation: 0, flipX: false, zIndex: 5 }
+    ]
+  },
+  {
+    id: 'bioluminescent_cavern',
+    name: 'Bioluminescent Cavern',
+    subtitle: 'Nocturnal subterranean grotto with glowing quartz geode & ultraviolet mushrooms',
+    vesselId: 'hex_lantern',
+    humidity: 84,
+    temperature: 21,
+    lighting: 'uv',
+    glassTint: 'clear',
+    pedestalType: 'led_halo',
+    substrates: { pebbles: 25, charcoal: 14, moss: 16, soil: 42, sand: 0 },
+    items: [
+      { uid: 'as-23', type: 'quartz', x: 200, y: 335, scale: 1.3, rotation: 0, flipX: false, zIndex: 1, cultivar: 'amethyst' },
+      { uid: 'as-24', type: 'mushrooms', x: 155, y: 350, scale: 1.2, rotation: -6, flipX: false, zIndex: 2 },
+      { uid: 'as-25', type: 'water_pool', x: 200, y: 368, scale: 1.15, rotation: 0, flipX: false, zIndex: 3 },
+      { uid: 'as-26', type: 'cushion_moss', x: 245, y: 360, scale: 1.1, rotation: 0, flipX: true, zIndex: 4 },
+      { uid: 'as-27', type: 'critters', x: 175, y: 374, scale: 0.95, rotation: 0, flipX: false, zIndex: 5 }
+    ]
+  },
+  {
+    id: 'cloud_forest_epiphyte',
+    name: 'Cloud Forest Epiphyte Wall',
+    subtitle: 'Cascading riparian paludarium with aquatic mist pool and trailing flora',
+    vesselId: 'paludarium',
+    humidity: 88,
+    temperature: 23,
+    lighting: 'sunset',
+    glassTint: 'amber',
+    pedestalType: 'walnut',
+    substrates: { pebbles: 28, charcoal: 12, moss: 18, soil: 44, sand: 0 },
+    items: [
+      { uid: 'as-28', type: 'water_pool', x: 140, y: 370, scale: 1.3, rotation: 0, flipX: false, zIndex: 1 },
+      { uid: 'as-29', type: 'lava_rock', x: 235, y: 340, scale: 1.3, rotation: -8, flipX: false, zIndex: 2, cultivar: 'red' },
+      { uid: 'as-30', type: 'fern', x: 255, y: 320, scale: 1.15, rotation: 12, flipX: true, zIndex: 3 },
+      { uid: 'as-31', type: 'creeping_fig', x: 185, y: 335, scale: 1.1, rotation: -5, flipX: false, zIndex: 4 },
+      { uid: 'as-32', type: 'cushion_moss', x: 195, y: 365, scale: 1.2, rotation: 0, flipX: false, zIndex: 5 }
+    ]
+  }
+];
+
 // ==========================================
 // 2. PROCEDURAL BOTANICAL & HARDSCAPE SVGs
 // ==========================================
 
-const RenderBotanicalArtwork = ({ type, uvActive, growthStage = 0 }) => {
+const RenderBotanicalArtwork = ({ type, uvActive, growthStage = 0, cultivar = null, isStressed = false }) => {
   switch (type) {
-    case 'fittonia':
+    case 'fittonia': {
+      const vein = uvActive ? "#ff49db" : cultivar === 'ruby' ? "#ef4444" : cultivar === 'white' ? "#f8fafc" : "#f472b6";
+      const leafFill1 = cultivar === 'white' ? "#166534" : "#1e4620";
+      const leafFill2 = cultivar === 'white' ? "#15803d" : "#28592b";
       return (
-        <g>
+        <g style={isStressed ? { filter: 'sepia(70%) saturate(160%) hue-rotate(-20deg)', transform: 'rotate(4deg)' } : undefined}>
           <path d="M0,0 Q-12,-18 -24,-32 M0,0 Q14,-20 26,-34 M0,0 Q-4,-25 -6,-48 M0,0 Q8,-15 18,-20" stroke="#2d5a27" strokeWidth="2.5" fill="none" strokeLinecap="round" />
           <g transform="translate(-22, -30) rotate(-32)">
-            <path d="M0,0 C-14,-8 -16,-28 0,-36 C16,-28 14,-8 0,0 Z" fill="#1e4620" stroke="#143316" strokeWidth="1" />
-            <path d="M0,-2 L0,-33 M0,-10 L-8,-16 M0,-18 L-9,-24 M0,-25 L-6,-30 M0,-12 L8,-18 M0,-20 L9,-26" stroke={uvActive ? "#ff49db" : "#f472b6"} strokeWidth="1.4" strokeLinecap="round" />
+            <path d="M0,0 C-14,-8 -16,-28 0,-36 C16,-28 14,-8 0,0 Z" fill={leafFill1} stroke="#143316" strokeWidth="1" />
+            <path d="M0,-2 L0,-33 M0,-10 L-8,-16 M0,-18 L-9,-24 M0,-25 L-6,-30 M0,-12 L8,-18 M0,-20 L9,-26" stroke={vein} strokeWidth="1.4" strokeLinecap="round" />
           </g>
           <g transform="translate(22, -30) rotate(30)">
-            <path d="M0,0 C-14,-8 -16,-28 0,-36 C16,-28 14,-8 0,0 Z" fill="#234f26" stroke="#143316" strokeWidth="1" />
-            <path d="M0,-2 L0,-33 M0,-10 L-8,-16 M0,-18 L-9,-24 M0,-12 L8,-18 M0,-20 L9,-26" stroke={uvActive ? "#ff49db" : "#f472b6"} strokeWidth="1.4" strokeLinecap="round" />
+            <path d="M0,0 C-14,-8 -16,-28 0,-36 C16,-28 14,-8 0,0 Z" fill={leafFill1} stroke="#143316" strokeWidth="1" />
+            <path d="M0,-2 L0,-33 M0,-10 L-8,-16 M0,-18 L-9,-24 M0,-12 L8,-18 M0,-20 L9,-26" stroke={vein} strokeWidth="1.4" strokeLinecap="round" />
           </g>
           <g transform="translate(-4, -42) rotate(-6)">
-            <path d="M0,0 C-16,-10 -18,-32 0,-42 C18,-32 16,-10 0,0 Z" fill="#28592b" stroke="#143316" strokeWidth="1" />
-            <path d="M0,-2 L0,-38 M0,-10 L-10,-17 M0,-20 L-11,-27 M0,-28 L-7,-34 M0,-12 L10,-19 M0,-22 L11,-29 M0,-30 L7,-35" stroke={uvActive ? "#ff49db" : "#fb7185"} strokeWidth="1.6" strokeLinecap="round" />
+            <path d="M0,0 C-16,-10 -18,-32 0,-42 C18,-32 16,-10 0,0 Z" fill={leafFill2} stroke="#143316" strokeWidth="1" />
+            <path d="M0,-2 L0,-38 M0,-10 L-10,-17 M0,-20 L-11,-27 M0,-28 L-7,-34 M0,-12 L10,-19 M0,-22 L11,-29 M0,-30 L7,-35" stroke={vein} strokeWidth="1.6" strokeLinecap="round" />
           </g>
           <g transform="translate(8, -14) rotate(14)">
-            <path d="M0,0 C-13,-7 -14,-24 0,-30 C14,-24 13,-7 0,0 Z" fill="#2e6832" stroke="#143316" strokeWidth="1" />
-            <path d="M0,-2 L0,-27 M0,-9 L-7,-14 M0,-17 L-8,-22 M0,-10 L7,-15 M0,-18 L8,-23" stroke={uvActive ? "#ff49db" : "#f472b6"} strokeWidth="1.3" strokeLinecap="round" />
+            <path d="M0,0 C-13,-7 -14,-24 0,-30 C14,-24 13,-7 0,0 Z" fill={leafFill1} stroke="#143316" strokeWidth="1" />
+            <path d="M0,-2 L0,-27 M0,-9 L-7,-14 M0,-17 L-8,-22 M0,-10 L7,-15 M0,-18 L8,-23" stroke={vein} strokeWidth="1.3" strokeLinecap="round" />
           </g>
         </g>
       );
+    }
 
     case 'polkadot':
       return (
@@ -1000,16 +1255,21 @@ const RenderBotanicalArtwork = ({ type, uvActive, growthStage = 0 }) => {
         </g>
       );
 
-    case 'quartz':
+    case 'quartz': {
+      const qColor1 = uvActive ? "#e879f9" : cultivar === 'rose' ? "#fbcfe8" : cultivar === 'clear' ? "#f8fafc" : cultivar === 'citrine' ? "#fef08a" : "#f472b6";
+      const qColor2 = uvActive ? "#c084fc" : cultivar === 'rose' ? "#f472b6" : cultivar === 'clear' ? "#e2e8f0" : cultivar === 'citrine' ? "#eab308" : "#e879f9";
+      const qColor3 = cultivar === 'rose' ? "#db2777" : cultivar === 'clear' ? "#94a3b8" : cultivar === 'citrine' ? "#ca8a04" : "#a855f7";
+      const qColor4 = uvActive ? "#f0abfc" : cultivar === 'rose' ? "#fda4af" : cultivar === 'clear' ? "#f1f5f9" : cultivar === 'citrine' ? "#fde047" : "#f9a8d4";
       return (
         <g>
-          <polygon points="-24,4 -32,-26 -22,-38 -10,-24 -8,4" fill={uvActive ? "#e879f9" : "#f472b6"} fillOpacity="0.82" stroke="#fdf4ff" strokeWidth="1" />
-          <polygon points="-12,4 -16,-46 0,-64 14,-44 10,4" fill={uvActive ? "#c084fc" : "#e879f9"} fillOpacity="0.88" stroke="#ffffff" strokeWidth="1.2" />
-          <polygon points="0,-64 14,-44 10,4 0,4" fill="#a855f7" fillOpacity="0.45" />
-          <polygon points="6,4 12,-32 26,-40 32,-22 22,4" fill={uvActive ? "#f0abfc" : "#f9a8d4"} fillOpacity="0.85" stroke="#fdf4ff" strokeWidth="1" />
+          <polygon points="-24,4 -32,-26 -22,-38 -10,-24 -8,4" fill={qColor1} fillOpacity="0.82" stroke="#fdf4ff" strokeWidth="1" />
+          <polygon points="-12,4 -16,-46 0,-64 14,-44 10,4" fill={qColor2} fillOpacity="0.88" stroke="#ffffff" strokeWidth="1.2" />
+          <polygon points="0,-64 14,-44 10,4 0,4" fill={qColor3} fillOpacity="0.45" />
+          <polygon points="6,4 12,-32 26,-40 32,-22 22,4" fill={qColor4} fillOpacity="0.85" stroke="#fdf4ff" strokeWidth="1" />
           {uvActive && <circle cx="0" cy="-50" r="18" fill="#e879f9" opacity="0.25" />}
         </g>
       );
+    }
 
     case 'river_stones':
       return (
@@ -1178,13 +1438,17 @@ const RenderBotanicalArtwork = ({ type, uvActive, growthStage = 0 }) => {
         </g>
       );
 
-    case 'lava_rock':
+    case 'lava_rock': {
+      const rockBase = cultivar === 'red' ? "#7f1d1d" : cultivar === 'pumice' ? "#57534e" : "#18181b";
+      const rockStroke = cultivar === 'red' ? "#450a0a" : cultivar === 'pumice' ? "#292524" : "#09090b";
+      const rockFacet1 = cultivar === 'red' ? "#991b1b" : cultivar === 'pumice' ? "#78716c" : "#27272a";
+      const rockFacet2 = cultivar === 'red' ? "#b91c1c" : cultivar === 'pumice' ? "#a8a29e" : "#3f3f46";
       return (
         <g>
-          <polygon points="-36,6 -42,-18 -26,-48 -6,-62 18,-54 38,-32 42,4 20,8 -16,8" fill="#18181b" stroke="#09090b" strokeWidth="1.5" />
-          <polygon points="-26,-48 -6,-62 4,-34 -18,-24" fill="#27272a" />
-          <polygon points="-6,-62 18,-54 12,-26 4,-34" fill="#3f3f46" />
-          <polygon points="18,-54 38,-32 24,-12 12,-26" fill="#27272a" />
+          <polygon points="-36,6 -42,-18 -26,-48 -6,-62 18,-54 38,-32 42,4 20,8 -16,8" fill={rockBase} stroke={rockStroke} strokeWidth="1.5" />
+          <polygon points="-26,-48 -6,-62 4,-34 -18,-24" fill={rockFacet1} />
+          <polygon points="-6,-62 18,-54 12,-26 4,-34" fill={rockFacet2} />
+          <polygon points="18,-54 38,-32 24,-12 12,-26" fill={rockFacet1} />
           {[
             { cx: -20, cy: -34, r: 3.5 },
             { cx: -8, cy: -46, r: 2.8 },
@@ -1195,13 +1459,14 @@ const RenderBotanicalArtwork = ({ type, uvActive, growthStage = 0 }) => {
             { cx: -28, cy: -10, r: 2.5 },
             { cx: 16, cy: -4, r: 3.6 }
           ].map((hole, hi) => (
-            <circle key={hi} cx={hole.cx} cy={hole.cy} r={hole.r} fill="#09090b" stroke="#27272a" strokeWidth="0.8" />
+            <circle key={hi} cx={hole.cx} cy={hole.cy} r={hole.r} fill={rockStroke} stroke={rockFacet1} strokeWidth="0.8" />
           ))}
           {uvActive && (
             <path d="M-6,-46 L-4,-38 M8,-38 L6,-28" stroke="#f97316" strokeWidth="1.5" opacity="0.7" />
           )}
         </g>
       );
+    }
 
     case 'petrified_wood':
       return (
@@ -1263,7 +1528,10 @@ export default function App() {
       substrates: PRESETS.rainforest.substrates,
       items: PRESETS.rainforest.items,
       humidity: PRESETS.rainforest.humidity,
-      lighting: PRESETS.rainforest.lighting
+      lighting: PRESETS.rainforest.lighting,
+      temperature: 23,
+      glassTint: 'clear',
+      pedestalType: 'walnut'
     }
   ]);
   const [historyIndex, setHistoryIndex] = useState(0);
@@ -1346,6 +1614,21 @@ export default function App() {
   const [isPinching, setIsPinching] = useState(false);
   const touchDistRef = useRef(0);
 
+  // Phase 4: State Additions
+  const [glassTint, setGlassTint] = useState('clear');
+  const [pedestalType, setPedestalType] = useState('walnut');
+  const [temperature, setTemperature] = useState(23);
+  const [isExplodedView, setIsExplodedView] = useState(false);
+  const [compositionGrid, setCompositionGrid] = useState('none');
+  const [isBuildWizardOpen, setIsBuildWizardOpen] = useState(false);
+  const [buildWizardStep, setBuildWizardStep] = useState(0);
+  const [isPassportModalOpen, setIsPassportModalOpen] = useState(false);
+  const [passportTitle, setPassportTitle] = useState('Sanctuary of the Living Glass');
+  const [passportRecipient, setPassportRecipient] = useState('For Nature Enthusiast');
+  const [passportCreator, setPassportCreator] = useState('Crafted by Basil Shaji');
+  const [passportQrDataUrl, setPassportQrDataUrl] = useState('');
+  const duplicateItemRef = useRef(null);
+
   // Web Audio Context & Synthesizer Engine
   const initAudioContext = () => {
     if (!audioCtxRef.current) {
@@ -1393,10 +1676,10 @@ export default function App() {
   };
 
   // State ref to prevent stale closures in drag / keyboard listeners
-  const stateRef = useRef({ vesselId, substrates, items, humidity, lighting });
+  const stateRef = useRef({ vesselId, substrates, items, humidity, lighting, temperature, glassTint, pedestalType });
   useEffect(() => {
-    stateRef.current = { vesselId, substrates, items, humidity, lighting };
-  }, [vesselId, substrates, items, humidity, lighting]);
+    stateRef.current = { vesselId, substrates, items, humidity, lighting, temperature, glassTint, pedestalType };
+  }, [vesselId, substrates, items, humidity, lighting, temperature, glassTint, pedestalType]);
 
   const currentVessel = useMemo(
     () => VESSELS.find((v) => v.id === vesselId) || VESSELS[0],
@@ -1423,10 +1706,15 @@ export default function App() {
           s: it.scale,
           r: it.rotation,
           f: it.flipX ? 1 : 0,
-          z: it.zIndex
+          z: it.zIndex,
+          c: it.cultivar || null,
+          k: it.isLocked ? 1 : 0
         })),
         h: state.humidity,
-        l: state.lighting
+        l: state.lighting,
+        temp: state.temperature ?? 23,
+        gt: state.glassTint || 'clear',
+        pb: state.pedestalType || 'walnut'
       };
       const jsonStr = JSON.stringify(payload);
       return btoa(
@@ -1462,10 +1750,15 @@ export default function App() {
           scale: it.s ?? 1,
           rotation: it.r ?? 0,
           flipX: Boolean(it.f),
-          zIndex: it.z ?? idx + 1
+          zIndex: it.z ?? idx + 1,
+          cultivar: it.c || null,
+          isLocked: Boolean(it.k)
         })),
         humidity: data.h ?? 70,
-        lighting: data.l ?? 'day'
+        lighting: data.l ?? 'day',
+        temperature: data.temp ?? 23,
+        glassTint: data.gt || 'clear',
+        pedestalType: data.pb || 'walnut'
       };
     } catch (err) {
       console.warn('Failed to parse build state:', err);
@@ -1475,9 +1768,20 @@ export default function App() {
 
   // Push Snapshot to History (up to 30 snapshots)
   const pushHistorySnapshot = (newSnapshot) => {
+    const fullSnapshot = {
+      vesselId,
+      substrates,
+      items,
+      humidity,
+      lighting,
+      temperature,
+      glassTint,
+      pedestalType,
+      ...newSnapshot
+    };
     setHistory((prev) => {
       const trimmed = prev.slice(0, historyIndex + 1);
-      const next = [...trimmed, newSnapshot];
+      const next = [...trimmed, fullSnapshot];
       if (next.length > 30) next.shift();
       return next;
     });
@@ -1494,6 +1798,9 @@ export default function App() {
         setItems(snap.items.map((it) => ({ ...it })));
         setHumidity(snap.humidity);
         setLighting(snap.lighting);
+        if (snap.temperature !== undefined) setTemperature(snap.temperature);
+        if (snap.glassTint) setGlassTint(snap.glassTint);
+        if (snap.pedestalType) setPedestalType(snap.pedestalType);
         setSelectedItemId(null);
         setHistoryIndex(targetIndex);
         showToast('Undo', 'info');
@@ -1511,6 +1818,9 @@ export default function App() {
         setItems(snap.items.map((it) => ({ ...it })));
         setHumidity(snap.humidity);
         setLighting(snap.lighting);
+        if (snap.temperature !== undefined) setTemperature(snap.temperature);
+        if (snap.glassTint) setGlassTint(snap.glassTint);
+        if (snap.pedestalType) setPedestalType(snap.pedestalType);
         setSelectedItemId(null);
         setHistoryIndex(targetIndex);
         showToast('Redo', 'info');
@@ -1528,6 +1838,9 @@ export default function App() {
         setItems(parsed.items);
         setHumidity(parsed.humidity);
         setLighting(parsed.lighting);
+        if (parsed.temperature !== undefined) setTemperature(parsed.temperature);
+        if (parsed.glassTint) setGlassTint(parsed.glassTint);
+        if (parsed.pedestalType) setPedestalType(parsed.pedestalType);
         setHistory([parsed]);
         setHistoryIndex(0);
         showToast('Ecosystem loaded from shared link!', 'success');
@@ -1545,13 +1858,19 @@ export default function App() {
           setItems(parsed.items);
           setHumidity(parsed.humidity ?? 70);
           setLighting(parsed.lighting ?? 'day');
+          if (parsed.temperature !== undefined) setTemperature(parsed.temperature);
+          if (parsed.glassTint) setGlassTint(parsed.glassTint);
+          if (parsed.pedestalType) setPedestalType(parsed.pedestalType);
           setHistory([
             {
               vesselId: parsed.vesselId || 'apothecary',
               substrates: parsed.substrates,
               items: parsed.items,
               humidity: parsed.humidity ?? 70,
-              lighting: parsed.lighting ?? 'day'
+              lighting: parsed.lighting ?? 'day',
+              temperature: parsed.temperature ?? 23,
+              glassTint: parsed.glassTint || 'clear',
+              pedestalType: parsed.pedestalType || 'walnut'
             }
           ]);
           setHistoryIndex(0);
@@ -1572,15 +1891,18 @@ export default function App() {
             items,
             humidity,
             lighting,
+            temperature,
+            glassTint,
+            pedestalType,
             timestamp: Date.now()
           })
         );
       } catch (_) {}
     }, 1000);
     return () => clearTimeout(timer);
-  }, [vesselId, substrates, items, humidity, lighting]);
+  }, [vesselId, substrates, items, humidity, lighting, temperature, glassTint, pedestalType]);
 
-  // 3. Global Keyboard Shortcuts for Undo & Redo (Ctrl+Z / Ctrl+Y / Cmd+Z / Cmd+Shift+Z)
+  // 3. Global Keyboard Shortcuts for Undo & Redo (Ctrl+Z / Ctrl+Y / Cmd+Z / Cmd+Shift+Z / Ctrl+D)
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
@@ -1594,6 +1916,9 @@ export default function App() {
       ) {
         e.preventDefault();
         handleRedo();
+      } else if ((e.ctrlKey || e.metaKey) && (e.key === 'd' || e.key === 'D')) {
+        e.preventDefault();
+        duplicateItemRef.current?.();
       } else if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey) {
         e.preventDefault();
         setIsZenMode((prev) => {
@@ -1822,7 +2147,7 @@ export default function App() {
     let currentBottomY = currentVessel.soilBaseY;
     const layers = [];
 
-    SUBSTRATE_CONFIG.forEach((layer) => {
+    SUBSTRATE_CONFIG.forEach((layer, idx) => {
       const height = substrates[layer.key] || 0;
       if (height > 0) {
         const topY = currentBottomY - height;
@@ -1830,7 +2155,8 @@ export default function App() {
           ...layer,
           height,
           topY,
-          bottomY: currentBottomY
+          bottomY: currentBottomY,
+          explodedOffset: isExplodedView ? (SUBSTRATE_CONFIG.length - 1 - idx) * 26 : 0
         });
         currentBottomY = topY;
       }
@@ -1841,7 +2167,7 @@ export default function App() {
       surfaceY: currentBottomY,
       totalHeight: currentVessel.soilBaseY - currentBottomY
     };
-  }, [substrates, currentVessel]);
+  }, [substrates, currentVessel, isExplodedView]);
 
   // ==========================================
   // 4. ECOSYSTEM BALANCE ENGINE
@@ -1916,7 +2242,18 @@ export default function App() {
       positives.push('Sphagnum moss layer simulates natural bog moisture for carnivorous flora.');
     }
 
-    // 6. Hardscape & Bioactive Bonuses
+    // 6. Check Temperature Compatibility
+    if (temperature < 18) {
+      score -= 16;
+      warnings.push(`Chilly temperature (${temperature}°C) slows botanical metabolism & triggers dormancy.`);
+    } else if (temperature > 28) {
+      score -= 18;
+      warnings.push(`High temperature (${temperature}°C) under enclosed glass causes heat stress & rot risk.`);
+    } else if (temperature >= 20 && temperature <= 25) {
+      positives.push(`Optimal micro-climate temperature (${temperature}°C) for cellular respiration.`);
+    }
+
+    // 7. Hardscape & Bioactive Bonuses
     if (hasCritters && tropicalPlants.length > 0 && substrates.soil >= 20) {
       score = Math.min(100, score + 8);
       positives.push('Bioactive clean-up crew actively cycling nutrients!');
@@ -1943,15 +2280,18 @@ export default function App() {
       barColor = 'bg-amber-500';
     }
 
+    const isLivingFloraStressed = clampedScore < 60 || temperature < 18 || temperature > 28 || (tropicalPlants.length > 0 && humidity < 45);
+
     return {
       score: clampedScore,
       statusLabel,
       statusColor,
       barColor,
       warnings,
-      positives
+      positives,
+      isLivingFloraStressed
     };
-  }, [substrates, items, humidity, currentVessel]);
+  }, [substrates, items, humidity, currentVessel, temperature]);
 
   // ==========================================
   // 5. INTERACTION & PERSISTENCE HANDLERS
@@ -2081,6 +2421,171 @@ export default function App() {
     });
   };
 
+  const handleDuplicateItem = () => {
+    if (!selectedItemId) return;
+    const target = items.find((it) => it.uid === selectedItemId);
+    if (!target) return;
+    const newUid = `item-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+    const newItem = {
+      ...target,
+      uid: newUid,
+      x: Math.min(320, target.x + 16),
+      y: Math.min(420, target.y + 12),
+      isLocked: false,
+      zIndex: items.length + 1
+    };
+    const nextItems = [...items, newItem];
+    setItems(nextItems);
+    setSelectedItemId(newUid);
+    playPopSound();
+    showToast('Specimen duplicated (Ctrl+D)', 'success');
+    pushHistorySnapshot({ items: nextItems });
+  };
+  duplicateItemRef.current = handleDuplicateItem;
+
+  const handleToggleItemLock = (uid) => {
+    const idToToggle = uid || selectedItemId;
+    if (!idToToggle) return;
+    const nextItems = items.map((it) => (it.uid === idToToggle ? { ...it, isLocked: !it.isLocked } : it));
+    setItems(nextItems);
+    const target = nextItems.find((it) => it.uid === idToToggle);
+    showToast(target?.isLocked ? 'Specimen layer pinned/locked 🔒' : 'Specimen layer unlocked 🔓', 'info');
+  };
+
+  const handleItemCultivarChange = (uid, cultivar) => {
+    const idToUpdate = uid || selectedItemId;
+    if (!idToUpdate) return;
+    const nextItems = items.map((it) => (it.uid === idToUpdate ? { ...it, cultivar } : it));
+    setItems(nextItems);
+    pushHistorySnapshot({ items: nextItems });
+  };
+
+  const playAutoScapeChime = () => {
+    try {
+      const ctx = initAudioContext();
+      if (!ctx || isSoundMuted) return;
+      const now = ctx.currentTime;
+      [523.25, 659.25, 783.99, 987.77, 1046.5].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+        gain.gain.setValueAtTime(0.001, now + idx * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.18 * soundVolume, now + idx * 0.08 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.55);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.08);
+        osc.stop(now + idx * 0.08 + 0.6);
+      });
+    } catch (_) {}
+  };
+
+  const playAutoBalanceChime = () => {
+    try {
+      const ctx = initAudioContext();
+      if (!ctx || isSoundMuted) return;
+      const now = ctx.currentTime;
+      [440, 554.37, 659.25, 880].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.09);
+        gain.gain.setValueAtTime(0.001, now + idx * 0.09);
+        gain.gain.exponentialRampToValueAtTime(0.2 * soundVolume, now + idx * 0.09 + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.09 + 0.8);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.09);
+        osc.stop(now + idx * 0.09 + 0.85);
+      });
+    } catch (_) {}
+  };
+
+  const handleAutoScape = (chosenThemeId = null) => {
+    let theme = AUTO_SCAPES.find((t) => t.id === chosenThemeId);
+    if (!theme) {
+      const remaining = AUTO_SCAPES.filter((t) => t.vesselId !== vesselId);
+      theme = remaining.length > 0
+        ? remaining[Math.floor(Math.random() * remaining.length)]
+        : AUTO_SCAPES[Math.floor(Math.random() * AUTO_SCAPES.length)];
+    }
+    setVesselId(theme.vesselId);
+    setSubstrates({ ...theme.substrates });
+    const freshItems = theme.items.map((it) => ({
+      ...it,
+      uid: `item-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
+    }));
+    setItems(freshItems);
+    setHumidity(theme.humidity);
+    setLighting(theme.lighting);
+    setTemperature(theme.temperature || 23);
+    setGlassTint(theme.glassTint || 'clear');
+    setPedestalType(theme.pedestalType || 'walnut');
+    setSelectedItemId(null);
+    playAutoScapeChime();
+    showToast(`Inspire Me: Generated "${theme.name}"! ✨`, 'success');
+    pushHistorySnapshot({
+      vesselId: theme.vesselId,
+      substrates: { ...theme.substrates },
+      items: freshItems,
+      humidity: theme.humidity,
+      lighting: theme.lighting,
+      temperature: theme.temperature || 23,
+      glassTint: theme.glassTint || 'clear',
+      pedestalType: theme.pedestalType || 'walnut'
+    });
+  };
+
+  const handleAutoFixEcosystem = () => {
+    const placedCatalog = items.map((it) => CATALOG_ITEMS.find((c) => c.id === it.type)).filter(Boolean);
+    const plants = placedCatalog.filter((c) => c.category === 'plants');
+    const isArid = plants.some((p) => p.biome === 'arid') && !plants.some((p) => p.biome === 'tropical');
+    const isCarnivorous = plants.some((p) => p.biome === 'carnivorous');
+
+    let newSubstrates = { ...substrates };
+    let newHumidity = humidity;
+    let newVesselId = vesselId;
+    let newTemp = 23;
+
+    if (isArid) {
+      newSubstrates = { pebbles: 26, charcoal: 8, moss: 0, soil: 24, sand: 42 };
+      newHumidity = 30;
+      newTemp = 26;
+      if (currentVessel.type === 'closed') {
+        newVesselId = 'fishbowl';
+      }
+    } else if (isCarnivorous) {
+      newSubstrates = { pebbles: 28, charcoal: 14, moss: 24, soil: 38, sand: 0 };
+      newHumidity = 88;
+      newTemp = 22;
+    } else {
+      // Tropical default optimal
+      newSubstrates = {
+        pebbles: Math.max(22, substrates.pebbles),
+        charcoal: Math.max(12, substrates.charcoal),
+        moss: Math.max(12, substrates.moss),
+        soil: Math.max(36, substrates.soil),
+        sand: 0
+      };
+      newHumidity = Math.max(75, Math.min(85, humidity));
+      newTemp = 23;
+    }
+
+    setSubstrates(newSubstrates);
+    setHumidity(newHumidity);
+    setVesselId(newVesselId);
+    setTemperature(newTemp);
+    playAutoBalanceChime();
+    showToast('Auto-Fix Applied: 100% Bio-Harmony Restored! 🌿✨', 'success');
+    pushHistorySnapshot({
+      vesselId: newVesselId,
+      substrates: newSubstrates,
+      humidity: newHumidity,
+      temperature: newTemp
+    });
+  };
+
   // Pointer Drag inside SVG
   const getSvgCoords = (clientX, clientY) => {
     if (!svgRef.current) return { x: 200, y: 300 };
@@ -2096,6 +2601,10 @@ export default function App() {
   const handleItemPointerDown = (e, item) => {
     e.stopPropagation();
     setSelectedItemId(item.uid);
+    if (item.isLocked) {
+      showToast('Specimen position is pinned (Unlock in Inspector)', 'info');
+      return;
+    }
     const pt = getSvgCoords(e.clientX, e.clientY);
     dragStartPosRef.current = { x: item.x, y: item.y };
     draggingRef.current = {
@@ -2507,9 +3016,33 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
   // Deep-Link Share URL computation & clipboard copy
   const currentShareUrl = useMemo(() => {
     if (typeof window === 'undefined') return '';
-    const hash = encodeBuildState({ vesselId, substrates, items, humidity, lighting });
+    const hash = encodeBuildState({
+      vesselId,
+      substrates,
+      items,
+      humidity,
+      lighting,
+      temperature,
+      glassTint,
+      pedestalType
+    });
     return `${window.location.origin}${window.location.pathname}#build=${hash}`;
-  }, [vesselId, substrates, items, humidity, lighting]);
+  }, [vesselId, substrates, items, humidity, lighting, temperature, glassTint, pedestalType]);
+
+  // Generate QR Code data URL for Printable Passport & Gift Card
+  useEffect(() => {
+    if (!currentShareUrl) return;
+    QRCode.toDataURL(currentShareUrl, {
+      width: 256,
+      margin: 1,
+      color: {
+        dark: '#0f172a',
+        light: '#ffffff'
+      }
+    })
+      .then((url) => setPassportQrDataUrl(url))
+      .catch((err) => console.warn('QR Code generation failed:', err));
+  }, [currentShareUrl]);
 
   const handleCopyShareUrl = async () => {
     try {
@@ -2747,6 +3280,17 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
             Zen Moss Garden
           </button>
 
+          {/* Inspire Me Auto-Scaper Button */}
+          <button
+            onClick={() => handleAutoScape()}
+            aria-label="Inspire Me procedural auto-scaper"
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-amber-500/20 via-purple-500/20 to-emerald-500/20 text-amber-200 border border-amber-500/40 hover:border-amber-400 transition flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm"
+            title="Generate Procedural Terrarium Theme (Inspire Me)"
+          >
+            <Wand2 className="w-3.5 h-3.5 text-amber-400 animate-pulse" aria-hidden="true" />
+            <span>Inspire Me</span>
+          </button>
+
           <div className="h-5 w-px bg-white/10 mx-1 hidden sm:block" />
 
           {/* Undo & Redo History */}
@@ -2831,6 +3375,31 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
           >
             <ShoppingBag className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
             <span className="hidden sm:inline">Nursery BOM</span>
+          </button>
+
+          {/* DIY Physical Build Guide */}
+          <button
+            onClick={() => {
+              setBuildWizardStep(0);
+              setIsBuildWizardOpen(true);
+            }}
+            aria-label="Open DIY Physical Build Guide"
+            className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-stone-700 text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
+            title="7-Step DIY Physical Build Walkthrough & Caliper Guide"
+          >
+            <FileText className="w-3.5 h-3.5 text-teal-400" aria-hidden="true" />
+            <span className="hidden sm:inline">Build Guide</span>
+          </button>
+
+          {/* Botanical Care Passport & QR Gift Certificate */}
+          <button
+            onClick={() => setIsPassportModalOpen(true)}
+            aria-label="Open Botanical Care Passport & QR Gift Certificate"
+            className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-stone-700 text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
+            title="Printable Botanical Care Passport & QR Gift Certificate"
+          >
+            <QrCode className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
+            <span className="hidden sm:inline">Passport & QR</span>
           </button>
 
           {/* Procedural Soundscape Toggle */}
@@ -2997,6 +3566,93 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
                       </button>
                     );
                   })}
+                </div>
+
+                {/* Phase 4: Glass Tint Customizer */}
+                <div className="pt-3 border-t border-white/10 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-white flex items-center gap-1.5">
+                      <Palette className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
+                      Architectural Glass Tint
+                    </label>
+                    <span className="text-[10px] font-mono text-stone-400 uppercase">
+                      {GLASS_TINTS[glassTint]?.name}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {Object.values(GLASS_TINTS).map((gt) => {
+                      const isActive = glassTint === gt.id;
+                      return (
+                        <button
+                          key={gt.id}
+                          onClick={() => {
+                            setGlassTint(gt.id);
+                            pushHistorySnapshot({ glassTint: gt.id });
+                            showToast(`Glass Tint: ${gt.name}`, 'info');
+                          }}
+                          className={`p-2 rounded-xl border text-left flex items-center gap-2 transition cursor-pointer ${
+                            isActive
+                              ? 'bg-emerald-500/15 border-emerald-400/60 shadow-md'
+                              : 'bg-stone-950/40 border-white/10 hover:border-white/25'
+                          }`}
+                        >
+                          <span
+                            className="w-4 h-4 rounded-full border border-white/30 shrink-0"
+                            style={{
+                              backgroundColor:
+                                gt.id === 'clear'
+                                  ? 'rgba(255,255,255,0.2)'
+                                  : gt.id === 'amber'
+                                  ? '#b45309'
+                                  : gt.id === 'seaglass'
+                                  ? '#059669'
+                                  : '#1e293b'
+                            }}
+                          />
+                          <span className="text-xs font-medium text-stone-200 truncate">{gt.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Phase 4: Pedestal Display Base */}
+                <div className="pt-3 border-t border-white/10 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-white flex items-center gap-1.5">
+                      <Layers className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
+                      Display Pedestal Base
+                    </label>
+                    <span className="text-[10px] font-mono text-stone-400 uppercase">
+                      {PEDESTAL_BASES[pedestalType]?.name}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                    {Object.values(PEDESTAL_BASES).map((pb) => {
+                      const isActive = pedestalType === pb.id;
+                      return (
+                        <button
+                          key={pb.id}
+                          onClick={() => {
+                            setPedestalType(pb.id);
+                            pushHistorySnapshot({ pedestalType: pb.id });
+                            showToast(`Pedestal: ${pb.name}`, 'info');
+                          }}
+                          className={`p-2 rounded-xl border text-left flex items-center gap-2 transition cursor-pointer ${
+                            isActive
+                              ? 'bg-amber-500/15 border-amber-400/60 shadow-md'
+                              : 'bg-stone-950/40 border-white/10 hover:border-white/25'
+                          }`}
+                        >
+                          <span
+                            className="w-3.5 h-3.5 rounded-full border border-white/20 shrink-0"
+                            style={{ backgroundColor: pb.id === 'none' ? 'transparent' : pb.topColor }}
+                          />
+                          <span className="text-[11px] font-medium text-stone-200 truncate">{pb.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             )}
@@ -3372,6 +4028,99 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
             </div>
           </div>
 
+          {/* Phase 4: Canvas Secondary Controls Toolbar (Climate, Aquascaping Grids, X-Ray Strata & 1-Click Fix) */}
+          <div className="w-full flex flex-wrap items-center justify-between gap-2 px-3 py-2 rounded-2xl bg-stone-900/80 border border-white/10 backdrop-blur-md shadow-lg text-xs">
+            {/* 1. Micro-Climate Temperature Controller */}
+            <div className="flex items-center gap-1.5 bg-stone-950/80 px-2.5 py-1 rounded-xl border border-white/10">
+              <Thermometer className={`w-3.5 h-3.5 ${temperature < 18 ? 'text-sky-400' : temperature > 27 ? 'text-amber-400' : 'text-emerald-400'}`} aria-hidden="true" />
+              <span className="text-[11px] text-stone-400 hidden sm:inline">Temp:</span>
+              <button
+                type="button"
+                onClick={() => setTemperature((prev) => Math.max(15, prev - 1))}
+                aria-label="Decrease temperature"
+                className="w-5 h-5 rounded-md bg-stone-800 hover:bg-stone-700 text-stone-200 flex items-center justify-center font-bold text-xs transition cursor-pointer"
+                title="Cool Enclosure (-1°C)"
+              >
+                -
+              </button>
+              <span className={`font-mono font-bold text-xs min-w-[34px] text-center ${temperature < 18 ? 'text-sky-300' : temperature > 27 ? 'text-amber-300' : 'text-emerald-300'}`}>
+                {temperature}°C
+              </span>
+              <button
+                type="button"
+                onClick={() => setTemperature((prev) => Math.min(32, prev + 1))}
+                aria-label="Increase temperature"
+                className="w-5 h-5 rounded-md bg-stone-800 hover:bg-stone-700 text-stone-200 flex items-center justify-center font-bold text-xs transition cursor-pointer"
+                title="Warm Enclosure (+1°C)"
+              >
+                +
+              </button>
+            </div>
+
+            {/* 2. Aquascaping Composition Grid Switcher */}
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => {
+                  const modes = ['none', 'ruleOfThirds', 'goldenSpiral', 'triangularSlope'];
+                  const nextIdx = (modes.indexOf(compositionGrid) + 1) % modes.length;
+                  const nextMode = modes[nextIdx];
+                  setCompositionGrid(nextMode);
+                  const labels = {
+                    none: 'Grid: Off',
+                    ruleOfThirds: 'Grid: Rule of Thirds',
+                    goldenSpiral: 'Grid: Golden Spiral',
+                    triangularSlope: 'Grid: Triangular Slope'
+                  };
+                  showToast(labels[nextMode], 'info');
+                }}
+                className={`px-2.5 py-1 rounded-xl border flex items-center gap-1.5 transition cursor-pointer text-xs font-medium ${
+                  compositionGrid !== 'none'
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm'
+                    : 'bg-stone-950/80 text-stone-300 border-white/10 hover:text-white hover:bg-stone-800'
+                }`}
+                title="Cycle Composition Grids (Rule of Thirds, Golden Spiral, Triangular Slope)"
+              >
+                <Grid className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
+                <span className="hidden sm:inline">
+                  {compositionGrid === 'none' && 'Grid'}
+                  {compositionGrid === 'ruleOfThirds' && '1/3 Grid'}
+                  {compositionGrid === 'goldenSpiral' && 'Golden Spiral'}
+                  {compositionGrid === 'triangularSlope' && 'Triangular'}
+                </span>
+              </button>
+
+              {/* 3. Exploded X-Ray Strata View Toggle */}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsExplodedView(!isExplodedView);
+                  showToast(!isExplodedView ? 'X-Ray Strata View enabled' : 'Normal view restored', 'info');
+                }}
+                className={`px-2.5 py-1 rounded-xl border flex items-center gap-1.5 transition cursor-pointer text-xs font-medium ${
+                  isExplodedView
+                    ? 'bg-sky-500/20 text-sky-300 border-sky-500/40 shadow-sm'
+                    : 'bg-stone-950/80 text-stone-300 border-white/10 hover:text-white hover:bg-stone-800'
+                }`}
+                title="Toggle Exploded Strata X-Ray View (Layer Depths & Weights)"
+              >
+                <Layers className="w-3.5 h-3.5 text-sky-400" aria-hidden="true" />
+                <span className="hidden sm:inline">X-Ray Strata</span>
+              </button>
+
+              {/* 4. 1-Click Ecosystem Auto-Fix Button */}
+              <button
+                type="button"
+                onClick={handleAutoFixEcosystem}
+                className="px-2.5 py-1 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold flex items-center gap-1.5 transition shadow-sm cursor-pointer active:scale-95 text-xs"
+                title="1-Click Auto-Fix: Automatically sets optimal climate, substrates & balanced biome"
+              >
+                <Wand2 className="w-3.5 h-3.5 text-emerald-200" aria-hidden="true" />
+                <span>Auto-Fix</span>
+              </button>
+            </div>
+          </div>
+
           {/* Interactive SVG Canvas */}
           <div className={`relative w-full ${isZenMode ? 'max-w-[540px]' : 'max-w-[460px]'} aspect-[400/520] rounded-3xl bg-stone-950/40 border border-white/10 backdrop-blur-sm shadow-2xl flex items-center justify-center overflow-hidden transition-all duration-500`}>
             <svg
@@ -3448,9 +4197,49 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
                 opacity="0.45"
               />
 
-              {/* Wooden Pedestal Base */}
-              <ellipse cx="200" cy="472" rx="145" ry="18" fill="#291d15" stroke="#423023" strokeWidth="2" />
-              <ellipse cx="200" cy="467" rx="135" ry="13" fill="#3d2b1f" />
+              {/* Dynamic Pedestal Base */}
+              {pedestalType !== 'none' && (
+                <g>
+                  {pedestalType === 'led_halo' && (
+                    <ellipse
+                      cx="200"
+                      cy="470"
+                      rx="155"
+                      ry="22"
+                      fill="none"
+                      stroke={PEDESTAL_BASES.led_halo.stroke}
+                      strokeWidth="5"
+                      opacity="0.85"
+                      filter="drop-shadow(0 0 10px rgba(6, 182, 212, 0.8))"
+                    />
+                  )}
+                  <ellipse
+                    cx="200"
+                    cy="472"
+                    rx="145"
+                    ry="18"
+                    fill={PEDESTAL_BASES[pedestalType]?.rimColor || '#291d15'}
+                    stroke={PEDESTAL_BASES[pedestalType]?.stroke || '#423023'}
+                    strokeWidth="2"
+                  />
+                  <ellipse
+                    cx="200"
+                    cy="467"
+                    rx="135"
+                    ry="13"
+                    fill={PEDESTAL_BASES[pedestalType]?.topColor || '#3d2b1f'}
+                  />
+                  {pedestalType === 'marble' && (
+                    <path
+                      d="M 120 467 Q 160 464 200 468 T 280 466"
+                      stroke="#94a3b8"
+                      strokeWidth="1.2"
+                      opacity="0.45"
+                      fill="none"
+                    />
+                  )}
+                </g>
+              )}
 
               {/* Hanging Chain for Globe */}
               {currentVessel.rimPath && (
@@ -3473,6 +4262,38 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
                 />
               )}
 
+              {/* Horizontal Bottle Side Cork & Neck */}
+              {currentVessel.lidType === 'cork-side' && (
+                <g>
+                  {currentVessel.neckPath && (
+                    <path
+                      d={currentVessel.neckPath}
+                      fill="none"
+                      stroke={GLASS_TINTS[glassTint]?.sheen || 'rgba(255,255,255,0.45)'}
+                      strokeWidth="2.5"
+                    />
+                  )}
+                  {currentVessel.lidPath && (
+                    <path
+                      d={currentVessel.lidPath}
+                      fill="#a47551"
+                      stroke="#704e32"
+                      strokeWidth="2"
+                    />
+                  )}
+                </g>
+              )}
+
+              {/* Hexagonal Lantern Hanging Ring */}
+              {currentVessel.steepleRing && (
+                <path
+                  d={currentVessel.steepleRing}
+                  fill="none"
+                  stroke="#d97706"
+                  strokeWidth="3.5"
+                />
+              )}
+
               {/* ==========================================
                   CLIPPED INTERIOR: SUBSTRATE + ITEMS + MIST
                   ========================================== */}
@@ -3485,23 +4306,75 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
                   fill={currentLighting.vesselTint}
                 />
 
+                {/* Glass Tint Tinting Fill */}
+                {glassTint !== 'clear' && (
+                  <rect
+                    x="0"
+                    y="0"
+                    width="400"
+                    height="520"
+                    fill={GLASS_TINTS[glassTint]?.vesselTint || 'transparent'}
+                    pointerEvents="none"
+                  />
+                )}
+
                 {/* 1. Stacked Substrate Layers */}
-                {substrateStack.layers.map((layer) => (
-                  <g key={layer.key}>
-                    <rect
-                      x="20"
-                      y={layer.topY}
-                      width="360"
-                      height={layer.height + 4}
-                      fill={`url(#pat-${layer.pattern})`}
-                    />
-                    <path
-                      d={`M 20 ${layer.topY} Q 110 ${layer.topY - 4} 200 ${layer.topY} T 380 ${layer.topY} L 380 ${layer.topY + 5} L 20 ${layer.topY + 5} Z`}
-                      fill={layer.color}
-                      opacity="0.85"
-                    />
-                  </g>
-                ))}
+                {substrateStack.layers.map((layer) => {
+                  const layerY = isExplodedView ? (layer.topY - layer.explodedOffset) : layer.topY;
+                  const depthMm = Math.round(layer.height * 1.5);
+                  const grams = Math.round(layer.height * 14);
+
+                  return (
+                    <g key={layer.key}>
+                      <rect
+                        x="20"
+                        y={layerY}
+                        width="360"
+                        height={layer.height + 4}
+                        fill={`url(#pat-${layer.pattern})`}
+                      />
+                      <path
+                        d={`M 20 ${layerY} Q 110 ${layerY - 4} 200 ${layerY} T 380 ${layerY} L 380 ${layerY + 5} L 20 ${layerY + 5} Z`}
+                        fill={layer.color}
+                        opacity="0.85"
+                      />
+
+                      {/* Exploded Strata Depth & Weight Caliper Brackets */}
+                      {isExplodedView && (
+                        <g pointerEvents="none">
+                          <path
+                            d={`M 345 ${layerY} L 355 ${layerY} L 355 ${layerY + layer.height} L 345 ${layerY + layer.height}`}
+                            stroke="#38bdf8"
+                            strokeWidth="1.5"
+                            fill="none"
+                            opacity="0.85"
+                          />
+                          <rect
+                            x="225"
+                            y={layerY + (layer.height / 2) - 9}
+                            width="115"
+                            height="18"
+                            rx="4"
+                            fill="rgba(15, 23, 42, 0.88)"
+                            stroke="#38bdf8"
+                            strokeWidth="1"
+                          />
+                          <text
+                            x="282"
+                            y={layerY + (layer.height / 2) + 3.5}
+                            fill="#7dd3fc"
+                            fontSize="8.5"
+                            fontWeight="bold"
+                            textAnchor="middle"
+                            fontFamily="monospace"
+                          >
+                            {layer.name.split(' ')[0]}: {depthMm}mm • {grams}g
+                          </text>
+                        </g>
+                      )}
+                    </g>
+                  );
+                })}
 
                 {/* 2. Placed Flora, Hardscape & Animated Critters */}
                 {sortedItems.map((item) => {
@@ -3519,11 +4392,13 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
 
                   const isLivingPlant = item.type !== 'driftwood' && item.type !== 'dragon_stone' && item.type !== 'quartz' && item.type !== 'river_stones' && item.type !== 'critters' && item.type !== 'water_pool' && item.type !== 'lava_rock' && item.type !== 'petrified_wood';
                   const growthMultiplier = isLivingPlant ? (1 + growthStage * 0.12) : 1;
+                  const itemExplodedY = isExplodedView ? item.y - 32 : item.y;
+                  const isItemStressed = isLivingPlant && ecosystemReport.isLivingFloraStressed;
 
                   return (
                     <g
                       key={item.uid}
-                      transform={`translate(${item.x + roamX}, ${item.y}) rotate(${item.rotation}) scale(${
+                      transform={`translate(${item.x + roamX}, ${itemExplodedY}) rotate(${item.rotation}) scale(${
                         item.scale * roamFlip * growthMultiplier
                       }, ${item.scale * growthMultiplier})`}
                       onPointerDown={(e) => handleItemPointerDown(e, item)}
@@ -3541,7 +4416,17 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
                         type={item.type}
                         uvActive={currentLighting.uvActive}
                         growthStage={growthStage}
+                        cultivar={item.cultivar}
+                        isStressed={isItemStressed}
                       />
+
+                      {/* Locked Specimen Pin Indicator */}
+                      {item.isLocked && (
+                        <g transform="translate(18, -35) scale(0.7)" pointerEvents="none">
+                          <circle cx="0" cy="0" r="11" fill="rgba(245, 158, 11, 0.95)" stroke="#78350f" strokeWidth="1.5" />
+                          <path d="M-4,-1 L-4,-4 A4,4 0 0,1 4,-4 L4,-1 M-5,-1 L5,-1 L5,6 L-5,6 Z" fill="none" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
+                        </g>
+                      )}
 
                       {/* Selection Bounding Halo */}
                       {isSelected && (
@@ -3550,9 +4435,9 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
                           cy="-28"
                           r="42"
                           fill="none"
-                          stroke="#34d399"
+                          stroke={item.isLocked ? "#f59e0b" : "#34d399"}
                           strokeWidth="1.8"
-                          strokeDasharray="4 3"
+                          strokeDasharray={item.isLocked ? "2 2" : "4 3"}
                         />
                       )}
                     </g>
@@ -3619,16 +4504,52 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
                 </g>
               )}
 
+              {/* Phase 4: Aquascaping Composition Overlays */}
+              {compositionGrid === 'ruleOfThirds' && (
+                <g pointerEvents="none" opacity="0.65">
+                  <line x1="133.3" y1="50" x2="133.3" y2="470" stroke="#f59e0b" strokeWidth="1.2" strokeDasharray="5 4" />
+                  <line x1="266.7" y1="50" x2="266.7" y2="470" stroke="#f59e0b" strokeWidth="1.2" strokeDasharray="5 4" />
+                  <line x1="60" y1="173.3" x2="340" y2="173.3" stroke="#f59e0b" strokeWidth="1.2" strokeDasharray="5 4" />
+                  <line x1="60" y1="346.7" x2="340" y2="346.7" stroke="#f59e0b" strokeWidth="1.2" strokeDasharray="5 4" />
+                  <circle cx="133.3" cy="173.3" r="6" fill="rgba(245, 158, 11, 0.25)" stroke="#f59e0b" strokeWidth="1.5" />
+                  <circle cx="266.7" cy="173.3" r="6" fill="rgba(245, 158, 11, 0.25)" stroke="#f59e0b" strokeWidth="1.5" />
+                  <circle cx="133.3" cy="346.7" r="6" fill="rgba(245, 158, 11, 0.25)" stroke="#f59e0b" strokeWidth="1.5" />
+                  <circle cx="266.7" cy="346.7" r="6" fill="rgba(245, 158, 11, 0.25)" stroke="#f59e0b" strokeWidth="1.5" />
+                </g>
+              )}
+
+              {compositionGrid === 'goldenSpiral' && (
+                <g pointerEvents="none" opacity="0.7">
+                  <path
+                    d="M 60 450 C 60 200 200 90 340 90 C 370 180 340 380 230 380 C 130 380 130 250 190 230 C 230 220 250 270 230 290"
+                    fill="none"
+                    stroke="#f59e0b"
+                    strokeWidth="1.8"
+                    strokeDasharray="6 3"
+                  />
+                  <circle cx="230" cy="290" r="5" fill="#f59e0b" />
+                </g>
+              )}
+
+              {compositionGrid === 'triangularSlope' && (
+                <g pointerEvents="none" opacity="0.65">
+                  <line x1="80" y1="130" x2="340" y2="440" stroke="#f59e0b" strokeWidth="1.5" strokeDasharray="5 4" />
+                  <line x1="320" y1="130" x2="200" y2="440" stroke="#f59e0b" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.6" />
+                  <circle cx="80" cy="130" r="5" fill="rgba(245, 158, 11, 0.3)" stroke="#f59e0b" strokeWidth="1.5" />
+                  <circle cx="340" cy="440" r="5" fill="rgba(245, 158, 11, 0.3)" stroke="#f59e0b" strokeWidth="1.5" />
+                </g>
+              )}
+
               {/* Glass Outlines & Highlights */}
               <path
                 d={currentVessel.outlinePath}
                 fill="none"
                 stroke={
-                  currentVessel.lidType === 'brass'
+                  currentVessel.lidType === 'brass' || currentVessel.lidType === 'brass-steeple'
                     ? '#d97706'
-                    : 'rgba(255, 255, 255, 0.45)'
+                    : (GLASS_TINTS[glassTint]?.sheen || 'rgba(255, 255, 255, 0.45)')
                 }
-                strokeWidth={currentVessel.lidType === 'brass' ? '3.5' : '2.5'}
+                strokeWidth={currentVessel.lidType === 'brass' || currentVessel.lidType === 'brass-steeple' ? '3.5' : '2.5'}
                 pointerEvents="none"
               />
 
@@ -3678,7 +4599,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
                 pointerEvents="none"
               />
 
-              {showHudLabels &&
+              {showHudLabels && !isExplodedView &&
                 substrateStack.layers.map((layer) => (
                   <g key={`hud-${layer.key}`} pointerEvents="none">
                     <line
@@ -3717,20 +4638,55 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
         <section aria-label="Ecosystem Diagnostics & Inspector" className="lg:col-span-3 space-y-4">
           {/* 1. SELECTED ITEM TRANSFORMATION CONTROLS */}
           <div className="bg-stone-900/75 border border-white/10 rounded-2xl p-4 backdrop-blur-md shadow-xl">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-semibold text-white flex items-center gap-2">
+            <div className="flex items-center justify-between mb-3 gap-2">
+              <h2 className="text-sm font-semibold text-white flex items-center gap-2 shrink-0">
                 <Sliders className="w-4 h-4 text-emerald-400" aria-hidden="true" />
                 Item Inspector
               </h2>
               {selectedItem && (
-                <button
-                  onClick={handleDeleteSelected}
-                  aria-label="Remove selected item"
-                  className="text-xs text-rose-300 hover:text-rose-200 flex items-center gap-1 px-2 py-1 rounded-lg bg-rose-500/15 border border-rose-500/30 transition cursor-pointer"
-                >
-                  <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
-                  Remove
-                </button>
+                <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                  {/* Pin / Lock Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleToggleItemLock(selectedItem.uid)}
+                    aria-label={selectedItem.isLocked ? "Unlock item position" : "Lock item position"}
+                    className={`text-xs flex items-center gap-1 px-2 py-1 rounded-lg border transition cursor-pointer ${
+                      selectedItem.isLocked
+                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm'
+                        : 'bg-stone-800 text-stone-300 border-white/10 hover:text-white hover:bg-stone-700'
+                    }`}
+                    title={selectedItem.isLocked ? "Pinned (Click to unlock)" : "Pin Position"}
+                  >
+                    {selectedItem.isLocked ? (
+                      <Lock className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
+                    ) : (
+                      <Unlock className="w-3.5 h-3.5 text-stone-400" aria-hidden="true" />
+                    )}
+                    <span>{selectedItem.isLocked ? 'Pinned' : 'Pin'}</span>
+                  </button>
+
+                  {/* Duplicate Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleDuplicateItem(selectedItem)}
+                    aria-label="Duplicate selected item"
+                    className="text-xs text-sky-300 hover:text-sky-200 flex items-center gap-1 px-2 py-1 rounded-lg bg-sky-500/15 border border-sky-500/30 hover:bg-sky-500/25 transition cursor-pointer"
+                    title="Duplicate Specimen (Ctrl+D)"
+                  >
+                    <CopyPlus className="w-3.5 h-3.5" aria-hidden="true" />
+                    <span>Duplicate</span>
+                  </button>
+
+                  {/* Delete Button */}
+                  <button
+                    onClick={handleDeleteSelected}
+                    aria-label="Remove selected item"
+                    className="text-xs text-rose-300 hover:text-rose-200 flex items-center gap-1 px-2 py-1 rounded-lg bg-rose-500/15 border border-rose-500/30 transition cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
+                    Remove
+                  </button>
+                </div>
               )}
             </div>
 
@@ -3749,6 +4705,49 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
                     Layer #{selectedItem.zIndex}
                   </span>
                 </div>
+
+                {/* Cultivar / Color Phenotype Chips */}
+                {(() => {
+                  const catalogItem = CATALOG_ITEMS.find((c) => c.id === selectedItem.type);
+                  if (!catalogItem?.cultivars || catalogItem.cultivars.length === 0) return null;
+                  return (
+                    <div className="space-y-1.5 p-2.5 rounded-xl bg-stone-950/70 border border-white/10">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-stone-300 flex items-center gap-1.5">
+                          <Palette className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
+                          Variety / Color
+                        </span>
+                        <span className="font-mono text-[11px] text-emerald-300">
+                          {catalogItem.cultivars.find((c) => c.id === (selectedItem.cultivar || catalogItem.cultivars[0].id))?.name}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5 pt-0.5 flex-wrap">
+                        {catalogItem.cultivars.map((cult) => {
+                          const isSelectedCult = (selectedItem.cultivar || catalogItem.cultivars[0].id) === cult.id;
+                          return (
+                            <button
+                              key={cult.id}
+                              type="button"
+                              onClick={() => handleItemCultivarChange(selectedItem.uid, cult.id)}
+                              className={`flex-1 min-w-[70px] py-1.5 px-2 rounded-lg text-[11px] font-medium transition flex items-center justify-center gap-1.5 border cursor-pointer ${
+                                isSelectedCult
+                                  ? 'bg-emerald-500/20 text-emerald-200 border-emerald-500/50 shadow-sm'
+                                  : 'bg-stone-900 text-stone-400 border-white/5 hover:text-stone-200 hover:bg-stone-800'
+                              }`}
+                              title={cult.name}
+                            >
+                              <span
+                                className="w-2.5 h-2.5 rounded-full shrink-0 border border-white/30"
+                                style={{ backgroundColor: cult.color }}
+                              />
+                              <span className="truncate">{cult.name.split(' ')[0]}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 {/* Scale Slider */}
                 <div className="space-y-1">
@@ -3933,6 +4932,19 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
             <div className={`text-xs font-semibold ${ecosystemReport.statusColor}`}>
               {ecosystemReport.statusLabel}
             </div>
+
+            {/* Phase 4: 1-Click Ecosystem Auto-Fix Button */}
+            {ecosystemReport.score < 100 && (
+              <button
+                type="button"
+                onClick={handleAutoFixEcosystem}
+                className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs shadow-lg shadow-emerald-950/60 transition flex items-center justify-center gap-2 cursor-pointer active:scale-95 animate-pulse"
+                title="Automatically fix substrate depths, humidity, vessel type & temperature for 100% ecosystem score"
+              >
+                <Wand2 className="w-4 h-4 text-emerald-200" aria-hidden="true" />
+                <span>1-Click Auto-Fix Ecosystem (100% Score)</span>
+              </button>
+            )}
 
             {/* Warnings & Positives List */}
             <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
@@ -4932,6 +5944,549 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
               >
                 <ClipboardCheck className="w-4 h-4" aria-hidden="true" />
                 <span>Copy Checklist to Clipboard</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
+          PHASE 4: INTERACTIVE DIY PHYSICAL BUILD WIZARD
+          ========================================== */}
+      {isBuildWizardOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="build-wizard-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in"
+        >
+          <div className="relative w-full max-w-2xl bg-stone-900/95 border border-white/10 rounded-3xl shadow-2xl p-6 text-stone-100 flex flex-col max-h-[90vh]">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between pb-4 border-b border-white/10">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono tracking-wider uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                    Step {buildWizardStep + 1} of 7
+                  </span>
+                  <span className="text-xs text-stone-400">Physical Terrarium Assembly Guide</span>
+                </div>
+                <h2 id="build-wizard-title" className="text-lg font-bold text-white flex items-center gap-2 mt-1">
+                  <Sprout className="w-5 h-5 text-emerald-400" aria-hidden="true" />
+                  Interactive Physical Build Walkthrough
+                </h2>
+                <p className="text-xs text-stone-300 mt-0.5">
+                  Real-world assembly protocol tailored to your custom {currentVessel.name} enclosure.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsBuildWizardOpen(false)}
+                aria-label="Close dialog"
+                className="p-1.5 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition cursor-pointer"
+              >
+                <X className="w-5 h-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            {/* Step Indicators / Navigation Pills */}
+            <div className="py-3 border-b border-white/10 overflow-x-auto">
+              <div className="flex items-center gap-1.5 min-w-max">
+                {[
+                  '1. Vessel Prep',
+                  '2. Drainage Leca',
+                  '3. Charcoal Shield',
+                  '4. Sphagnum Mesh',
+                  '5. Tropical Soil',
+                  '6. Hardscape & Flora',
+                  '7. Hydration & Seal'
+                ].map((stepName, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setBuildWizardStep(idx)}
+                    className={`px-2.5 py-1 rounded-xl text-xs font-medium transition cursor-pointer flex items-center gap-1 ${
+                      buildWizardStep === idx
+                        ? 'bg-emerald-500 text-stone-950 font-bold shadow-sm'
+                        : idx < buildWizardStep
+                        ? 'bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-900/40'
+                        : 'bg-stone-950/60 text-stone-400 border border-white/5 hover:text-white hover:bg-stone-800'
+                    }`}
+                  >
+                    <span>{stepName}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Step Body Content */}
+            <div className="flex-1 overflow-y-auto py-5 space-y-4 pr-1">
+              {buildWizardStep === 0 && (
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-stone-950/70 border border-white/10 space-y-2">
+                    <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+                      <Sparkles className="w-4 h-4" />
+                      Step 1: Enclosure Sterilization & Inspection
+                    </div>
+                    <p className="text-xs text-stone-300 leading-relaxed">
+                      Before placing any living matter, ensure your <span className="text-white font-medium">{currentVessel.name}</span> is thoroughly sanitized. Even invisible fungal spores or oils can cause mold outbreaks in a sealed microclimate.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 pt-2 text-[11px]">
+                      <div className="p-2.5 rounded-xl bg-stone-900/80 border border-white/5">
+                        <span className="text-stone-400 block font-mono">Cleaning Agent</span>
+                        <span className="text-white font-medium">70% Isopropyl alcohol or mild dish soap</span>
+                      </div>
+                      <div className="p-2.5 rounded-xl bg-stone-900/80 border border-white/5">
+                        <span className="text-stone-400 block font-mono">Drying Technique</span>
+                        <span className="text-white font-medium">Lint-free microfiber cloth (zero streaks)</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-200 text-xs flex items-start gap-2.5">
+                    <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                    <span>Avoid chemical glass cleaners (e.g. Windex) with ammonia—residual fumes are toxic to tropical mosses and micro-fauna.</span>
+                  </div>
+                </div>
+              )}
+
+              {buildWizardStep === 1 && (
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-stone-950/70 border border-white/10 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+                        <Layers className="w-4 h-4" />
+                        Step 2: Hydro-Stratum (False Bottom Drainage)
+                      </div>
+                      <span className="text-xs font-mono text-emerald-300 font-bold">
+                        ~{Math.round((substrates.pebbles || 25) * 1.5)}mm depth
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone-300 leading-relaxed">
+                      Pour washed hydro-clay leca pebbles or river pea gravel into the bottom of the vessel. This creates the foundational false bottom where excess water collects away from plant roots, preventing root suffocation and rot.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 pt-2 text-[11px]">
+                      <div className="p-2.5 rounded-xl bg-stone-900/80 border border-white/5">
+                        <span className="text-stone-400 block font-mono">Calculated Mass</span>
+                        <span className="text-white font-bold text-xs">~{Math.round((substrates.pebbles || 25) * 12.5)} grams</span>
+                      </div>
+                      <div className="p-2.5 rounded-xl bg-stone-900/80 border border-white/5">
+                        <span className="text-stone-400 block font-mono">Stratum Role</span>
+                        <span className="text-white font-medium">Sub-surface water table reservoir</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-200 text-xs flex items-start gap-2.5">
+                    <Droplets className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                    <span>Rinse leca pebbles under running water first to wash away red clay dust that would otherwise cloud the glass.</span>
+                  </div>
+                </div>
+              )}
+
+              {buildWizardStep === 2 && (
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-stone-950/70 border border-white/10 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+                        <ShieldCheck className="w-4 h-4" />
+                        Step 3: Activated Horticultural Carbon Filtration
+                      </div>
+                      <span className="text-xs font-mono text-emerald-300 font-bold">
+                        ~{Math.round((substrates.charcoal || 10) * 1.5)}mm depth
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone-300 leading-relaxed">
+                      Distribute an even layer of granular activated charcoal directly atop the drainage pebbles. Activated carbon serves as a biological chemical filter that binds toxins, absorbs sour odors, and suppresses mold in enclosed ecosystems.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 pt-2 text-[11px]">
+                      <div className="p-2.5 rounded-xl bg-stone-900/80 border border-white/5">
+                        <span className="text-stone-400 block font-mono">Calculated Mass</span>
+                        <span className="text-white font-bold text-xs">~{Math.round((substrates.charcoal || 10) * 8.5)} grams</span>
+                      </div>
+                      <div className="p-2.5 rounded-xl bg-stone-900/80 border border-white/5">
+                        <span className="text-stone-400 block font-mono">Vessel Retention</span>
+                        <span className="text-white font-medium">{currentVessel.type === 'closed' ? 'Critical (Enclosed Glass)' : 'Recommended (Bio-active)'}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-200 text-xs flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span>Use steam-activated horticultural charcoal rather than BBQ briquettes, which contain petroleum binders.</span>
+                  </div>
+                </div>
+              )}
+
+              {buildWizardStep === 3 && (
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-stone-950/70 border border-white/10 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+                        <Layers className="w-4 h-4" />
+                        Step 4: Sphagnum Separation Mesh Barrier
+                      </div>
+                      <span className="text-xs font-mono text-emerald-300 font-bold">
+                        ~{Math.round((substrates.moss || 15) * 1.5)}mm depth
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone-300 leading-relaxed">
+                      Dampen long-fiber sphagnum moss in dechlorinated water, squeeze out the drip until sponge-damp, and press it firmly across the entire charcoal surface. This creates an impenetrable physical membrane preventing fine soil from falling into your drainage basin.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 pt-2 text-[11px]">
+                      <div className="p-2.5 rounded-xl bg-stone-900/80 border border-white/5">
+                        <span className="text-stone-400 block font-mono">Calculated Dry Mass</span>
+                        <span className="text-white font-bold text-xs">~{Math.round((substrates.moss || 15) * 3.2)} grams</span>
+                      </div>
+                      <div className="p-2.5 rounded-xl bg-stone-900/80 border border-white/5">
+                        <span className="text-stone-400 block font-mono">Alternative Barrier</span>
+                        <span className="text-white font-medium">Fine fiberglass mesh screen cut to size</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {buildWizardStep === 4 && (
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-stone-950/70 border border-white/10 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+                        <Sprout className="w-4 h-4" />
+                        Step 5: Bio-Active Soil Substrate (ABG Mix)
+                      </div>
+                      <span className="text-xs font-mono text-emerald-300 font-bold">
+                        ~{Math.round((substrates.soil || 40) * 1.5)}mm depth
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone-300 leading-relaxed">
+                      Introduce your bio-active substrate (Atlanta Botanical Garden mix). Sculpt a gentle slope—higher at the rear of the vessel and lower at the front—to add dramatic optical depth and allow multiple viewing planes.
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 pt-2 text-[11px]">
+                      <div className="p-2.5 rounded-xl bg-stone-900/80 border border-white/5">
+                        <span className="text-stone-400 block font-mono">Calculated Mass</span>
+                        <span className="text-white font-bold text-xs">~{Math.round((substrates.soil || 40) * 14.5)} grams</span>
+                      </div>
+                      <div className="p-2.5 rounded-xl bg-stone-900/80 border border-white/5">
+                        <span className="text-stone-400 block font-mono">Soil Blend Composition</span>
+                        <span className="text-white font-medium">Tree fern fiber, peat, fine charcoal & fir bark</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {buildWizardStep === 5 && (
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-stone-950/70 border border-white/10 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+                        <Sparkles className="w-4 h-4" />
+                        Step 6: Hardscape Anchoring & Botanical Planting
+                      </div>
+                      <span className="text-xs font-mono text-emerald-300 font-bold">
+                        {items.length} Elements
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone-300 leading-relaxed">
+                      First, position structural hardscape (driftwood roots, stones, crystals). Then, use aquascaping tweezers to plant botanical plugs. Trim long root tips, open small divots in the soil, insert the roots, and tamp gently with a wooden dowel.
+                    </p>
+                    <div className="p-2.5 rounded-xl bg-stone-900/80 border border-white/5 space-y-1.5 text-xs">
+                      <span className="text-stone-400 block font-mono text-[11px]">Current Enclosure Species Manifest:</span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {bomData.specimenItems.map((sp) => (
+                          <span key={sp.id} className="px-2 py-0.5 rounded-lg bg-stone-800 text-stone-200 text-[11px] border border-white/5">
+                            {sp.count}x {sp.name}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {buildWizardStep === 6 && (
+                <div className="space-y-4">
+                  <div className="p-4 rounded-2xl bg-stone-950/70 border border-white/10 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
+                        <Droplets className="w-4 h-4" />
+                        Step 7: Initial Hydration & Acclimation Protocol
+                      </div>
+                      <span className="text-xs font-mono text-sky-300 font-bold">
+                        Target: {humidity}% RH • {temperature}°C
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone-300 leading-relaxed">
+                      Give the plants and substrate 4-6 fine pumps of pure distilled or reverse-osmosis mist. Wipe down interior glass above the soil line. Place the lid on your {currentVessel.name}. During the first 2 weeks, monitor condensation: gentle fogging in early morning that clears during midday indicates equilibrium.
+                    </p>
+                    <div className="grid grid-cols-3 gap-2 pt-2 text-[11px]">
+                      <div className="p-2 rounded-xl bg-stone-900/80 border border-white/5 text-center">
+                        <span className="text-stone-400 block font-mono">Lighting</span>
+                        <span className="text-white font-medium">Bright indirect (no direct sun)</span>
+                      </div>
+                      <div className="p-2 rounded-xl bg-stone-900/80 border border-white/5 text-center">
+                        <span className="text-stone-400 block font-mono">Temperature</span>
+                        <span className="text-white font-medium">{temperature}°C (Optimal: 20-25°C)</span>
+                      </div>
+                      <div className="p-2 rounded-xl bg-stone-900/80 border border-white/5 text-center">
+                        <span className="text-stone-400 block font-mono">Ventilation</span>
+                        <span className="text-white font-medium">{currentVessel.type === 'closed' ? 'Air out 10m / month' : 'Open continuous'}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer Controls */}
+            <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-2">
+              <button
+                type="button"
+                disabled={buildWizardStep === 0}
+                onClick={() => setBuildWizardStep((prev) => Math.max(0, prev - 1))}
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-stone-800 hover:bg-stone-700 disabled:opacity-40 disabled:cursor-not-allowed text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
+                Previous Step
+              </button>
+
+              <div className="text-xs text-stone-400 font-mono hidden sm:block">
+                Step {buildWizardStep + 1} of 7
+              </div>
+
+              {buildWizardStep < 6 ? (
+                <button
+                  type="button"
+                  onClick={() => setBuildWizardStep((prev) => Math.min(6, prev + 1))}
+                  className="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-stone-950 transition flex items-center gap-1.5 shadow-lg shadow-emerald-950/60 cursor-pointer"
+                >
+                  <span>Next Step</span>
+                  <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsBuildWizardOpen(false)}
+                  className="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-stone-950 transition flex items-center gap-1.5 shadow-lg shadow-emerald-950/60 cursor-pointer"
+                >
+                  <Check className="w-4 h-4" aria-hidden="true" />
+                  <span>Finish Walkthrough</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
+          PHASE 4: PRINTABLE BOTANICAL CARE PASSPORT & QR GIFT CARD
+          ========================================== */}
+      {isPassportModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="passport-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-in fade-in"
+        >
+          <div className="relative w-full max-w-3xl bg-stone-900/95 border border-white/10 rounded-3xl shadow-2xl p-6 text-stone-100 flex flex-col max-h-[92vh]">
+            {/* Header */}
+            <div className="flex items-start justify-between pb-3 border-b border-white/10 no-print">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono tracking-wider uppercase px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                    Artisan Certificate
+                  </span>
+                  <span className="text-xs text-stone-400">Botanical Care Passport & QR Gift Certificate</span>
+                </div>
+                <h2 id="passport-modal-title" className="text-lg font-bold text-white flex items-center gap-2 mt-1">
+                  <FileText className="w-5 h-5 text-amber-400" aria-hidden="true" />
+                  Botanical Care Passport & Interactive Gift Card
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsPassportModalOpen(false)}
+                aria-label="Close dialog"
+                className="p-1.5 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition cursor-pointer"
+              >
+                <X className="w-5 h-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            {/* Customizer Inputs (Top bar, hidden in print) */}
+            <div className="py-3 border-b border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs no-print">
+              <div>
+                <label className="text-[11px] text-stone-400 block mb-1">Enclosure Title</label>
+                <input
+                  type="text"
+                  value={passportTitle}
+                  onChange={(e) => setPassportTitle(e.target.value)}
+                  placeholder="e.g. Kyoto Moss Sanctuary No. 04"
+                  className="w-full px-2.5 py-1.5 bg-stone-950 border border-white/10 rounded-xl text-stone-100 focus:outline-none focus:border-amber-400 text-xs"
+                />
+              </div>
+              <div>
+                <label className="text-[11px] text-stone-400 block mb-1">Recipient / Dedication</label>
+                <input
+                  type="text"
+                  value={passportRecipient}
+                  onChange={(e) => setPassportRecipient(e.target.value)}
+                  placeholder="e.g. For Emma"
+                  className="w-full px-2.5 py-1.5 bg-stone-950 border border-white/10 rounded-xl text-stone-100 focus:outline-none focus:border-amber-400 text-xs"
+                />
+              </div>
+              <div>
+                <label className="text-[11px] text-stone-400 block mb-1">Botanical Artisan</label>
+                <input
+                  type="text"
+                  value={passportCreator}
+                  onChange={(e) => setPassportCreator(e.target.value)}
+                  placeholder="e.g. Crafted by Basil Shaji"
+                  className="w-full px-2.5 py-1.5 bg-stone-950 border border-white/10 rounded-xl text-stone-100 focus:outline-none focus:border-amber-400 text-xs"
+                />
+              </div>
+            </div>
+
+            {/* Certificate Preview Card (Printable Area) */}
+            <div className="flex-1 overflow-y-auto py-4 pr-1">
+              <div className="printable-certificate p-6 sm:p-8 rounded-2xl bg-stone-950/90 border-2 border-amber-500/30 text-stone-200 shadow-xl space-y-6 relative overflow-hidden">
+                {/* Decorative Botanical Border Corners */}
+                <div className="absolute top-2 left-2 text-amber-500/20 text-xl select-none">🌿</div>
+                <div className="absolute top-2 right-2 text-amber-500/20 text-xl select-none">🌿</div>
+                <div className="absolute bottom-2 left-2 text-amber-500/20 text-xl select-none">🌱</div>
+                <div className="absolute bottom-2 right-2 text-amber-500/20 text-xl select-none">🌱</div>
+
+                {/* Certificate Header */}
+                <div className="text-center space-y-1.5 border-b border-white/10 pb-4">
+                  <div className="text-[11px] font-mono tracking-widest text-amber-400 uppercase font-semibold">
+                    VerdantGlass Terrarium Studio • Botanical Registry
+                  </div>
+                  <h3 className="text-2xl font-serif font-bold text-white tracking-tight">
+                    {passportTitle || 'Verdant Enclosure'}
+                  </h3>
+                  <div className="flex items-center justify-center gap-4 text-xs text-stone-400 pt-1">
+                    <span>Dedication: <strong className="text-stone-200">{passportRecipient || 'Honored Guest'}</strong></span>
+                    <span>•</span>
+                    <span>Artisan: <strong className="text-stone-200">{passportCreator || 'Verdant Artisan'}</strong></span>
+                    <span>•</span>
+                    <span>Date: <strong className="text-stone-200">{new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</strong></span>
+                  </div>
+                </div>
+
+                {/* Micro-Climate & Enclosure Specifications */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                  <div className="p-3 rounded-xl bg-stone-900/80 border border-white/10 text-center">
+                    <span className="text-[10px] text-stone-400 block font-mono uppercase">Vessel & Glass</span>
+                    <span className="font-semibold text-white text-xs">{currentVessel.name}</span>
+                    <span className="text-[10px] text-emerald-400 block">{GLASS_TINTS[glassTint]?.name || 'Clear'}</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-stone-900/80 border border-white/10 text-center">
+                    <span className="text-[10px] text-stone-400 block font-mono uppercase">Pedestal Base</span>
+                    <span className="font-semibold text-white text-xs">{PEDESTAL_BASES[pedestalType]?.name || 'None'}</span>
+                    <span className="text-[10px] text-stone-400 block">Artisan display</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-stone-900/80 border border-white/10 text-center">
+                    <span className="text-[10px] text-stone-400 block font-mono uppercase">Target Humidity</span>
+                    <span className="font-semibold text-sky-300 text-xs font-mono">{humidity}% RH</span>
+                    <span className="text-[10px] text-stone-400 block">{currentVessel.type === 'closed' ? 'Closed-dome' : 'Semi-closed'}</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-stone-900/80 border border-white/10 text-center">
+                    <span className="text-[10px] text-stone-400 block font-mono uppercase">Temperature</span>
+                    <span className="font-semibold text-emerald-300 text-xs font-mono">{temperature}°C (Optimal)</span>
+                    <span className="text-[10px] text-stone-400 block">Eco-Score: {ecosystemReport.score}/100</span>
+                  </div>
+                </div>
+
+                {/* Botanical Species Manifest Table */}
+                <div className="space-y-2">
+                  <div className="text-xs font-semibold text-white flex items-center gap-2">
+                    <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
+                    Living Botanical & Hardscape Manifest
+                  </div>
+                  <div className="rounded-xl border border-white/10 overflow-hidden">
+                    <table className="w-full text-left text-xs border-collapse">
+                      <thead className="bg-stone-900/90 text-stone-300 font-mono text-[10px] uppercase border-b border-white/10">
+                        <tr>
+                          <th className="py-2 px-3">Item / Species</th>
+                          <th className="py-2 px-3">Category / Variety</th>
+                          <th className="py-2 px-3">Scientific Name</th>
+                          <th className="py-2 px-3 text-right">Care Note</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/5">
+                        {bomData.specimenItems.map((sp) => {
+                          const catalog = CATALOG_ITEMS.find((c) => c.name === sp.name);
+                          return (
+                            <tr key={sp.id} className="hover:bg-white/5 transition-colors">
+                              <td className="py-2 px-3 font-medium text-stone-100">
+                                {sp.count}x {sp.name}
+                              </td>
+                              <td className="py-2 px-3 text-stone-400 capitalize">
+                                {sp.category}
+                              </td>
+                              <td className="py-2 px-3 italic font-serif text-stone-400">
+                                {sp.scientific || 'Mineralia'}
+                              </td>
+                              <td className="py-2 px-3 text-right text-stone-400 text-[11px]">
+                                {catalog?.watering || 'Ambient mist'}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Interactive QR Code & Digital Twin Callout */}
+                <div className="p-4 rounded-xl bg-stone-900/90 border border-white/10 flex items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-white">
+                      <QrCode className="w-4 h-4 text-emerald-400" />
+                      <span>Scan to Inspect 3D Interactive Digital Twin</span>
+                    </div>
+                    <p className="text-[11px] text-stone-400 max-w-md leading-relaxed">
+                      Scan this cryptographic QR code with any smartphone camera to open and interact with this exact living enclosure, inspect strata depths, and simulate growth on VerdantGlass Studio.
+                    </p>
+                    <div className="text-[10px] text-emerald-400 font-mono pt-1">
+                      Deep-link URL encoded into certificate
+                    </div>
+                  </div>
+                  {passportQrDataUrl ? (
+                    <div className="shrink-0 p-2 rounded-xl bg-white shadow-md">
+                      <img
+                        src={passportQrDataUrl}
+                        alt="Interactive Terrarium Digital Twin QR Code"
+                        className="w-24 h-24 rounded"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-24 h-24 rounded-xl bg-stone-800 flex items-center justify-center text-xs text-stone-500">
+                      QR Generating...
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2 no-print">
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(currentShareUrl);
+                  showToast('Interactive digital twin link copied to clipboard!', 'success');
+                }}
+                className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-stone-800 hover:bg-stone-700 text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer"
+              >
+                <Share2 className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Copy Deep-Link</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="px-5 py-2 rounded-xl text-xs font-bold bg-amber-500 hover:bg-amber-400 text-stone-950 transition flex items-center gap-1.5 shadow-lg shadow-amber-950/60 cursor-pointer active:scale-95"
+              >
+                <Printer className="w-4 h-4" aria-hidden="true" />
+                <span>Print Care Passport & Gift Card (PDF)</span>
               </button>
             </div>
           </div>
