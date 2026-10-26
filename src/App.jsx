@@ -4,8 +4,9 @@ import {
   Sliders, Trash2, FlipHorizontal, ArrowUp, 
   ArrowDown, ZoomIn, ZoomOut, CheckCircle2, AlertTriangle, 
   Camera, RefreshCw, Eye, EyeOff, Volume2, VolumeX, Plus,
-  ShieldCheck, ChevronRight, Maximize2,
-  Undo2, Redo2, Share2, Copy, Save, Bookmark, Check, X, Download, FolderHeart, ExternalLink, FileDown, Upload
+  ShieldCheck, ChevronRight, Maximize2, Minimize2,
+  Undo2, Redo2, Share2, Copy, Save, Bookmark, Check, X, Download, FolderHeart, ExternalLink, FileDown, Upload,
+  Play, Pause, Clock, CloudRain, Wind
 } from 'lucide-react';
 
 // ==========================================
@@ -276,13 +277,83 @@ const CATALOG_ITEMS = [
     biome: 'tropical',
     defaultScale: 1,
     description: 'Living micro-fauna that roam the substrate and consume decaying matter!',
+  },
+  {
+    id: 'venus_flytrap',
+    name: 'Venus Flytrap',
+    scientific: 'Dionaea muscipula',
+    category: 'plants',
+    biome: 'carnivorous',
+    idealHumidity: [65, 95],
+    defaultScale: 1.1,
+    description: 'Fascinating carnivorous bog plant with sensitive trigger-cilia traps.',
+  },
+  {
+    id: 'sundew',
+    name: 'Cape Sundew',
+    scientific: 'Drosera capensis',
+    category: 'plants',
+    biome: 'carnivorous',
+    idealHumidity: [70, 95],
+    defaultScale: 1.05,
+    description: 'Carnivorous tentacles tipped with glistening mucilage dew beads that catch the light.',
+  },
+  {
+    id: 'peperomia',
+    name: 'String of Turtles',
+    scientific: 'Peperomia prostrata',
+    category: 'plants',
+    biome: 'tropical',
+    idealHumidity: [55, 85],
+    defaultScale: 1.0,
+    description: 'Charming trailing succulent vine with intricate turtle-shell leaf markings.',
+  },
+  {
+    id: 'water_pool',
+    name: 'Subterranean Crystal Pool',
+    scientific: 'Aquifer reservoir',
+    category: 'hardscape',
+    biome: 'neutral',
+    defaultScale: 1.2,
+    description: 'Clear reflective water pocket providing natural humidity buffering and caustics.',
+  },
+  {
+    id: 'lava_rock',
+    name: 'Black Volcanic Basalt',
+    scientific: 'Porous vesicular basalt',
+    category: 'hardscape',
+    biome: 'neutral',
+    defaultScale: 1.15,
+    description: 'Dark, textured volcanic rock ideal for anchoring moss and beneficial bacteria.',
+  },
+  {
+    id: 'petrified_wood',
+    name: 'Ancient Petrified Wood',
+    scientific: 'Silicified mineral timber',
+    category: 'hardscape',
+    biome: 'neutral',
+    defaultScale: 1.1,
+    description: 'Fossilized prehistoric wood with striated rings and rich ochre grain.',
   }
 ];
 
 const LIGHTING_MODES = {
+  dawn: {
+    id: 'dawn',
+    name: 'Dawn',
+    timeLabel: '06:30 Sunrise',
+    icon: Sunset,
+    bgGradient: 'from-stone-950 via-rose-950/60 to-amber-950/40',
+    ambientGlow: 'rgba(254, 205, 211, 0.22)',
+    vesselTint: 'rgba(251, 113, 133, 0.08)',
+    rayColor: 'rgba(253, 164, 175, 0.22)',
+    uvActive: false,
+    accentText: 'text-rose-300'
+  },
   day: {
     id: 'day',
     name: 'Daylight',
+    timeLabel: '12:00 Solar Noon',
     icon: Sun,
     bgGradient: 'from-stone-900 via-stone-900 to-emerald-950',
     ambientGlow: 'rgba(255, 252, 235, 0.14)',
@@ -294,17 +365,31 @@ const LIGHTING_MODES = {
   golden: {
     id: 'golden',
     name: 'Golden Hour',
+    timeLabel: '17:45 Sunset',
     icon: Sunset,
     bgGradient: 'from-stone-950 via-amber-950/60 to-orange-950/50',
-    ambientGlow: 'rgba(251, 146, 60, 0.22)',
+    ambientGlow: 'rgba(251, 146, 60, 0.24)',
     vesselTint: 'rgba(251, 146, 60, 0.08)',
-    rayColor: 'rgba(253, 186, 116, 0.22)',
+    rayColor: 'rgba(253, 186, 116, 0.24)',
     uvActive: false,
     accentText: 'text-orange-300'
+  },
+  twilight: {
+    id: 'twilight',
+    name: 'Twilight',
+    timeLabel: '20:15 Dusk',
+    icon: Moon,
+    bgGradient: 'from-slate-950 via-violet-950/70 to-indigo-950/60',
+    ambientGlow: 'rgba(167, 139, 250, 0.20)',
+    vesselTint: 'rgba(139, 92, 246, 0.08)',
+    rayColor: 'rgba(196, 181, 253, 0.18)',
+    uvActive: false,
+    accentText: 'text-indigo-300'
   },
   night: {
     id: 'night',
     name: 'Moonlight',
+    timeLabel: '23:30 Midnight',
     icon: Moon,
     bgGradient: 'from-slate-950 via-indigo-950/70 to-slate-900',
     ambientGlow: 'rgba(96, 165, 250, 0.16)',
@@ -316,6 +401,7 @@ const LIGHTING_MODES = {
   uv: {
     id: 'uv',
     name: 'UV Bio-Glow',
+    timeLabel: '02:45 Phosphor',
     icon: Zap,
     bgGradient: 'from-zinc-950 via-purple-950/75 to-fuchsia-950/50',
     ambientGlow: 'rgba(192, 132, 252, 0.25)',
@@ -324,6 +410,15 @@ const LIGHTING_MODES = {
     uvActive: true,
     accentText: 'text-purple-300'
   }
+};
+
+const getTimeLightingMode = (hour) => {
+  if (hour >= 5.5 && hour < 8.5) return 'dawn';
+  if (hour >= 8.5 && hour < 16.5) return 'day';
+  if (hour >= 16.5 && hour < 19.5) return 'golden';
+  if (hour >= 19.5 && hour < 21.5) return 'twilight';
+  if (hour >= 21.5 || hour < 2.0) return 'night';
+  return 'uv';
 };
 
 const PRESETS = {
@@ -666,6 +761,166 @@ const RenderBotanicalArtwork = ({ type, uvActive }) => {
         </g>
       );
 
+    case 'venus_flytrap':
+      return (
+        <g>
+          <ellipse cx="0" cy="2" rx="10" ry="4" fill="#14532d" />
+          {/* Trap 1: Left arching trap */}
+          <g transform="translate(-18, -26) rotate(-28)">
+            <path d="M18,26 Q10,12 0,0" stroke="#16a34a" strokeWidth="3" fill="none" strokeLinecap="round" />
+            <path d="M-10,-12 C-16,-6 -14,6 0,8 C14,6 16,-6 10,-12 Z" fill="#15803d" stroke="#14532d" strokeWidth="1" />
+            <path d="M-8,-8 C-12,-4 -10,4 0,6 C10,4 12,-4 8,-8 Z" fill={uvActive ? "#f43f5e" : "#b91c1c"} />
+            <g stroke={uvActive ? "#fecdd3" : "#86efac"} strokeWidth="1.2" strokeLinecap="round">
+              <line x1="-9" y1="-10" x2="-12" y2="-17" />
+              <line x1="-5" y1="-12" x2="-6" y2="-19" />
+              <line x1="0" y1="-13" x2="0" y2="-20" />
+              <line x1="5" y1="-12" x2="6" y2="-19" />
+              <line x1="9" y1="-10" x2="12" y2="-17" />
+            </g>
+          </g>
+          {/* Trap 2: Right arching trap */}
+          <g transform="translate(18, -24) rotate(32)">
+            <path d="M-18,24 Q-8,12 0,0" stroke="#16a34a" strokeWidth="3" fill="none" strokeLinecap="round" />
+            <path d="M-10,-12 C-16,-6 -14,6 0,8 C14,6 16,-6 10,-12 Z" fill="#15803d" stroke="#14532d" strokeWidth="1" />
+            <path d="M-8,-8 C-12,-4 -10,4 0,6 C10,4 12,-4 8,-8 Z" fill={uvActive ? "#f43f5e" : "#b91c1c"} />
+            <g stroke={uvActive ? "#fecdd3" : "#86efac"} strokeWidth="1.2" strokeLinecap="round">
+              <line x1="-9" y1="-10" x2="-12" y2="-17" />
+              <line x1="-5" y1="-12" x2="-6" y2="-19" />
+              <line x1="0" y1="-13" x2="0" y2="-20" />
+              <line x1="5" y1="-12" x2="6" y2="-19" />
+              <line x1="9" y1="-10" x2="12" y2="-17" />
+            </g>
+          </g>
+          {/* Trap 3: Tall center erect trap */}
+          <g transform="translate(0, -36) rotate(4)">
+            <path d="M0,36 Q-2,18 0,0" stroke="#22c55e" strokeWidth="3.2" fill="none" strokeLinecap="round" />
+            <path d="M-12,-14 C-18,-7 -16,8 0,10 C16,8 18,-7 12,-14 Z" fill="#16a34a" stroke="#14532d" strokeWidth="1" />
+            <path d="M-9,-10 C-14,-5 -12,6 0,8 C12,6 14,-5 9,-10 Z" fill={uvActive ? "#fb7185" : "#dc2626"} />
+            <g stroke={uvActive ? "#ffe4e6" : "#bbf7d0"} strokeWidth="1.3" strokeLinecap="round">
+              <line x1="-11" y1="-12" x2="-14" y2="-20" />
+              <line x1="-6" y1="-14" x2="-7" y2="-22" />
+              <line x1="0" y1="-15" x2="0" y2="-23" />
+              <line x1="6" y1="-14" x2="7" y2="-22" />
+              <line x1="11" y1="-12" x2="14" y2="-20" />
+            </g>
+          </g>
+        </g>
+      );
+
+    case 'sundew':
+      return (
+        <g>
+          <ellipse cx="0" cy="1" rx="8" ry="3.5" fill="#14532d" />
+          {[
+            { angle: -65, len: 44, c: '#22c55e' },
+            { angle: -38, len: 48, c: '#4ade80' },
+            { angle: -12, len: 52, c: '#86efac' },
+            { angle: 15, len: 50, c: '#4ade80' },
+            { angle: 42, len: 46, c: '#22c55e' },
+            { angle: 70, len: 40, c: '#16a34a' }
+          ].map((stem, idx) => (
+            <g key={idx} transform={`rotate(${stem.angle})`}>
+              <path d={`M0,0 Q-4,${-stem.len * 0.5} 0,${-stem.len}`} stroke={stem.c} strokeWidth="2.2" fill="none" strokeLinecap="round" />
+              {[-0.4, -0.6, -0.8, -1.0].map((frac, di) => (
+                <g key={di} transform={`translate(0, ${stem.len * frac})`}>
+                  <line x1="-6" y1="-2" x2="6" y2="2" stroke="#f43f5e" strokeWidth="0.8" opacity="0.8" />
+                  <circle cx="-6" cy="-2" r={uvActive ? "2.6" : "2"} fill={uvActive ? "#f0abfc" : "#fb7185"} opacity="0.9" />
+                  <circle cx="6" cy="2" r={uvActive ? "2.6" : "2"} fill={uvActive ? "#f0abfc" : "#fb7185"} opacity="0.9" />
+                  <circle cx="-7" cy="-3" r="0.8" fill="#ffffff" />
+                  <circle cx="5" cy="1" r="0.8" fill="#ffffff" />
+                </g>
+              ))}
+              <circle cx="0" cy={-stem.len} r={uvActive ? "3.5" : "2.8"} fill={uvActive ? "#e879f9" : "#f43f5e"} />
+              <circle cx="-1" cy={-stem.len - 1} r="1" fill="#ffffff" />
+            </g>
+          ))}
+        </g>
+      );
+
+    case 'peperomia':
+      return (
+        <g>
+          <path d="M0,0 Q-18,-15 -28,-36 Q-34,-50 -25,-68" stroke="#713f12" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+          <path d="M0,0 Q16,-12 24,-32 Q32,-48 20,-64" stroke="#713f12" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+          <path d="M0,0 Q-4,-25 2,-50 Q8,-65 0,-80" stroke="#713f12" strokeWidth="2" fill="none" strokeLinecap="round" />
+          {[
+            { x: -14, y: -12, r: 12, s: 0.95 },
+            { x: -26, y: -30, r: -20, s: 1.1 },
+            { x: -30, y: -50, r: -10, s: 1.05 },
+            { x: -23, y: -66, r: 15, s: 0.85 },
+            { x: 12, y: -10, r: -15, s: 0.9 },
+            { x: 22, y: -26, r: 25, s: 1.1 },
+            { x: 28, y: -44, r: 15, s: 1.0 },
+            { x: 18, y: -62, r: -15, s: 0.8 },
+            { x: -2, y: -22, r: 5, s: 1.15 },
+            { x: 4, y: -42, r: -8, s: 1.2 },
+            { x: 6, y: -62, r: 10, s: 1.05 },
+            { x: -1, y: -78, r: -4, s: 0.9 }
+          ].map((leaf, idx) => (
+            <g key={idx} transform={`translate(${leaf.x}, ${leaf.y}) rotate(${leaf.r}) scale(${leaf.s})`}>
+              <ellipse cx="0" cy="0" rx="9" ry="7.5" fill="#14532d" stroke="#166534" strokeWidth="1" />
+              <path d="M-6,0 Q0,-4 6,0 Q0,4 -6,0 M0,-6 L0,6 M-4,-4 L4,4 M-4,4 L4,-4" stroke={uvActive ? "#86efac" : "#bbf7d0"} strokeWidth="1.1" fill="none" opacity="0.85" />
+              <ellipse cx="-2" cy="-2" rx="7" ry="5.5" fill="none" stroke={uvActive ? "#a7f3d0" : "#dcfce7"} strokeWidth="0.6" opacity="0.6" />
+            </g>
+          ))}
+        </g>
+      );
+
+    case 'water_pool':
+      return (
+        <g>
+          <path d="M-38,6 C-42,-2 -28,-14 0,-14 C28,-14 42,-2 38,6 C26,12 -26,12 -38,6 Z" fill="#1c1917" stroke="#44403c" strokeWidth="1.5" />
+          <path d="M-34,5 C-38,-1 -24,-11 0,-11 C24,-11 38,-1 34,5 C24,9 -24,9 -34,5 Z" fill="#0284c7" fillOpacity="0.75" />
+          <path d="M-28,3 C-30,-2 -18,-8 0,-8 C18,-8 30,-2 28,3 C18,6 -18,6 -28,3 Z" fill="#38bdf8" fillOpacity="0.55" />
+          <ellipse cx="-6" cy="-2" rx="14" ry="4" fill="none" stroke="#e0f2fe" strokeWidth="1.2" opacity="0.85" />
+          <ellipse cx="10" cy="1" rx="8" ry="2.5" fill="none" stroke="#bae6fd" strokeWidth="1" opacity="0.75" />
+          {uvActive && (
+            <ellipse cx="0" cy="0" rx="30" ry="8" fill="#38bdf8" opacity="0.25" />
+          )}
+        </g>
+      );
+
+    case 'lava_rock':
+      return (
+        <g>
+          <polygon points="-36,6 -42,-18 -26,-48 -6,-62 18,-54 38,-32 42,4 20,8 -16,8" fill="#18181b" stroke="#09090b" strokeWidth="1.5" />
+          <polygon points="-26,-48 -6,-62 4,-34 -18,-24" fill="#27272a" />
+          <polygon points="-6,-62 18,-54 12,-26 4,-34" fill="#3f3f46" />
+          <polygon points="18,-54 38,-32 24,-12 12,-26" fill="#27272a" />
+          {[
+            { cx: -20, cy: -34, r: 3.5 },
+            { cx: -8, cy: -46, r: 2.8 },
+            { cx: 8, cy: -38, r: 4.2 },
+            { cx: 22, cy: -22, r: 3.2 },
+            { cx: -12, cy: -14, r: 4.8 },
+            { cx: 6, cy: -16, r: 3.0 },
+            { cx: -28, cy: -10, r: 2.5 },
+            { cx: 16, cy: -4, r: 3.6 }
+          ].map((hole, hi) => (
+            <circle key={hi} cx={hole.cx} cy={hole.cy} r={hole.r} fill="#09090b" stroke="#27272a" strokeWidth="0.8" />
+          ))}
+          {uvActive && (
+            <path d="M-6,-46 L-4,-38 M8,-38 L6,-28" stroke="#f97316" strokeWidth="1.5" opacity="0.7" />
+          )}
+        </g>
+      );
+
+    case 'petrified_wood':
+      return (
+        <g>
+          <path d="M-30,6 C-34,-14 -32,-42 -22,-68 C-6,-74 16,-72 26,-66 C32,-38 34,-12 30,6 Z" fill="#78350f" stroke="#451a03" strokeWidth="1.5" />
+          <path d="M-22,-64 C-26,-40 -26,-16 -24,4" stroke="#b45309" strokeWidth="3.5" fill="none" />
+          <path d="M-14,-67 C-18,-42 -16,-12 -14,5" stroke="#f59e0b" strokeWidth="3" fill="none" />
+          <path d="M-6,-70 C-8,-44 -6,-10 -4,5" stroke="#fef3c7" strokeWidth="2.5" fill="none" />
+          <path d="M4,-69 C2,-42 4,-12 6,5" stroke="#d97706" strokeWidth="3.2" fill="none" />
+          <path d="M14,-67 C12,-38 14,-14 16,5" stroke="#92400e" strokeWidth="3" fill="none" />
+          <path d="M22,-64 C24,-38 24,-14 24,5" stroke="#451a03" strokeWidth="2" fill="none" />
+          <ellipse cx="2" cy="-68" rx="24" ry="7" fill="#fde68a" stroke="#78350f" strokeWidth="1.2" />
+          <ellipse cx="2" cy="-68" rx="16" ry="4.5" fill="none" stroke="#b45309" strokeWidth="1" />
+          <ellipse cx="2" cy="-68" rx="8" ry="2.2" fill="#78350f" />
+        </g>
+      );
+
     default:
       return null;
   }
@@ -747,6 +1002,69 @@ export default function App() {
     setTimeout(() => {
       setToast((prev) => ({ ...prev, visible: false }));
     }, 2800);
+  };
+
+  // Phase 2: Diurnal Automated Time-Lapse Cycle State (0.00 to 24.00 hours)
+  const [timeOfDay, setTimeOfDay] = useState(12.0);
+  const [isCyclePlaying, setIsCyclePlaying] = useState(false);
+  const [cycleSpeed, setCycleSpeed] = useState(1); // 1x, 5x, 20x
+
+  // Phase 2: Zen Sanctuary Mode
+  const [isZenMode, setIsZenMode] = useState(false);
+
+  // Phase 2: Dynamic Water Cycle & Evaporation Engine
+  const [isEvaporationActive, setIsEvaporationActive] = useState(true);
+  const [condensationTrickleOffset, setCondensationTrickleOffset] = useState(0);
+
+  // Phase 2: Multi-Track Procedural Web Audio Soundscape
+  const [isAmbientSoundActive, setIsAmbientSoundActive] = useState(false);
+  const [soundVolume, setSoundVolume] = useState(0.5);
+  const ambientNodesRef = useRef({ windSource: null, windGain: null, cricketOsc: null, cricketGain: null });
+
+  // Web Audio Context & Synthesizer Engine
+  const initAudioContext = () => {
+    if (!audioCtxRef.current) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        audioCtxRef.current = new AudioCtx();
+      }
+    }
+    if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+      audioCtxRef.current.resume();
+    }
+    return audioCtxRef.current;
+  };
+
+  // Play resonant 432 Hz Zen Singing Bowl harmonic tone
+  const playZenHarmonicChime = () => {
+    try {
+      const ctx = initAudioContext();
+      if (!ctx || isSoundMuted) return;
+
+      const now = ctx.currentTime;
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(432, now); // 432Hz harmonic
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(864, now); // Octave overtone
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.exponentialRampToValueAtTime(0.22 * soundVolume, now + 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.2);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + 3.3);
+      osc2.stop(now + 3.3);
+      showToast('Zen Harmonic Chime (432 Hz)', 'info');
+    } catch (_) {}
   };
 
   // State ref to prevent stale closures in drag / keyboard listeners
@@ -951,12 +1269,169 @@ export default function App() {
       ) {
         e.preventDefault();
         handleRedo();
+      } else if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        setIsZenMode((prev) => {
+          const next = !prev;
+          showToast(next ? 'Entered Zen Sanctuary' : 'Exited Zen Sanctuary', 'info');
+          return next;
+        });
+      } else if (e.key === 'Escape' && isZenMode) {
+        setIsZenMode(false);
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [historyIndex, history]);
+  }, [historyIndex, history, isZenMode]);
+
+  // Phase 2: Diurnal Automated Time-Lapse Progression
+  useEffect(() => {
+    if (!isCyclePlaying) return;
+    const interval = setInterval(() => {
+      setTimeOfDay((prev) => {
+        const next = (prev + 0.05 * cycleSpeed) % 24;
+        const targetMode = getTimeLightingMode(next);
+        setLighting((curr) => (curr !== targetMode ? targetMode : curr));
+        return Number(next.toFixed(2));
+      });
+    }, 100);
+    return () => clearInterval(interval);
+  }, [isCyclePlaying, cycleSpeed]);
+
+  // Phase 2: Dynamic Water Cycle Evaporation Loop (Realistic Open vs Closed Glass)
+  useEffect(() => {
+    if (!isEvaporationActive) return;
+    const interval = setInterval(() => {
+      if (currentVessel.type === 'open') {
+        // Open vessels lose moisture steadily down to ambient 24%
+        setHumidity((prev) => Math.max(24, Math.round(prev - 1)));
+      } else if (currentVessel.type === 'semi-closed') {
+        setHumidity((prev) => Math.max(38, Math.round(prev - 0.5)));
+      }
+      // Closed vessels retain equilibrium
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isEvaporationActive, currentVessel]);
+
+  // Phase 2: Condensation Trickle Animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCondensationTrickleOffset((prev) => (prev + 0.5) % 40);
+    }, 120);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Phase 2: Procedural Multi-Track Soundscape (Canopy Wind & Nocturnal Crickets)
+  useEffect(() => {
+    if (!isAmbientSoundActive || isSoundMuted) {
+      if (ambientNodesRef.current.windGain) {
+        try {
+          ambientNodesRef.current.windGain.gain.setValueAtTime(0.0001, audioCtxRef.current?.currentTime || 0);
+        } catch (_) {}
+      }
+      if (ambientNodesRef.current.cricketGain) {
+        try {
+          ambientNodesRef.current.cricketGain.gain.setValueAtTime(0.0001, audioCtxRef.current?.currentTime || 0);
+        } catch (_) {}
+      }
+      return;
+    }
+
+    try {
+      const ctx = initAudioContext();
+      if (!ctx) return;
+
+      // 1. Canopy Wind Breeze
+      const bufferSize = ctx.sampleRate * 2;
+      const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      let b0 = 0, b1 = 0, b2 = 0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        b0 = 0.99886 * b0 + white * 0.0555179;
+        b1 = 0.99332 * b1 + white * 0.0750759;
+        b2 = 0.96900 * b2 + white * 0.1538520;
+        output[i] = (b0 + b1 + b2) * 0.18;
+      }
+
+      const windSource = ctx.createBufferSource();
+      windSource.buffer = noiseBuffer;
+      windSource.loop = true;
+
+      const windFilter = ctx.createBiquadFilter();
+      windFilter.type = 'lowpass';
+      windFilter.frequency.value = 420;
+      windFilter.Q.value = 2.2;
+
+      const windGain = ctx.createGain();
+      windGain.gain.setValueAtTime(0.08 * soundVolume, ctx.currentTime);
+
+      windSource.connect(windFilter);
+      windFilter.connect(windGain);
+      windGain.connect(ctx.destination);
+      windSource.start();
+
+      ambientNodesRef.current.windGain = windGain;
+
+      // 2. Nocturnal Crickets (Active during dusk/night/uv)
+      const isNight = lighting === 'night' || lighting === 'twilight' || lighting === 'uv';
+      const cricketGain = ctx.createGain();
+      cricketGain.gain.setValueAtTime(isNight ? 0.035 * soundVolume : 0.0001, ctx.currentTime);
+
+      const cricketOsc = ctx.createOscillator();
+      cricketOsc.type = 'sine';
+      cricketOsc.frequency.value = 4650;
+
+      const cricketMod = ctx.createOscillator();
+      cricketMod.frequency.value = 12; // Chirp frequency
+
+      const modGain = ctx.createGain();
+      modGain.gain.value = 0.45;
+
+      cricketMod.connect(modGain);
+      cricketOsc.connect(cricketGain);
+      cricketGain.connect(ctx.destination);
+
+      cricketOsc.start();
+      cricketMod.start();
+
+      ambientNodesRef.current.cricketGain = cricketGain;
+
+      return () => {
+        try {
+          windSource.stop();
+          cricketOsc.stop();
+          cricketMod.stop();
+        } catch (_) {}
+      };
+    } catch (_) {}
+  }, [isAmbientSoundActive, isSoundMuted, lighting, soundVolume]);
+
+  // Phase 2: Compute Dynamic Condensation Beads along the glass walls
+  const condensationBeads = useMemo(() => {
+    if (humidity < 48) return [];
+    const beadCount = Math.min(50, Math.floor(((humidity - 40) / 60) * 45 * currentVessel.humidityRetention));
+    const beads = [];
+    for (let i = 0; i < beadCount; i++) {
+      const side = i % 2 === 0 ? -1 : 1;
+      const baseDist = 112 + (i * 19) % 78;
+      const cx = 200 + side * baseDist;
+      const rawCy = 115 + (i * 31) % 270;
+      const cy = humidity > 70 ? rawCy + ((condensationTrickleOffset + i * 7) % 32) : rawCy;
+      const rx = 1.6 + ((i * 3) % 2.5);
+      const ry = 2.4 + ((i * 5) % 3.8);
+      beads.push({
+        id: `cond-bead-${i}`,
+        cx,
+        cy,
+        rx,
+        ry,
+        opacity: Math.min(0.65, 0.2 + (humidity / 100) * 0.45)
+      });
+    }
+    return beads;
+  }, [humidity, currentVessel, condensationTrickleOffset]);
 
   // Animate Critters smoothly along the soil surface
   useEffect(() => {
@@ -1059,7 +1534,10 @@ export default function App() {
     const plants = placedCatalogItems.filter((c) => c.category === 'plants');
     const tropicalPlants = plants.filter((p) => p.biome === 'tropical');
     const aridPlants = plants.filter((p) => p.biome === 'arid');
+    const carnivorousPlants = plants.filter((p) => p.biome === 'carnivorous');
     const hasCritters = placedCatalogItems.some((c) => c.id === 'critters');
+    const hasWaterPool = placedCatalogItems.some((c) => c.id === 'water_pool');
+    const hasLavaRock = placedCatalogItems.some((c) => c.id === 'lava_rock');
 
     // 1. Check Drainage Layer
     if (substrates.pebbles < 12) {
@@ -1088,6 +1566,10 @@ export default function App() {
       score -= 28;
       warnings.push('Incompatible biomes: Tropical plants & desert succulents have conflicting moisture needs.');
     }
+    if (carnivorousPlants.length > 0 && aridPlants.length > 0) {
+      score -= 26;
+      warnings.push('Incompatible biomes: Carnivorous bog flora cannot co-exist with arid succulents.');
+    }
 
     // 5. Check Humidity vs Plant Needs
     if (aridPlants.length > 0 && humidity > 50) {
@@ -1102,11 +1584,23 @@ export default function App() {
       score -= 22;
       warnings.push('Humidity is too low for tropical flora—use the Mist Spray!');
     }
+    if (carnivorousPlants.length > 0 && humidity < 60) {
+      score -= 20;
+      warnings.push('Carnivorous plants (Venus Flytrap / Sundew) require elevated bog humidity (>60%).');
+    } else if (carnivorousPlants.length > 0 && substrates.moss >= 8) {
+      positives.push('Sphagnum moss layer simulates natural bog moisture for carnivorous flora.');
+    }
 
-    // 6. Bioactive Bonus
+    // 6. Hardscape & Bioactive Bonuses
     if (hasCritters && tropicalPlants.length > 0 && substrates.soil >= 20) {
       score = Math.min(100, score + 8);
       positives.push('Bioactive clean-up crew actively cycling nutrients!');
+    }
+    if (hasWaterPool) {
+      positives.push('Subterranean crystal aquifer buffers internal micro-climate humidity.');
+    }
+    if (hasLavaRock) {
+      positives.push('Porous volcanic basalt enhances beneficial bacterial colonization.');
     }
 
     const clampedScore = Math.max(10, Math.min(100, score));
@@ -1783,16 +2277,38 @@ export default function App() {
             <span className="hidden sm:inline">Share</span>
           </button>
 
+          {/* Procedural Soundscape Toggle */}
+          <button
+            onClick={() => {
+              setIsAmbientSoundActive((prev) => {
+                const next = !prev;
+                if (next && isSoundMuted) setIsSoundMuted(false);
+                showToast(next ? 'Canopy Wind & Nocturnal Crickets On' : 'Ambient Sound Off', 'info');
+                return next;
+              });
+            }}
+            aria-label="Toggle ambient procedural soundscape"
+            className={`p-1.5 rounded-lg text-xs border transition flex items-center gap-1.5 cursor-pointer min-w-[32px] min-h-[32px] justify-center ${
+              isAmbientSoundActive && !isSoundMuted
+                ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
+                : 'bg-stone-800/80 text-stone-300 border-white/10 hover:text-white'
+            }`}
+            title="Canopy Breeze & Nocturnal Crickets"
+          >
+            <Wind className="w-3.5 h-3.5" aria-hidden="true" />
+            <span className="hidden xl:inline text-xs">Breeze</span>
+          </button>
+
           {/* Sound Mute Toggle */}
           <button
             onClick={() => setIsSoundMuted((prev) => !prev)}
-            aria-label={isSoundMuted ? "Unmute ambient mist sound" : "Mute ambient mist sound"}
+            aria-label={isSoundMuted ? "Unmute ambient audio" : "Mute ambient audio"}
             className={`p-1.5 rounded-lg text-xs border transition flex items-center gap-1 cursor-pointer min-w-[32px] min-h-[32px] justify-center ${
               !isSoundMuted 
                 ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' 
                 : 'bg-stone-800/80 text-stone-300 border-white/10 hover:text-white'
             }`}
-            title={isSoundMuted ? "Unmute Ambient Mist Sound" : "Mute Sound"}
+            title={isSoundMuted ? "Unmute Ambient Sound" : "Mute Sound"}
           >
             {isSoundMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
           </button>
@@ -1805,6 +2321,27 @@ export default function App() {
           >
             <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
             <span className="hidden sm:inline">Empty</span>
+          </button>
+
+          {/* Zen Sanctuary Toggle Button */}
+          <button
+            onClick={() => {
+              setIsZenMode((z) => {
+                const next = !z;
+                showToast(next ? 'Entered Zen Sanctuary (Press Esc to exit)' : 'Exited Zen Sanctuary', 'info');
+                return next;
+              });
+            }}
+            aria-label="Toggle Zen Sanctuary ambient full-screen mode"
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-medium border transition flex items-center gap-1.5 cursor-pointer active:scale-95 ${
+              isZenMode
+                ? 'bg-purple-500/25 text-purple-200 border-purple-400/50 shadow-sm'
+                : 'bg-stone-800/80 hover:bg-stone-700 text-stone-200 border-white/10'
+            }`}
+            title="Zen Sanctuary Living Lamp Mode (F)"
+          >
+            {isZenMode ? <Minimize2 className="w-3.5 h-3.5 text-purple-300" aria-hidden="true" /> : <Maximize2 className="w-3.5 h-3.5 text-purple-300" aria-hidden="true" />}
+            <span className="hidden sm:inline">Zen Mode</span>
           </button>
 
           <button
@@ -1825,6 +2362,7 @@ export default function App() {
       <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 p-4 lg:p-6 max-w-[1600px] w-full mx-auto items-start">
         
         {/* LEFT PANEL: VESSEL, SUBSTRATE & CATALOG */}
+        {!isZenMode && (
         <section aria-label="Terrarium Design Controls" className="lg:col-span-4 bg-stone-900/75 border border-white/10 rounded-2xl backdrop-blur-md shadow-2xl overflow-hidden flex flex-col">
           {/* Navigation Tabs */}
           <div role="tablist" aria-label="Designer Modules" className="grid grid-cols-3 p-1.5 bg-stone-950/80 border-b border-white/10 gap-1">
@@ -2050,15 +2588,58 @@ export default function App() {
             )}
           </div>
         </section>
+        )}
 
         {/* ==========================================
             CENTER PANEL: INTERACTIVE SVG TERRARIUM STAGE
             ========================================== */}
-        <section aria-label="Interactive Terrarium Enclosure" className="lg:col-span-5 flex flex-col items-center justify-center relative">
+        <section
+          aria-label="Interactive Terrarium Enclosure"
+          className={`${
+            isZenMode
+              ? 'lg:col-span-12 flex flex-col items-center justify-center min-h-[85vh] py-2 relative'
+              : 'lg:col-span-5 flex flex-col items-center justify-center relative'
+          }`}
+        >
           {/* Quick Floating Environment Bar */}
-          <div className="w-full flex flex-wrap items-center justify-between gap-2 mb-3 px-3 py-2 rounded-2xl bg-stone-900/75 border border-white/10 backdrop-blur-md">
-            {/* Lighting Mode Switcher */}
-            <div className="flex items-center gap-1" role="group" aria-label="Lighting Environment">
+          <div className="w-full flex flex-wrap items-center justify-between gap-2 mb-3 px-3 py-2 rounded-2xl bg-stone-900/85 border border-white/10 backdrop-blur-md shadow-lg">
+            {/* Diurnal Time-Lapse Player Pill */}
+            <div className="flex items-center gap-1.5 bg-stone-950/70 p-1 rounded-xl border border-white/10">
+              <button
+                onClick={() => setIsCyclePlaying((p) => !p)}
+                className={`p-1.5 rounded-lg border text-xs flex items-center gap-1.5 transition cursor-pointer min-h-[30px] ${
+                  isCyclePlaying
+                    ? 'bg-emerald-500/25 text-emerald-300 border-emerald-500/40 shadow-sm'
+                    : 'bg-stone-900 text-stone-300 border-white/10 hover:text-white'
+                }`}
+                title={isCyclePlaying ? 'Pause Automated 24h Day/Night Cycle' : 'Play Automated 24h Day/Night Cycle'}
+              >
+                {isCyclePlaying ? <Pause className="w-3.5 h-3.5" aria-hidden="true" /> : <Play className="w-3.5 h-3.5" aria-hidden="true" />}
+                <span className="text-xs font-semibold hidden md:inline">
+                  {isCyclePlaying ? 'Pause' : 'Play Cycle'}
+                </span>
+              </button>
+
+              <div className="flex items-center gap-1 px-1.5 text-xs font-mono font-bold text-stone-200">
+                <Clock className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
+                <span>
+                  {Math.floor(timeOfDay).toString().padStart(2, '0')}:
+                  {Math.floor((timeOfDay % 1) * 60).toString().padStart(2, '0')}
+                </span>
+              </div>
+
+              {/* Cycle Speed Selector */}
+              <button
+                onClick={() => setCycleSpeed((s) => (s === 1 ? 5 : s === 5 ? 20 : 1))}
+                className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-stone-800 text-stone-300 hover:text-white border border-white/10 transition cursor-pointer"
+                title="Change Cycle Simulation Speed"
+              >
+                {cycleSpeed}x
+              </button>
+            </div>
+
+            {/* Lighting Mode Switcher (All 6 modes) */}
+            <div className="flex items-center gap-1 overflow-x-auto py-0.5" role="group" aria-label="Lighting Environment">
               {Object.values(LIGHTING_MODES).map((mode) => {
                 const Icon = mode.icon;
                 const active = lighting === mode.id;
@@ -2067,71 +2648,106 @@ export default function App() {
                     key={mode.id}
                     aria-label={`Set lighting to ${mode.name}`}
                     aria-pressed={active}
-                    onClick={() => setLighting(mode.id)}
-                    className={`px-2.5 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1.5 transition cursor-pointer min-h-[32px] ${
+                    onClick={() => {
+                      setLighting(mode.id);
+                      if (mode.id === 'dawn') setTimeOfDay(6.5);
+                      else if (mode.id === 'day') setTimeOfDay(12.0);
+                      else if (mode.id === 'golden') setTimeOfDay(17.5);
+                      else if (mode.id === 'twilight') setTimeOfDay(20.0);
+                      else if (mode.id === 'night') setTimeOfDay(23.5);
+                      else if (mode.id === 'uv') setTimeOfDay(2.5);
+                    }}
+                    className={`px-2 py-1.5 rounded-xl text-xs font-medium flex items-center gap-1 transition cursor-pointer min-h-[30px] ${
                       active
                         ? 'bg-white/15 text-white border border-white/25 shadow-sm'
                         : 'text-stone-300 hover:text-white'
                     }`}
-                    title={mode.name}
+                    title={`${mode.name} (${mode.timeLabel})`}
                   >
                     <Icon className={`w-3.5 h-3.5 ${active ? mode.accentText : ''}`} aria-hidden="true" />
-                    <span className="hidden sm:inline">{mode.name}</span>
+                    <span className="hidden xl:inline">{mode.name}</span>
                   </button>
                 );
               })}
             </div>
 
-            {/* Mist Spray, Undo/Redo & HUD Toggle */}
+            {/* Right group: Mist Spray, Water Cycle, Chime & Zen */}
             <div className="flex items-center gap-1.5">
+              {/* Dynamic Water Cycle Evaporation Status */}
               <button
-                onClick={handleUndo}
-                disabled={historyIndex <= 0}
-                aria-label="Undo last change (Ctrl+Z)"
-                className={`p-1.5 rounded-xl border transition flex items-center justify-center min-w-[32px] min-h-[32px] sm:hidden ${
-                  historyIndex > 0
-                    ? 'bg-stone-800/80 text-stone-200 border-white/10 hover:text-white cursor-pointer active:scale-95'
-                    : 'bg-stone-900/40 text-stone-600 border-white/5 cursor-not-allowed opacity-40'
+                onClick={() => {
+                  setIsEvaporationActive((p) => {
+                    const next = !p;
+                    showToast(next ? 'Natural Evaporation Cycle: Active' : 'Evaporation: Paused', 'info');
+                    return next;
+                  });
+                }}
+                className={`p-1.5 rounded-xl border text-xs flex items-center gap-1 transition cursor-pointer min-h-[30px] ${
+                  isEvaporationActive
+                    ? 'bg-emerald-950/60 text-emerald-300 border-emerald-600/30'
+                    : 'bg-stone-900 text-stone-500 border-white/5'
                 }`}
-                title="Undo (Ctrl+Z)"
+                title={`Water Cycle & Evaporation: ${isEvaporationActive ? 'Active (Dynamic)' : 'Paused'}`}
               >
-                <Undo2 className="w-3.5 h-3.5" aria-hidden="true" />
-              </button>
-              <button
-                onClick={handleRedo}
-                disabled={historyIndex >= history.length - 1}
-                aria-label="Redo last change (Ctrl+Y)"
-                className={`p-1.5 rounded-xl border transition flex items-center justify-center min-w-[32px] min-h-[32px] sm:hidden ${
-                  historyIndex < history.length - 1
-                    ? 'bg-stone-800/80 text-stone-200 border-white/10 hover:text-white cursor-pointer active:scale-95'
-                    : 'bg-stone-900/40 text-stone-600 border-white/5 cursor-not-allowed opacity-40'
-                }`}
-                title="Redo (Ctrl+Y)"
-              >
-                <Redo2 className="w-3.5 h-3.5" aria-hidden="true" />
+                <CloudRain className="w-3.5 h-3.5" aria-hidden="true" />
+                <span className="text-[11px] hidden lg:inline">
+                  {currentVessel.type === 'closed' ? 'Closed Glass' : 'Evaporating'}
+                </span>
               </button>
 
+              {/* 432Hz Zen Singing Bowl Chime */}
+              <button
+                onClick={playZenHarmonicChime}
+                className="p-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-400/40 text-xs flex items-center gap-1 transition cursor-pointer min-h-[30px]"
+                title="432 Hz Zen Singing Bowl Harmonic Chime"
+              >
+                <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+              </button>
+
+              {/* Mist Spray */}
               <button
                 onClick={handleTriggerMist}
                 aria-label="Spray water mist into terrarium"
-                className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-400/40 transition flex items-center gap-1.5 active:scale-95 cursor-pointer shadow-sm min-h-[32px]"
+                className="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-400/40 transition flex items-center gap-1 active:scale-95 cursor-pointer shadow-sm min-h-[30px]"
               >
                 <Droplets className={`w-3.5 h-3.5 ${isMisting ? 'animate-bounce' : ''}`} aria-hidden="true" />
                 <span>Mist</span>
               </button>
+
+              {/* HUD Guides */}
               <button
                 onClick={() => setShowHudLabels((p) => !p)}
                 aria-label={showHudLabels ? "Hide layer depth guides" : "Show layer depth guides"}
-                className="p-1.5 rounded-xl bg-stone-800/80 text-stone-200 hover:text-white border border-white/10 cursor-pointer min-w-[32px] min-h-[32px] flex items-center justify-center"
-                title="Toggle Layer Guides"
+                className="p-1.5 rounded-xl bg-stone-800/80 text-stone-200 hover:text-white border border-white/10 cursor-pointer min-w-[30px] min-h-[30px] flex items-center justify-center"
+                title="Toggle Layer Depth Guides"
               >
-                {showHudLabels ? <Eye className="w-4 h-4" aria-hidden="true" /> : <EyeOff className="w-4 h-4" aria-hidden="true" />}
+                {showHudLabels ? <Eye className="w-3.5 h-3.5" aria-hidden="true" /> : <EyeOff className="w-3.5 h-3.5" aria-hidden="true" />}
+              </button>
+
+              {/* Zen Fullscreen Button */}
+              <button
+                onClick={() => {
+                  setIsZenMode((p) => {
+                    const next = !p;
+                    showToast(next ? 'Entered Zen Sanctuary (Press Esc to exit)' : 'Exited Zen Sanctuary', 'info');
+                    return next;
+                  });
+                }}
+                aria-label={isZenMode ? "Exit Zen Mode" : "Enter Zen Mode"}
+                className={`p-1.5 rounded-xl border cursor-pointer min-w-[30px] min-h-[30px] flex items-center justify-center transition ${
+                  isZenMode
+                    ? 'bg-purple-500/25 text-purple-200 border-purple-400/50'
+                    : 'bg-stone-800/80 text-stone-200 hover:text-white border-white/10'
+                }`}
+                title={isZenMode ? "Exit Zen Mode (Esc)" : "Zen Fullscreen Mode (F)"}
+              >
+                {isZenMode ? <Minimize2 className="w-3.5 h-3.5 text-purple-300" aria-hidden="true" /> : <Maximize2 className="w-3.5 h-3.5 text-purple-300" aria-hidden="true" />}
               </button>
             </div>
           </div>
 
           {/* Interactive SVG Canvas */}
-          <div className="relative w-full max-w-[460px] aspect-[400/520] rounded-3xl bg-stone-950/40 border border-white/10 backdrop-blur-sm shadow-2xl flex items-center justify-center overflow-hidden">
+          <div className={`relative w-full ${isZenMode ? 'max-w-[540px]' : 'max-w-[460px]'} aspect-[400/520] rounded-3xl bg-stone-950/40 border border-white/10 backdrop-blur-sm shadow-2xl flex items-center justify-center overflow-hidden transition-all duration-500`}>
             <svg
               ref={svgRef}
               viewBox="0 0 400 520"
@@ -2342,6 +2958,33 @@ export default function App() {
                 />
               </g>
 
+              {/* Dynamic Water Cycle: Condensation Beads on Glass */}
+              {condensationBeads.length > 0 && (
+                <g clipPath="url(#vessel-clip)" opacity={currentVessel.humidityRetention >= 1 ? 0.95 : 0.75} pointerEvents="none">
+                  {condensationBeads.map((bead) => (
+                    <g key={bead.id} transform={`translate(${bead.cx}, ${bead.cy})`}>
+                      <ellipse
+                        cx="0"
+                        cy="0"
+                        rx={bead.rx}
+                        ry={bead.ry}
+                        fill="rgba(255, 255, 255, 0.45)"
+                        stroke="rgba(255, 255, 255, 0.7)"
+                        strokeWidth="0.5"
+                        opacity={bead.opacity}
+                      />
+                      <circle
+                        cx={-bead.rx * 0.3}
+                        cy={-bead.ry * 0.3}
+                        r={bead.rx * 0.35}
+                        fill="#ffffff"
+                        opacity={bead.opacity * 1.3}
+                      />
+                    </g>
+                  ))}
+                </g>
+              )}
+
               {/* Glass Outlines & Highlights */}
               <path
                 d={currentVessel.outlinePath}
@@ -2436,6 +3079,7 @@ export default function App() {
         {/* ==========================================
             RIGHT PANEL: INSPECTOR & ECOSYSTEM DIAGNOSTICS
             ========================================== */}
+        {!isZenMode && (
         <section aria-label="Ecosystem Diagnostics & Inspector" className="lg:col-span-3 space-y-4">
           {/* 1. SELECTED ITEM TRANSFORMATION CONTROLS */}
           <div className="bg-stone-900/75 border border-white/10 rounded-2xl p-4 backdrop-blur-md shadow-xl">
@@ -2667,6 +3311,7 @@ export default function App() {
             </div>
           </div>
         </section>
+        )}
       </main>
 
       {/* ==========================================
