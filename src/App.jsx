@@ -4,7 +4,8 @@ import {
   Sliders, Trash2, FlipHorizontal, ArrowUp, 
   ArrowDown, ZoomIn, ZoomOut, CheckCircle2, AlertTriangle, 
   Camera, RefreshCw, Eye, EyeOff, Volume2, VolumeX, Plus,
-  ShieldCheck, ChevronRight, Maximize2
+  ShieldCheck, ChevronRight, Maximize2,
+  Undo2, Redo2, Share2, Copy, Save, Bookmark, Check, X, Download, FolderHeart, ExternalLink, FileDown, Upload
 } from 'lucide-react';
 
 // ==========================================
@@ -700,6 +701,59 @@ export default function App() {
   // SVG Dragging State
   const svgRef = useRef(null);
   const draggingRef = useRef({ active: false, uid: null, offsetX: 0, offsetY: 0 });
+  const dragStartPosRef = useRef({ x: 0, y: 0 });
+
+  // History & Undo / Redo State
+  const [history, setHistory] = useState([
+    {
+      vesselId: 'apothecary',
+      substrates: PRESETS.rainforest.substrates,
+      items: PRESETS.rainforest.items,
+      humidity: PRESETS.rainforest.humidity,
+      lighting: PRESETS.rainforest.lighting
+    }
+  ]);
+  const [historyIndex, setHistoryIndex] = useState(0);
+
+  // Saved Enclosures (LocalStorage) State
+  const [savedSlots, setSavedSlots] = useState(() => {
+    try {
+      const raw = localStorage.getItem('verdantglass_saved_slots');
+      return raw ? JSON.parse(raw) : [];
+    } catch (_) {
+      return [];
+    }
+  });
+  const [isSavedModalOpen, setIsSavedModalOpen] = useState(false);
+  const [newSlotName, setNewSlotName] = useState('');
+
+  // Share Modal & Deep Link State
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [copiedShareLink, setCopiedShareLink] = useState(false);
+
+  // High-Res Photo Studio State
+  const [isPhotoStudioOpen, setIsPhotoStudioOpen] = useState(false);
+  const [exportFormat, setExportFormat] = useState('png'); // 'png' | 'svg'
+  const [exportResolution, setExportResolution] = useState(2); // 1 | 2 | 4
+  const [exportBackdrop, setExportBackdrop] = useState('studio'); // 'studio' | 'white' | 'transparent'
+  const [includePlaque, setIncludePlaque] = useState(true);
+  const [customPlaqueTitle, setCustomPlaqueTitle] = useState('VERDANTGLASS ARCHIVE • SPECIMEN NO. 1');
+  const [isRenderingExport, setIsRenderingExport] = useState(false);
+
+  // Toast Notification State
+  const [toast, setToast] = useState({ visible: false, message: '', type: 'success' });
+  const showToast = (message, type = 'success') => {
+    setToast({ visible: true, message, type });
+    setTimeout(() => {
+      setToast((prev) => ({ ...prev, visible: false }));
+    }, 2800);
+  };
+
+  // State ref to prevent stale closures in drag / keyboard listeners
+  const stateRef = useRef({ vesselId, substrates, items, humidity, lighting });
+  useEffect(() => {
+    stateRef.current = { vesselId, substrates, items, humidity, lighting };
+  }, [vesselId, substrates, items, humidity, lighting]);
 
   const currentVessel = useMemo(
     () => VESSELS.find((v) => v.id === vesselId) || VESSELS[0],
@@ -712,6 +766,197 @@ export default function App() {
     () => items.find((it) => it.uid === selectedItemId) || null,
     [items, selectedItemId]
   );
+
+  // Deep-Linking Serialization & Deserialization Helpers
+  const encodeBuildState = (state) => {
+    try {
+      const payload = {
+        v: state.vesselId,
+        s: state.substrates,
+        i: state.items.map((it) => ({
+          t: it.type,
+          x: it.x,
+          y: it.y,
+          s: it.scale,
+          r: it.rotation,
+          f: it.flipX ? 1 : 0,
+          z: it.zIndex
+        })),
+        h: state.humidity,
+        l: state.lighting
+      };
+      const jsonStr = JSON.stringify(payload);
+      return btoa(
+        encodeURIComponent(jsonStr).replace(/%([0-9A-F]{2})/g, (_, p1) =>
+          String.fromCharCode(parseInt(p1, 16))
+        )
+      );
+    } catch (err) {
+      console.error('Failed to encode build state:', err);
+      return '';
+    }
+  };
+
+  const decodeBuildState = (hashStr) => {
+    try {
+      const cleanHash = hashStr.replace(/^#build=/, '');
+      if (!cleanHash) return null;
+      const decodedUri = decodeURIComponent(
+        Array.prototype.map
+          .call(atob(cleanHash), (c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      const data = JSON.parse(decodedUri);
+      if (!data || !data.s || !Array.isArray(data.i)) return null;
+      return {
+        vesselId: data.v || 'apothecary',
+        substrates: data.s,
+        items: data.i.map((it, idx) => ({
+          uid: `shared-${Date.now()}-${idx}`,
+          type: it.t,
+          x: it.x,
+          y: it.y,
+          scale: it.s ?? 1,
+          rotation: it.r ?? 0,
+          flipX: Boolean(it.f),
+          zIndex: it.z ?? idx + 1
+        })),
+        humidity: data.h ?? 70,
+        lighting: data.l ?? 'day'
+      };
+    } catch (err) {
+      console.warn('Failed to parse build state:', err);
+      return null;
+    }
+  };
+
+  // Push Snapshot to History (up to 30 snapshots)
+  const pushHistorySnapshot = (newSnapshot) => {
+    setHistory((prev) => {
+      const trimmed = prev.slice(0, historyIndex + 1);
+      const next = [...trimmed, newSnapshot];
+      if (next.length > 30) next.shift();
+      return next;
+    });
+    setHistoryIndex((prev) => Math.min(prev + 1, 29));
+  };
+
+  const handleUndo = () => {
+    if (historyIndex > 0) {
+      const targetIndex = historyIndex - 1;
+      const snap = history[targetIndex];
+      if (snap) {
+        setVesselId(snap.vesselId);
+        setSubstrates({ ...snap.substrates });
+        setItems(snap.items.map((it) => ({ ...it })));
+        setHumidity(snap.humidity);
+        setLighting(snap.lighting);
+        setSelectedItemId(null);
+        setHistoryIndex(targetIndex);
+        showToast('Undo', 'info');
+      }
+    }
+  };
+
+  const handleRedo = () => {
+    if (historyIndex < history.length - 1) {
+      const targetIndex = historyIndex + 1;
+      const snap = history[targetIndex];
+      if (snap) {
+        setVesselId(snap.vesselId);
+        setSubstrates({ ...snap.substrates });
+        setItems(snap.items.map((it) => ({ ...it })));
+        setHumidity(snap.humidity);
+        setLighting(snap.lighting);
+        setSelectedItemId(null);
+        setHistoryIndex(targetIndex);
+        showToast('Redo', 'info');
+      }
+    }
+  };
+
+  // 1. Initial Load: Check URL Hash first (#build=...), else load LocalStorage Auto-Save
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash.startsWith('#build=')) {
+      const parsed = decodeBuildState(window.location.hash);
+      if (parsed) {
+        setVesselId(parsed.vesselId);
+        setSubstrates(parsed.substrates);
+        setItems(parsed.items);
+        setHumidity(parsed.humidity);
+        setLighting(parsed.lighting);
+        setHistory([parsed]);
+        setHistoryIndex(0);
+        showToast('Ecosystem loaded from shared link!', 'success');
+        return;
+      }
+    }
+
+    try {
+      const saved = localStorage.getItem('verdantglass_autosave');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.items && parsed.substrates) {
+          setVesselId(parsed.vesselId || 'apothecary');
+          setSubstrates(parsed.substrates);
+          setItems(parsed.items);
+          setHumidity(parsed.humidity ?? 70);
+          setLighting(parsed.lighting ?? 'day');
+          setHistory([
+            {
+              vesselId: parsed.vesselId || 'apothecary',
+              substrates: parsed.substrates,
+              items: parsed.items,
+              humidity: parsed.humidity ?? 70,
+              lighting: parsed.lighting ?? 'day'
+            }
+          ]);
+          setHistoryIndex(0);
+        }
+      }
+    } catch (_) {}
+  }, []);
+
+  // 2. Debounced Auto-Save to LocalStorage
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        localStorage.setItem(
+          'verdantglass_autosave',
+          JSON.stringify({
+            vesselId,
+            substrates,
+            items,
+            humidity,
+            lighting,
+            timestamp: Date.now()
+          })
+        );
+      } catch (_) {}
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [vesselId, substrates, items, humidity, lighting]);
+
+  // 3. Global Keyboard Shortcuts for Undo & Redo (Ctrl+Z / Ctrl+Y / Cmd+Z / Cmd+Shift+Z)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z') && !e.shiftKey) {
+        e.preventDefault();
+        handleUndo();
+      } else if (
+        (e.ctrlKey || e.metaKey) &&
+        ((e.key === 'y' || e.key === 'Y') || (e.shiftKey && (e.key === 'z' || e.key === 'Z')))
+      ) {
+        e.preventDefault();
+        handleRedo();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [historyIndex, history]);
 
   // Animate Critters smoothly along the soil surface
   useEffect(() => {
@@ -744,7 +989,24 @@ export default function App() {
     };
 
     const onPointerUp = () => {
-      draggingRef.current.active = false;
+      if (draggingRef.current.active) {
+        const movedUid = draggingRef.current.uid;
+        draggingRef.current.active = false;
+        const currentItems = stateRef.current.items;
+        const movedItem = currentItems.find((it) => it.uid === movedUid);
+        if (
+          movedItem &&
+          (movedItem.x !== dragStartPosRef.current.x || movedItem.y !== dragStartPosRef.current.y)
+        ) {
+          pushHistorySnapshot({
+            vesselId: stateRef.current.vesselId,
+            substrates: stateRef.current.substrates,
+            items: currentItems,
+            humidity: stateRef.current.humidity,
+            lighting: stateRef.current.lighting
+          });
+        }
+      }
     };
 
     window.addEventListener('pointermove', onPointerMove);
@@ -753,7 +1015,7 @@ export default function App() {
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
     };
-  }, []);
+  }, [historyIndex]);
 
   // Calculate stacked substrate layers from bottom up
   const substrateStack = useMemo(() => {
@@ -873,7 +1135,7 @@ export default function App() {
   }, [substrates, items, humidity, currentVessel]);
 
   // ==========================================
-  // 5. INTERACTION HANDLERS
+  // 5. INTERACTION & PERSISTENCE HANDLERS
   // ==========================================
 
   const handleSubstrateChange = (key, newValue) => {
@@ -881,19 +1143,40 @@ export default function App() {
     const oldVal = substrates[key] || 0;
     const delta = val - oldVal;
 
-    setSubstrates((prev) => ({
-      ...prev,
+    const nextSubstrates = {
+      ...substrates,
       [key]: val
-    }));
+    };
+    setSubstrates(nextSubstrates);
 
+    let nextItems = items;
     if (delta !== 0) {
-      setItems((prevItems) =>
-        prevItems.map((it) => ({
-          ...it,
-          y: Math.max(130, Math.min(445, it.y - delta))
-        }))
-      );
+      nextItems = items.map((it) => ({
+        ...it,
+        y: Math.max(130, Math.min(445, it.y - delta))
+      }));
+      setItems(nextItems);
     }
+
+    pushHistorySnapshot({
+      vesselId,
+      substrates: nextSubstrates,
+      items: nextItems,
+      humidity,
+      lighting
+    });
+  };
+
+  const handleSelectVessel = (newVesselId) => {
+    if (newVesselId === vesselId) return;
+    setVesselId(newVesselId);
+    pushHistorySnapshot({
+      vesselId: newVesselId,
+      substrates,
+      items,
+      humidity,
+      lighting
+    });
   };
 
   const handleAddItem = (catalogItem) => {
@@ -912,36 +1195,70 @@ export default function App() {
       zIndex: items.length + 1
     };
 
-    setItems((prev) => [...prev, newItem]);
+    const nextItems = [...items, newItem];
+    setItems(nextItems);
     setSelectedItemId(newUid);
+
+    pushHistorySnapshot({
+      vesselId,
+      substrates,
+      items: nextItems,
+      humidity,
+      lighting
+    });
   };
 
-  const updateSelectedItem = (patch) => {
+  const updateSelectedItem = (patch, record = true) => {
     if (!selectedItemId) return;
-    setItems((prev) =>
-      prev.map((it) => (it.uid === selectedItemId ? { ...it, ...patch } : it))
+    const nextItems = items.map((it) =>
+      it.uid === selectedItemId ? { ...it, ...patch } : it
     );
+    setItems(nextItems);
+    if (record) {
+      pushHistorySnapshot({
+        vesselId,
+        substrates,
+        items: nextItems,
+        humidity,
+        lighting
+      });
+    }
   };
 
   const handleDeleteSelected = () => {
     if (!selectedItemId) return;
-    setItems((prev) => prev.filter((it) => it.uid !== selectedItemId));
+    const nextItems = items.filter((it) => it.uid !== selectedItemId);
+    setItems(nextItems);
     setSelectedItemId(null);
+    pushHistorySnapshot({
+      vesselId,
+      substrates,
+      items: nextItems,
+      humidity,
+      lighting
+    });
+    showToast('Element removed from terrarium', 'info');
   };
 
   const handleLayerOrder = (direction) => {
     if (!selectedItem) return;
-    setItems((prev) => {
-      const sorted = [...prev].sort((a, b) => a.zIndex - b.zIndex);
-      const idx = sorted.findIndex((it) => it.uid === selectedItemId);
-      if (idx === -1) return prev;
-      const swapIdx = direction === 'up' ? idx + 1 : idx - 1;
-      if (swapIdx < 0 || swapIdx >= sorted.length) return prev;
+    const sorted = [...items].sort((a, b) => a.zIndex - b.zIndex);
+    const idx = sorted.findIndex((it) => it.uid === selectedItemId);
+    if (idx === -1) return;
+    const swapIdx = direction === 'up' ? idx + 1 : idx - 1;
+    if (swapIdx < 0 || swapIdx >= sorted.length) return;
 
-      const tempZ = sorted[idx].zIndex;
-      sorted[idx] = { ...sorted[idx], zIndex: sorted[swapIdx].zIndex };
-      sorted[swapIdx] = { ...sorted[swapIdx], zIndex: tempZ };
-      return sorted;
+    const tempZ = sorted[idx].zIndex;
+    sorted[idx] = { ...sorted[idx], zIndex: sorted[swapIdx].zIndex };
+    sorted[swapIdx] = { ...sorted[swapIdx], zIndex: tempZ };
+
+    setItems(sorted);
+    pushHistorySnapshot({
+      vesselId,
+      substrates,
+      items: sorted,
+      humidity,
+      lighting
     });
   };
 
@@ -961,6 +1278,7 @@ export default function App() {
     e.stopPropagation();
     setSelectedItemId(item.uid);
     const pt = getSvgCoords(e.clientX, e.clientY);
+    dragStartPosRef.current = { x: item.x, y: item.y };
     draggingRef.current = {
       active: true,
       uid: item.uid,
@@ -976,7 +1294,8 @@ export default function App() {
   // Mist Spray Effect & Sound Synthesis
   const handleTriggerMist = () => {
     setIsMisting(true);
-    setHumidity((prev) => Math.min(99, Math.round(prev + 12 * currentVessel.humidityRetention)));
+    const nextHumidity = Math.min(99, Math.round(humidity + 12 * currentVessel.humidityRetention));
+    setHumidity(nextHumidity);
 
     if (!isSoundMuted) {
       try {
@@ -1038,36 +1357,302 @@ export default function App() {
     if (!preset) return;
     setVesselId(preset.vesselId);
     setSubstrates({ ...preset.substrates });
-    setItems(preset.items.map((item) => ({ ...item })));
+    const nextItems = preset.items.map((item) => ({ ...item }));
+    setItems(nextItems);
     setHumidity(preset.humidity);
     setLighting(preset.lighting);
     setSelectedItemId(null);
+
+    pushHistorySnapshot({
+      vesselId: preset.vesselId,
+      substrates: { ...preset.substrates },
+      items: nextItems,
+      humidity: preset.humidity,
+      lighting: preset.lighting
+    });
+    showToast(`Loaded ${preset.name} template!`, 'success');
   };
 
   const handleClearTerrarium = () => {
     setItems([]);
     setSelectedItemId(null);
+    pushHistorySnapshot({
+      vesselId,
+      substrates,
+      items: [],
+      humidity,
+      lighting
+    });
+    showToast('Emptied all plants and decor', 'info');
   };
 
-  const handleExportSnapshot = () => {
-    if (!svgRef.current) return;
+  // Saved Enclosure Slot Management (LocalStorage)
+  const handleSaveSlot = (name) => {
+    const cleanName = (name || '').trim();
+    if (!cleanName) return;
+    const newSlot = {
+      id: `slot-${Date.now()}`,
+      name: cleanName,
+      timestamp: Date.now(),
+      vesselId,
+      substrates: { ...substrates },
+      items: items.map((it) => ({ ...it })),
+      humidity,
+      lighting,
+      score: ecosystemReport.score
+    };
+
+    const updated = [newSlot, ...savedSlots.filter((s) => s.name.toLowerCase() !== cleanName.toLowerCase())];
+    setSavedSlots(updated);
     try {
-      const serializer = new XMLSerializer();
-      const svgString = serializer.serializeToString(svgRef.current);
-      const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
+      localStorage.setItem('verdantglass_saved_slots', JSON.stringify(updated));
+    } catch (_) {}
+    setNewSlotName('');
+    showToast(`Archived "${cleanName}"!`, 'success');
+  };
+
+  const handleLoadSlot = (slot) => {
+    if (!slot) return;
+    setVesselId(slot.vesselId);
+    setSubstrates({ ...slot.substrates });
+    const loadedItems = (slot.items || []).map((it) => ({ ...it }));
+    setItems(loadedItems);
+    setHumidity(slot.humidity ?? 70);
+    setLighting(slot.lighting ?? 'day');
+    setSelectedItemId(null);
+
+    pushHistorySnapshot({
+      vesselId: slot.vesselId,
+      substrates: { ...slot.substrates },
+      items: loadedItems,
+      humidity: slot.humidity ?? 70,
+      lighting: slot.lighting ?? 'day'
+    });
+    setIsSavedModalOpen(false);
+    showToast(`Loaded "${slot.name}"`, 'success');
+  };
+
+  const handleDeleteSlot = (slotId) => {
+    const updated = savedSlots.filter((s) => s.id !== slotId);
+    setSavedSlots(updated);
+    try {
+      localStorage.setItem('verdantglass_saved_slots', JSON.stringify(updated));
+    } catch (_) {}
+    showToast('Enclosure removed from archives', 'info');
+  };
+
+  const handleExportAllSlotsJson = () => {
+    try {
+      const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(savedSlots, null, 2));
       const link = document.createElement('a');
-      link.href = url;
-      link.download = `terrarium-${vesselId}-${Date.now()}.svg`;
+      link.href = dataStr;
+      link.download = `verdantglass-archives-${Date.now()}.json`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      setSnapshotSuccess(true);
-      setTimeout(() => setSnapshotSuccess(false), 2500);
+      showToast('Exported archives JSON backup', 'success');
     } catch (_) {
-      setSnapshotSuccess(true);
-      setTimeout(() => setSnapshotSuccess(false), 2500);
+      showToast('Failed to export JSON backup', 'warn');
+    }
+  };
+
+  const handleImportSlotsJson = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const parsed = JSON.parse(event.target.result);
+        if (Array.isArray(parsed)) {
+          const merged = [...parsed, ...savedSlots];
+          const unique = Array.from(new Map(merged.map((s) => [s.id, s])).values());
+          setSavedSlots(unique);
+          localStorage.setItem('verdantglass_saved_slots', JSON.stringify(unique));
+          showToast(`Imported ${parsed.length} enclosures!`, 'success');
+        } else {
+          showToast('Invalid JSON file format', 'warn');
+        }
+      } catch (_) {
+        showToast('Invalid JSON file', 'warn');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  // Deep-Link Share URL computation & clipboard copy
+  const currentShareUrl = useMemo(() => {
+    if (typeof window === 'undefined') return '';
+    const hash = encodeBuildState({ vesselId, substrates, items, humidity, lighting });
+    return `${window.location.origin}${window.location.pathname}#build=${hash}`;
+  }, [vesselId, substrates, items, humidity, lighting]);
+
+  const handleCopyShareUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(currentShareUrl);
+      setCopiedShareLink(true);
+      showToast('Link copied to clipboard!', 'success');
+      setTimeout(() => setCopiedShareLink(false), 2500);
+    } catch (_) {
+      showToast('Could not copy link automatically', 'warn');
+    }
+  };
+
+  // High-Resolution Photo Studio Export Engine
+  const handleRenderAndDownloadArtwork = () => {
+    if (!svgRef.current) return;
+    setIsRenderingExport(true);
+
+    try {
+      const serializer = new XMLSerializer();
+      const svgString = serializer.serializeToString(svgRef.current);
+
+      if (exportFormat === 'svg') {
+        const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `verdantglass-${vesselId}-${Date.now()}.svg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        showToast('SVG artwork exported!', 'success');
+        setIsRenderingExport(false);
+        setIsPhotoStudioOpen(false);
+        return;
+      }
+
+      // PNG High-Res Rasterization with Canvas
+      const img = new Image();
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      const svgUrl = URL.createObjectURL(svgBlob);
+
+      img.onload = () => {
+        const scale = exportResolution; // 1 | 2 | 4
+        const terrariumW = 400 * scale;
+        const terrariumH = 520 * scale;
+        const plaqueH = includePlaque ? 80 * scale : 0;
+
+        const canvas = document.createElement('canvas');
+        canvas.width = terrariumW;
+        canvas.height = terrariumH + plaqueH;
+        const ctx = canvas.getContext('2d');
+
+        // 1. Draw Background
+        if (exportBackdrop === 'studio') {
+          const grad = ctx.createRadialGradient(
+            terrariumW / 2, terrariumH * 0.4, 20 * scale,
+            terrariumW / 2, (terrariumH + plaqueH) / 2, terrariumH
+          );
+          grad.addColorStop(0, '#16231c');
+          grad.addColorStop(0.6, '#0c1410');
+          grad.addColorStop(1, '#050806');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        } else if (exportBackdrop === 'white') {
+          ctx.fillStyle = '#f7f6f2';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // 2. Draw Terrarium Vessel Artwork
+        ctx.drawImage(img, 0, 0, terrariumW, terrariumH);
+
+        // 3. Draw Engraved Brass Archival Plaque
+        if (includePlaque) {
+          const pTop = terrariumH;
+          const pHeight = plaqueH;
+          const pWidth = terrariumW;
+
+          // Plaque base plate
+          const plaqueGrad = ctx.createLinearGradient(0, pTop, 0, pTop + pHeight);
+          plaqueGrad.addColorStop(0, '#1c1b18');
+          plaqueGrad.addColorStop(0.5, '#121210');
+          plaqueGrad.addColorStop(1, '#0d0d0b');
+          ctx.fillStyle = plaqueGrad;
+          ctx.fillRect(0, pTop, pWidth, pHeight);
+
+          // Double Gold Borders
+          ctx.strokeStyle = '#d4af37';
+          ctx.lineWidth = 2 * scale;
+          ctx.strokeRect(12 * scale, pTop + 8 * scale, pWidth - 24 * scale, pHeight - 16 * scale);
+
+          ctx.strokeStyle = '#8c7322';
+          ctx.lineWidth = 1 * scale;
+          ctx.strokeRect(15 * scale, pTop + 11 * scale, pWidth - 30 * scale, pHeight - 22 * scale);
+
+          // Golden Corner Rivets
+          const rivetCoords = [
+            [20 * scale, pTop + 16 * scale],
+            [pWidth - 20 * scale, pTop + 16 * scale],
+            [20 * scale, pTop + pHeight - 16 * scale],
+            [pWidth - 20 * scale, pTop + pHeight - 16 * scale]
+          ];
+          rivetCoords.forEach(([rx, ry]) => {
+            ctx.beginPath();
+            ctx.arc(rx, ry, 2.5 * scale, 0, Math.PI * 2);
+            ctx.fillStyle = '#b89635';
+            ctx.fill();
+          });
+
+          // Text Engravings
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+
+          // Small-caps Archival Header
+          ctx.fillStyle = '#b89635';
+          ctx.font = `600 ${9 * scale}px "Georgia", "Times New Roman", serif`;
+          ctx.fillText('VERDANTGLASS BOTANICAL ARCHIVES', pWidth / 2, pTop + 24 * scale);
+
+          // Custom Specimen Title
+          ctx.fillStyle = '#f4e8c1';
+          ctx.font = `bold ${13 * scale}px "Georgia", serif`;
+          const titleText = customPlaqueTitle || `SPECIMEN NO. ${items.length} • ${currentVessel.name.toUpperCase()}`;
+          ctx.fillText(titleText, pWidth / 2, pTop + 42 * scale);
+
+          // Bottom Metadata Bar
+          const dateStr = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+          ctx.fillStyle = '#a19375';
+          ctx.font = `500 ${8.5 * scale}px monospace, sans-serif`;
+          ctx.fillText(
+            `${currentVessel.name.toUpperCase()}  |  BIO-HARMONY: ${ecosystemReport.score}/100  |  ${dateStr.toUpperCase()}`,
+            pWidth / 2,
+            pTop + 60 * scale
+          );
+        }
+
+        // 4. Download Resulting PNG
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const downloadUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            const resTag = scale === 4 ? '4K' : scale === 2 ? 'HD' : '1x';
+            link.download = `verdantglass-${vesselId}-${resTag}-${Date.now()}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(downloadUrl);
+            showToast(`Exported ${resTag} PNG photo!`, 'success');
+          }
+          URL.revokeObjectURL(svgUrl);
+          setIsRenderingExport(false);
+          setIsPhotoStudioOpen(false);
+        }, 'image/png');
+      };
+
+      img.onerror = () => {
+        URL.revokeObjectURL(svgUrl);
+        setIsRenderingExport(false);
+        showToast('Rasterization error. Please choose SVG format.', 'warn');
+      };
+
+      img.src = svgUrl;
+    } catch (err) {
+      console.error(err);
+      setIsRenderingExport(false);
+      showToast('Export failed', 'warn');
     }
   };
 
@@ -1139,6 +1724,65 @@ export default function App() {
 
           <div className="h-5 w-px bg-white/10 mx-1 hidden sm:block" />
 
+          {/* Undo & Redo History */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handleUndo}
+              disabled={historyIndex <= 0}
+              aria-label="Undo last modification (Ctrl+Z)"
+              className={`p-1.5 rounded-lg text-xs border transition flex items-center justify-center min-w-[32px] min-h-[32px] ${
+                historyIndex > 0
+                  ? 'bg-stone-800/80 text-stone-200 border-white/10 hover:text-white hover:bg-stone-700 cursor-pointer active:scale-95'
+                  : 'bg-stone-900/40 text-stone-600 border-white/5 cursor-not-allowed opacity-40'
+              }`}
+              title="Undo (Ctrl+Z)"
+            >
+              <Undo2 className="w-3.5 h-3.5" aria-hidden="true" />
+            </button>
+            <button
+              onClick={handleRedo}
+              disabled={historyIndex >= history.length - 1}
+              aria-label="Redo last modification (Ctrl+Y)"
+              className={`p-1.5 rounded-lg text-xs border transition flex items-center justify-center min-w-[32px] min-h-[32px] ${
+                historyIndex < history.length - 1
+                  ? 'bg-stone-800/80 text-stone-200 border-white/10 hover:text-white hover:bg-stone-700 cursor-pointer active:scale-95'
+                  : 'bg-stone-900/40 text-stone-600 border-white/5 cursor-not-allowed opacity-40'
+              }`}
+              title="Redo (Ctrl+Y)"
+            >
+              <Redo2 className="w-3.5 h-3.5" aria-hidden="true" />
+            </button>
+          </div>
+
+          <div className="h-5 w-px bg-white/10 mx-1 hidden sm:block" />
+
+          {/* Saved Enclosures Archives */}
+          <button
+            onClick={() => setIsSavedModalOpen(true)}
+            aria-label="Open Saved Enclosures Archives"
+            className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-stone-700 text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer relative active:scale-95"
+            title="Saved Terrarium Enclosures"
+          >
+            <Bookmark className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
+            <span className="hidden sm:inline">Archives</span>
+            {savedSlots.length > 0 && (
+              <span className="px-1.5 py-0.2 text-[10px] font-bold rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                {savedSlots.length}
+              </span>
+            )}
+          </button>
+
+          {/* Share Deep-Link */}
+          <button
+            onClick={() => setIsShareModalOpen(true)}
+            aria-label="Share this Terrarium via interactive link"
+            className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-stone-700 text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
+            title="Share Interactive Link"
+          >
+            <Share2 className="w-3.5 h-3.5 text-sky-400" aria-hidden="true" />
+            <span className="hidden sm:inline">Share</span>
+          </button>
+
           {/* Sound Mute Toggle */}
           <button
             onClick={() => setIsSoundMuted((prev) => !prev)}
@@ -1156,7 +1800,7 @@ export default function App() {
           <button
             onClick={handleClearTerrarium}
             aria-label="Clear all placed items"
-            className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-rose-950/80 hover:text-rose-200 hover:border-rose-700/50 text-stone-200 border border-white/10 transition flex items-center gap-1 cursor-pointer"
+            className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-rose-950/80 hover:text-rose-200 hover:border-rose-700/50 text-stone-200 border border-white/10 transition flex items-center gap-1 cursor-pointer active:scale-95"
             title="Clear all plants and decor"
           >
             <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
@@ -1164,12 +1808,13 @@ export default function App() {
           </button>
 
           <button
-            onClick={handleExportSnapshot}
-            aria-label="Save terrarium vector snapshot"
+            onClick={() => setIsPhotoStudioOpen(true)}
+            aria-label="Open Botanical Photo Studio & Archival Export"
             className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 hover:bg-emerald-400 text-stone-950 transition flex items-center gap-1.5 shadow-lg shadow-emerald-950/50 active:scale-95 cursor-pointer"
+            title="High-Res Photo Studio"
           >
             <Camera className="w-3.5 h-3.5" aria-hidden="true" />
-            {snapshotSuccess ? 'Saved SVG!' : 'Snapshot'}
+            <span>Photo Studio</span>
           </button>
         </div>
       </header>
@@ -1227,7 +1872,7 @@ export default function App() {
                       <button
                         key={v.id}
                         aria-label={`Select ${v.name} (${v.type})`}
-                        onClick={() => setVesselId(v.id)}
+                        onClick={() => handleSelectVessel(v.id)}
                         className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3 cursor-pointer ${
                           isSelected
                             ? 'bg-emerald-500/15 border-emerald-400/60 shadow-lg'
@@ -1437,15 +2082,42 @@ export default function App() {
               })}
             </div>
 
-            {/* Mist Spray & HUD Toggle */}
-            <div className="flex items-center gap-2">
+            {/* Mist Spray, Undo/Redo & HUD Toggle */}
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={handleUndo}
+                disabled={historyIndex <= 0}
+                aria-label="Undo last change (Ctrl+Z)"
+                className={`p-1.5 rounded-xl border transition flex items-center justify-center min-w-[32px] min-h-[32px] sm:hidden ${
+                  historyIndex > 0
+                    ? 'bg-stone-800/80 text-stone-200 border-white/10 hover:text-white cursor-pointer active:scale-95'
+                    : 'bg-stone-900/40 text-stone-600 border-white/5 cursor-not-allowed opacity-40'
+                }`}
+                title="Undo (Ctrl+Z)"
+              >
+                <Undo2 className="w-3.5 h-3.5" aria-hidden="true" />
+              </button>
+              <button
+                onClick={handleRedo}
+                disabled={historyIndex >= history.length - 1}
+                aria-label="Redo last change (Ctrl+Y)"
+                className={`p-1.5 rounded-xl border transition flex items-center justify-center min-w-[32px] min-h-[32px] sm:hidden ${
+                  historyIndex < history.length - 1
+                    ? 'bg-stone-800/80 text-stone-200 border-white/10 hover:text-white cursor-pointer active:scale-95'
+                    : 'bg-stone-900/40 text-stone-600 border-white/5 cursor-not-allowed opacity-40'
+                }`}
+                title="Redo (Ctrl+Y)"
+              >
+                <Redo2 className="w-3.5 h-3.5" aria-hidden="true" />
+              </button>
+
               <button
                 onClick={handleTriggerMist}
                 aria-label="Spray water mist into terrarium"
                 className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-400/40 transition flex items-center gap-1.5 active:scale-95 cursor-pointer shadow-sm min-h-[32px]"
               >
                 <Droplets className={`w-3.5 h-3.5 ${isMisting ? 'animate-bounce' : ''}`} aria-hidden="true" />
-                Mist Spray
+                <span>Mist</span>
               </button>
               <button
                 onClick={() => setShowHudLabels((p) => !p)}
@@ -1996,6 +2668,426 @@ export default function App() {
           </div>
         </section>
       </main>
+
+      {/* ==========================================
+          TOAST NOTIFICATION BANNER
+          ========================================== */}
+      {toast.visible && (
+        <aside
+          role="status"
+          aria-live="polite"
+          className="fixed top-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-stone-900/95 border border-emerald-500/30 shadow-2xl backdrop-blur-md text-xs font-medium text-emerald-200 transition-all duration-300 animate-in fade-in slide-in-from-top-4"
+        >
+          {toast.type === 'success' && <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" aria-hidden="true" />}
+          {toast.type === 'info' && <Sparkles className="w-4 h-4 text-sky-400 shrink-0" aria-hidden="true" />}
+          {toast.type === 'warn' && <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" aria-hidden="true" />}
+          <span>{toast.message}</span>
+        </aside>
+      )}
+
+      {/* ==========================================
+          SAVED ENCLOSURES / ARCHIVES MODAL
+          ========================================== */}
+      {isSavedModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="saved-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in"
+        >
+          <div className="relative w-full max-w-xl bg-stone-900/95 border border-white/10 rounded-2xl shadow-2xl p-6 text-stone-100 flex flex-col max-h-[85vh]">
+            <div className="flex items-start justify-between pb-4 border-b border-white/10">
+              <div>
+                <h2 id="saved-modal-title" className="text-lg font-bold text-white flex items-center gap-2">
+                  <Bookmark className="w-5 h-5 text-amber-400" aria-hidden="true" />
+                  Terrarium Archives & Saved Enclosures
+                </h2>
+                <p className="text-xs text-stone-300 mt-0.5">
+                  Save your designs locally in your browser. Persisted across visits on this device.
+                </p>
+              </div>
+              <button
+                onClick={() => setIsSavedModalOpen(false)}
+                aria-label="Close dialog"
+                className="p-1.5 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition cursor-pointer"
+              >
+                <X className="w-5 h-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            {/* Save Current Build Form */}
+            <div className="py-4 border-b border-white/10 flex gap-2">
+              <input
+                type="text"
+                placeholder="Name this enclosure (e.g., Emerald Rainforest, Moonlit Haven)..."
+                value={newSlotName}
+                onChange={(e) => setNewSlotName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSaveSlot(newSlotName);
+                }}
+                className="flex-1 px-3 py-2 text-xs bg-stone-950 border border-white/10 rounded-xl text-stone-100 placeholder:text-stone-500 focus:outline-none focus:border-emerald-400"
+              />
+              <button
+                onClick={() => handleSaveSlot(newSlotName)}
+                disabled={!newSlotName.trim()}
+                className="px-4 py-2 text-xs font-semibold bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 disabled:cursor-not-allowed text-stone-950 rounded-xl transition flex items-center gap-1.5 shrink-0 cursor-pointer"
+              >
+                <Save className="w-3.5 h-3.5" aria-hidden="true" />
+                Save Current
+              </button>
+            </div>
+
+            {/* Saved Slots List */}
+            <div className="flex-1 overflow-y-auto py-4 space-y-2.5 pr-1">
+              {savedSlots.length === 0 ? (
+                <div className="text-center py-10 text-stone-400 text-xs">
+                  <FolderHeart className="w-10 h-10 mx-auto text-stone-600 mb-2 opacity-50" aria-hidden="true" />
+                  <p className="font-medium text-stone-300">No saved terrariums found.</p>
+                  <p className="mt-1 text-[11px] text-stone-400">
+                    Type a name above and click "Save Current" to archive your work.
+                  </p>
+                </div>
+              ) : (
+                savedSlots.map((slot) => {
+                  const slotVessel = VESSELS.find((v) => v.id === slot.vesselId) || VESSELS[0];
+                  const dateStr = new Date(slot.timestamp).toLocaleDateString(undefined, {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  });
+                  return (
+                    <div
+                      key={slot.id}
+                      className="p-3.5 rounded-xl bg-stone-950/60 border border-white/10 hover:border-white/20 transition flex items-center justify-between gap-3"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-sm text-stone-100">{slot.name}</span>
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                            {slotVessel.name}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2.5 text-[11px] text-stone-400">
+                          <span>{slot.items?.length || 0} flora/decor</span>
+                          <span>•</span>
+                          <span>Score: {slot.score || 85}/100</span>
+                          <span>•</span>
+                          <span>{dateStr}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          onClick={() => handleLoadSlot(slot)}
+                          className="px-3 py-1.5 text-xs font-semibold bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-stone-950 border border-emerald-500/40 rounded-lg transition cursor-pointer"
+                          title="Load into Studio"
+                        >
+                          Load
+                        </button>
+                        <button
+                          onClick={() => handleDeleteSlot(slot.id)}
+                          aria-label={`Delete ${slot.name}`}
+                          className="p-1.5 text-stone-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition cursor-pointer"
+                          title="Delete Slot"
+                        >
+                          <Trash2 className="w-4 h-4" aria-hidden="true" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-stone-400">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handleExportAllSlotsJson}
+                  className="text-[11px] text-stone-400 hover:text-white flex items-center gap-1 transition cursor-pointer"
+                  title="Download JSON Backup"
+                >
+                  <FileDown className="w-3.5 h-3.5" aria-hidden="true" />
+                  Backup (JSON)
+                </button>
+                <label className="text-[11px] text-stone-400 hover:text-white flex items-center gap-1 transition cursor-pointer">
+                  <Upload className="w-3.5 h-3.5" aria-hidden="true" />
+                  Restore (JSON)
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={handleImportSlotsJson}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+              <span>{savedSlots.length} enclosure{savedSlots.length !== 1 ? 's' : ''} stored</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
+          SHARE DEEP-LINK MODAL
+          ========================================== */}
+      {isShareModalOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="share-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in"
+        >
+          <div className="relative w-full max-w-md bg-stone-900/95 border border-white/10 rounded-2xl shadow-2xl p-6 text-stone-100 space-y-4">
+            <div className="flex items-start justify-between pb-3 border-b border-white/10">
+              <div>
+                <h2 id="share-modal-title" className="text-base font-bold text-white flex items-center gap-2">
+                  <Share2 className="w-4 h-4 text-sky-400" aria-hidden="true" />
+                  Share Micro-Ecosystem
+                </h2>
+                <p className="text-xs text-stone-300 mt-0.5">
+                  Send this interactive link so anyone can explore or clone your exact terrarium.
+                </p>
+              </div>
+              <button
+                onClick={() => setIsShareModalOpen(false)}
+                aria-label="Close share dialog"
+                className="p-1.5 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition cursor-pointer"
+              >
+                <X className="w-5 h-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            {/* Direct Link Input */}
+            <div className="space-y-1.5">
+              <label htmlFor="share-url-input" className="text-xs font-semibold text-stone-300">Shareable Deep-Link URL</label>
+              <div className="flex items-center gap-2">
+                <input
+                  id="share-url-input"
+                  type="text"
+                  readOnly
+                  value={currentShareUrl}
+                  className="flex-1 px-3 py-2 text-xs bg-stone-950 border border-white/10 rounded-xl text-stone-300 font-mono select-all focus:outline-none"
+                />
+                <button
+                  onClick={handleCopyShareUrl}
+                  className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition flex items-center gap-1.5 shrink-0 cursor-pointer ${
+                    copiedShareLink
+                      ? 'bg-emerald-500 text-stone-950'
+                      : 'bg-stone-800 hover:bg-stone-700 text-stone-200'
+                  }`}
+                >
+                  {copiedShareLink ? <Check className="w-3.5 h-3.5" aria-hidden="true" /> : <Copy className="w-3.5 h-3.5" aria-hidden="true" />}
+                  {copiedShareLink ? 'Copied!' : 'Copy'}
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Share Buttons */}
+            <div className="space-y-2 pt-2">
+              <div className="text-xs font-semibold text-stone-300">Quick Share:</div>
+              <div className="grid grid-cols-2 gap-2">
+                <a
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                    `🌿 Check out my custom botanical terrarium on VerdantGlass Studio!\n${currentShareUrl}`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="py-2.5 px-3 rounded-xl bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-600/40 text-emerald-200 text-xs font-medium flex items-center justify-center gap-2 transition cursor-pointer"
+                >
+                  <span>WhatsApp</span>
+                  <ExternalLink className="w-3.5 h-3.5 opacity-60" aria-hidden="true" />
+                </a>
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    'Crafted a living botanical micro-ecosystem on VerdantGlass Studio. Explore or clone it:'
+                  )}&url=${encodeURIComponent(currentShareUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="py-2.5 px-3 rounded-xl bg-sky-950/80 hover:bg-sky-900 border border-sky-600/40 text-sky-200 text-xs font-medium flex items-center justify-center gap-2 transition cursor-pointer"
+                >
+                  <span>X / Twitter</span>
+                  <ExternalLink className="w-3.5 h-3.5 opacity-60" aria-hidden="true" />
+                </a>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-stone-950/50 border border-white/5 text-[11px] text-stone-400">
+              💡 <strong>Instant & Private:</strong> The full design configuration is stored directly in the URL hash—no server accounts or sign-ups required.
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
+          HIGH-RESOLUTION PHOTO STUDIO MODAL
+          ========================================== */}
+      {isPhotoStudioOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="photo-studio-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in"
+        >
+          <div className="relative w-full max-w-2xl bg-stone-900/95 border border-white/10 rounded-2xl shadow-2xl p-6 text-stone-100 flex flex-col max-h-[90vh]">
+            <div className="flex items-start justify-between pb-3 border-b border-white/10">
+              <div>
+                <h2 id="photo-studio-title" className="text-lg font-bold text-white flex items-center gap-2">
+                  <Camera className="w-5 h-5 text-emerald-400" aria-hidden="true" />
+                  Botanical Photo Studio & Archival Export
+                </h2>
+                <p className="text-xs text-stone-300 mt-0.5">
+                  Render exhibition-grade high-resolution artwork of your living terrarium.
+                </p>
+              </div>
+              <button
+                onClick={() => setIsPhotoStudioOpen(false)}
+                aria-label="Close photo studio dialog"
+                className="p-1.5 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition cursor-pointer"
+              >
+                <X className="w-5 h-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto py-4 space-y-4 pr-1">
+              {/* Export Format */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-stone-300">Export Format</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setExportFormat('png')}
+                    className={`py-2 px-3 rounded-xl text-xs font-medium border flex items-center justify-center gap-2 transition cursor-pointer ${
+                      exportFormat === 'png'
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50'
+                        : 'bg-stone-950/60 text-stone-400 border-white/10 hover:text-white'
+                    }`}
+                  >
+                    <span>PNG Photo Image</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setExportFormat('svg')}
+                    className={`py-2 px-3 rounded-xl text-xs font-medium border flex items-center justify-center gap-2 transition cursor-pointer ${
+                      exportFormat === 'svg'
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50'
+                        : 'bg-stone-950/60 text-stone-400 border-white/10 hover:text-white'
+                    }`}
+                  >
+                    <span>Scalable Vector (SVG)</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* PNG Resolution Options */}
+              {exportFormat === 'png' && (
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-stone-300">Output Resolution</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { res: 1, label: 'Standard 1x', dim: '400×520' },
+                      { res: 2, label: 'High-Res 2x', dim: '800×1040' },
+                      { res: 4, label: 'Ultra 4K', dim: '1600×2080' }
+                    ].map((item) => (
+                      <button
+                        key={item.res}
+                        type="button"
+                        onClick={() => setExportResolution(item.res)}
+                        className={`p-2 rounded-xl text-xs border flex flex-col items-center transition cursor-pointer ${
+                          exportResolution === item.res
+                            ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 font-semibold'
+                            : 'bg-stone-950/60 text-stone-400 border-white/10 hover:text-white'
+                        }`}
+                      >
+                        <span>{item.label}</span>
+                        <span className="text-[10px] text-stone-500 font-mono mt-0.5">{item.dim}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Studio Backdrop */}
+              {exportFormat === 'png' && (
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-stone-300">Studio Backdrop</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { id: 'studio', name: 'Botanical Noir' },
+                      { id: 'white', name: 'Gallery Ivory' },
+                      { id: 'transparent', name: 'Transparent' }
+                    ].map((bg) => (
+                      <button
+                        key={bg.id}
+                        type="button"
+                        onClick={() => setExportBackdrop(bg.id)}
+                        className={`p-2 rounded-xl text-xs border flex items-center justify-center transition cursor-pointer ${
+                          exportBackdrop === bg.id
+                            ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 font-semibold'
+                            : 'bg-stone-950/60 text-stone-400 border-white/10 hover:text-white'
+                        }`}
+                      >
+                        {bg.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Collector's Brass Archival Plaque */}
+              {exportFormat === 'png' && (
+                <div className="p-3.5 rounded-xl bg-stone-950/60 border border-white/10 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-semibold text-stone-200">Engraved Archival Brass Plaque</span>
+                      <p className="text-[11px] text-stone-400">Emboss a museum specimen plaque at the base.</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={includePlaque}
+                        onChange={(e) => setIncludePlaque(e.target.checked)}
+                        className="sr-only peer"
+                      />
+                      <div className="w-9 h-5 bg-stone-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                    </label>
+                  </div>
+
+                  {includePlaque && (
+                    <div className="space-y-1">
+                      <label htmlFor="plaque-title-input" className="text-[11px] text-stone-400">Specimen Title / Inscription</label>
+                      <input
+                        id="plaque-title-input"
+                        type="text"
+                        value={customPlaqueTitle}
+                        onChange={(e) => setCustomPlaqueTitle(e.target.value)}
+                        className="w-full px-3 py-1.5 text-xs bg-stone-900 border border-white/10 rounded-lg text-stone-200 font-serif focus:outline-none focus:border-amber-400"
+                        placeholder="VERDANTGLASS ARCHIVE • SPECIMEN NO. 1"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Modal Actions */}
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+              <span className="text-xs text-stone-400 font-mono">
+                {exportFormat === 'svg' ? 'SVG Vector' : `${exportResolution === 4 ? '1600×2400 (4K)' : exportResolution === 2 ? '800×1200 (HD)' : '400×600'} PNG`}
+              </span>
+              <button
+                type="button"
+                onClick={handleRenderAndDownloadArtwork}
+                disabled={isRenderingExport}
+                className="px-5 py-2.5 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-stone-950 transition flex items-center gap-2 shadow-lg shadow-emerald-950/60 active:scale-95 cursor-pointer disabled:opacity-50"
+              >
+                <Download className="w-4 h-4" aria-hidden="true" />
+                <span>{isRenderingExport ? 'Rendering Artwork...' : 'Download Artwork'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
