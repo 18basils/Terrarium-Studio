@@ -7,7 +7,7 @@ import {
   ShieldCheck, ChevronRight, Maximize2, Minimize2,
   Undo2, Redo2, Share2, Copy, Save, Bookmark, Check, X, Download, FolderHeart, ExternalLink, FileDown, Upload,
   Play, Pause, Clock, CloudRain, Wind,
-  BookOpen, ShoppingBag, ClipboardCheck, Printer, Search, RotateCcw, Info
+  BookOpen, ShoppingBag, ClipboardCheck, Printer, Search, RotateCcw, Info, Globe
 } from 'lucide-react';
 
 // ==========================================
@@ -141,6 +141,81 @@ const SUBSTRATE_CONFIG = [
   }
 ];
 
+// ==========================================
+// 1.5 LOCAL CURRENCY & FX REGIONAL ENGINE
+// ==========================================
+
+const CURRENCIES = {
+  USD: { code: 'USD', symbol: '$', name: 'US Dollar', rate: 1.0, flag: '🇺🇸' },
+  AED: { code: 'AED', symbol: 'AED', name: 'UAE Dirham', rate: 3.67, flag: '🇦🇪' },
+  EUR: { code: 'EUR', symbol: '€', name: 'Euro', rate: 0.92, flag: '🇪🇺' },
+  GBP: { code: 'GBP', symbol: '£', name: 'British Pound', rate: 0.77, flag: '🇬🇧' },
+  INR: { code: 'INR', symbol: '₹', name: 'Indian Rupee', rate: 83.5, flag: '🇮🇳' },
+  CAD: { code: 'CAD', symbol: 'CA$', name: 'Canadian Dollar', rate: 1.36, flag: '🇨🇦' },
+  AUD: { code: 'AUD', symbol: 'A$', name: 'Australian Dollar', rate: 1.52, flag: '🇦🇺' },
+  SAR: { code: 'SAR', symbol: 'SAR', name: 'Saudi Riyal', rate: 3.75, flag: '🇸🇦' },
+  QAR: { code: 'QAR', symbol: 'QAR', name: 'Qatari Riyal', rate: 3.64, flag: '🇶🇦' },
+  KWD: { code: 'KWD', symbol: 'KWD', name: 'Kuwaiti Dinar', rate: 0.31, flag: '🇰🇼' },
+  OMR: { code: 'OMR', symbol: 'OMR', name: 'Omani Rial', rate: 0.38, flag: '🇴🇲' },
+  BHD: { code: 'BHD', symbol: 'BHD', name: 'Bahraini Dinar', rate: 0.38, flag: '🇧🇭' },
+  SGD: { code: 'SGD', symbol: 'S$', name: 'Singapore Dollar', rate: 1.32, flag: '🇸🇬' },
+  JPY: { code: 'JPY', symbol: '¥', name: 'Japanese Yen', rate: 152.0, flag: '🇯🇵' },
+  CHF: { code: 'CHF', symbol: 'CHF', name: 'Swiss Franc', rate: 0.87, flag: '🇨🇭' },
+  BRL: { code: 'BRL', symbol: 'R$', name: 'Brazilian Real', rate: 5.40, flag: '🇧🇷' }
+};
+
+const detectUserCurrency = () => {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    const lang = (navigator.language || '').toLowerCase();
+
+    // 1. Timezone-based auto-detection (100% client-side, zero latency, privacy-preserving)
+    if (tz.includes('Dubai') || tz.includes('Abu_Dhabi') || tz.includes('Muscat')) return 'AED';
+    if (tz.includes('Riyadh')) return 'SAR';
+    if (tz.includes('Qatar')) return 'QAR';
+    if (tz.includes('Kuwait')) return 'KWD';
+    if (tz.includes('Bahrain')) return 'BHD';
+    if (tz.includes('Kolkata') || tz.includes('Calcutta') || tz.includes('Delhi')) return 'INR';
+    if (tz.includes('London')) return 'GBP';
+    if (tz.includes('Paris') || tz.includes('Berlin') || tz.includes('Rome') || tz.includes('Madrid') || tz.includes('Amsterdam') || tz.includes('Brussels') || tz.includes('Vienna') || tz.includes('Dublin')) return 'EUR';
+    if (tz.includes('Tokyo')) return 'JPY';
+    if (tz.includes('Singapore')) return 'SGD';
+    if (tz.includes('Toronto') || tz.includes('Vancouver') || tz.includes('Montreal')) return 'CAD';
+    if (tz.includes('Sydney') || tz.includes('Melbourne') || tz.includes('Brisbane') || tz.includes('Perth')) return 'AUD';
+    if (tz.includes('Zurich')) return 'CHF';
+    if (tz.includes('Sao_Paulo')) return 'BRL';
+
+    // 2. Browser Locale mapping fallback
+    if (lang.endsWith('-ae')) return 'AED';
+    if (lang.endsWith('-sa')) return 'SAR';
+    if (lang.endsWith('-qa')) return 'QAR';
+    if (lang.endsWith('-in')) return 'INR';
+    if (lang.endsWith('-gb')) return 'GBP';
+    if (lang.endsWith('-de') || lang.endsWith('-fr') || lang.endsWith('-es') || lang.endsWith('-it') || lang.endsWith('-nl')) return 'EUR';
+    if (lang.endsWith('-ca')) return 'CAD';
+    if (lang.endsWith('-au')) return 'AUD';
+    if (lang.endsWith('-jp')) return 'JPY';
+    if (lang.endsWith('-sg')) return 'SGD';
+
+    return 'USD';
+  } catch (_) {
+    return 'USD';
+  }
+};
+
+const formatPriceRange = (usdMin, usdMax, currencyCode) => {
+  const curr = CURRENCIES[currencyCode] || CURRENCIES.USD;
+  const minVal = Math.round(usdMin * curr.rate);
+  const maxVal = Math.round(usdMax * curr.rate);
+
+  if (curr.code === 'USD') return `$${minVal} – $${maxVal}`;
+  if (curr.code === 'EUR') return `€${minVal} – €${maxVal}`;
+  if (curr.code === 'GBP') return `£${minVal} – £${maxVal}`;
+  if (curr.code === 'INR') return `₹${minVal.toLocaleString()} – ₹${maxVal.toLocaleString()}`;
+  if (curr.code === 'JPY') return `¥${minVal.toLocaleString()} – ¥${maxVal.toLocaleString()}`;
+  return `${curr.code} ${minVal.toLocaleString()} – ${curr.code} ${maxVal.toLocaleString()}`;
+};
+
 const CATALOG_ITEMS = [
   // PLANTS
   {
@@ -157,6 +232,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Beginner Friendly',
     companionTip: 'Pairs exquisitely with cushion moss and ferns; collapses visibly when thirsty as a bio-indicator.',
     nurseryUnit: '1x 2-inch nursery pot (4-6 rooted stems)',
+    usdRange: [5, 8],
     approxCost: '$5 - $8',
     idealHumidity: [65, 95],
     defaultScale: 1,
@@ -176,6 +252,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Beginner Friendly',
     companionTip: 'Provides striking pink/magenta splash against dark stones and emerald mosses.',
     nurseryUnit: '1x 2-inch starter pot',
+    usdRange: [4, 7],
     approxCost: '$4 - $7',
     idealHumidity: [60, 90],
     defaultScale: 1,
@@ -195,6 +272,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Easy / Low Maintenance',
     companionTip: 'The quintessential terrarium groundcover; buffers humidity and protects root zones.',
     nurseryUnit: '1x live cushion pad (~50g, 3-4" diameter)',
+    usdRange: [6, 10],
     approxCost: '$6 - $10',
     idealHumidity: [55, 95],
     defaultScale: 1.05,
@@ -214,6 +292,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Intermediate',
     companionTip: 'Gives vertical architecture and woodland depth; unfurls fresh chartreuse fronds over time.',
     nurseryUnit: '1x 2.5-inch mini fern starter',
+    usdRange: [6, 9],
     approxCost: '$6 - $9',
     idealHumidity: [60, 95],
     defaultScale: 1.1,
@@ -233,6 +312,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Intermediate / Collector',
     companionTip: 'Mount onto spiderwood branch or lava rock; benefits greatly from gentle air ventilation.',
     nurseryUnit: '1x blooming-size miniature specimen',
+    usdRange: [14, 22],
     approxCost: '$14 - $22',
     idealHumidity: [65, 90],
     defaultScale: 1.05,
@@ -252,6 +332,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Easy in open bowls / Fatal in closed jars',
     companionTip: 'NEVER plant in a closed apothecary jar; pair with Haworthia & desert sand in wide bubble bowls.',
     nurseryUnit: '1x 2-inch succulent plug',
+    usdRange: [4, 7],
     approxCost: '$4 - $7',
     idealHumidity: [15, 45],
     defaultScale: 1,
@@ -271,6 +352,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Very Resilient / Beginner Friendly',
     companionTip: 'Ideal structural plant for open aerium bowls and desert rock arrangements.',
     nurseryUnit: '1x 2-inch zebra plant rosette',
+    usdRange: [5, 8],
     approxCost: '$5 - $8',
     idealHumidity: [15, 50],
     defaultScale: 1,
@@ -290,6 +372,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Easy / Zero Substrate',
     companionTip: 'Leaves blush vivid crimson prior to violet tubular flowers; perfect epiphyte accent.',
     nurseryUnit: '1x live tillandsia cluster (2-3")',
+    usdRange: [5, 9],
     approxCost: '$5 - $9',
     idealHumidity: [35, 80],
     defaultScale: 0.95,
@@ -309,6 +392,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Specialist / Intermediate',
     companionTip: 'Sensitive cilia trigger bi-lobed traps in 100ms; avoid touching traps unnecessarily.',
     nurseryUnit: '1x live potted trap specimen (3-5 traps)',
+    usdRange: [9, 15],
     approxCost: '$9 - $15',
     idealHumidity: [65, 95],
     defaultScale: 1.1,
@@ -328,6 +412,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Intermediate / Vigorous Grower',
     companionTip: 'Glistening adhesive mucilage traps fungus gnats naturally, acting as biological pest control!',
     nurseryUnit: '1x 2-inch live sundew starter pot',
+    usdRange: [8, 14],
     approxCost: '$8 - $14',
     idealHumidity: [70, 95],
     defaultScale: 1.05,
@@ -347,6 +432,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Intermediate / Trailing Beauty',
     companionTip: 'Cascades gracefully over driftwood and rock cliffs with exquisite turtle-shell patterns.',
     nurseryUnit: '1x 2-inch rooted trailing pot (several vines)',
+    usdRange: [8, 13],
     approxCost: '$8 - $13',
     idealHumidity: [55, 85],
     defaultScale: 1.0,
@@ -368,6 +454,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Zero Maintenance',
     companionTip: 'Ideal climbing trellis for creeping vines and moss pad attachment.',
     nurseryUnit: '1x 4-6" curated specimen branch',
+    usdRange: [7, 12],
     approxCost: '$7 - $12',
     defaultScale: 1.15,
     description: 'Twisted golden timber providing natural climbing structure.',
@@ -386,6 +473,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Zero Maintenance',
     companionTip: 'Natural porous crater-like pockmarks are ideal for pressing live moss plugs into.',
     nurseryUnit: '1x small hand-picked stone (200-350g)',
+    usdRange: [5, 9],
     approxCost: '$5 - $9',
     defaultScale: 1.1,
     description: 'Craggy, eroded stone with cavities perfect for moss pockets.',
@@ -404,6 +492,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Zero Maintenance',
     companionTip: 'Creates a mystical subterranean aesthetic, especially under twilight or UV lighting.',
     nurseryUnit: '1x raw mineral cluster (1.5-2.5")',
+    usdRange: [6, 11],
     approxCost: '$6 - $11',
     defaultScale: 0.95,
     description: 'Translucent mineral cluster that catches grow-light rays.',
@@ -422,6 +511,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Zero Maintenance',
     companionTip: 'Used to craft stepping-stone paths, retaining walls, or gravel borders.',
     nurseryUnit: '1x bag of 5-8 hand-selected pebbles',
+    usdRange: [3, 5],
     approxCost: '$3 - $5',
     defaultScale: 1,
     description: 'Smooth water-worn stones for pathways and soil borders.',
@@ -440,6 +530,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Novelty / Organic Wonder',
     companionTip: 'Symbiotic decomposer that breaks down organic matter alongside micro-fauna.',
     nurseryUnit: '1x inoculated mini-spore wood plug',
+    usdRange: [8, 14],
     approxCost: '$8 - $14',
     defaultScale: 0.95,
     description: 'Whimsical fruiting bodies that glow softly under UV light.',
@@ -458,6 +549,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Self-Sustaining Colony',
     companionTip: 'Essential ecosystem engineers! They consume decaying plant leaves and mold before it spreads.',
     nurseryUnit: '1x starter culture (~50 springtails + 10 isopods)',
+    usdRange: [10, 16],
     approxCost: '$10 - $16',
     defaultScale: 1,
     description: 'Living micro-fauna that roam the substrate and consume decaying matter!',
@@ -476,6 +568,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Zero Maintenance',
     companionTip: 'Maintains steady atmospheric evaporation and provides an aquifer look.',
     nurseryUnit: '1x sculpted resin/glass reservoir dish',
+    usdRange: [6, 10],
     approxCost: '$6 - $10',
     defaultScale: 1.2,
     description: 'Clear reflective water pocket providing natural humidity buffering and caustics.',
@@ -494,6 +587,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Zero Maintenance',
     companionTip: 'Its vesicular micro-pores cultivate beneficial nitrifying bio-filtration bacteria.',
     nurseryUnit: '1x porous volcanic specimen (200-300g)',
+    usdRange: [4, 8],
     approxCost: '$4 - $8',
     defaultScale: 1.15,
     description: 'Dark, textured volcanic rock ideal for anchoring moss and beneficial bacteria.',
@@ -512,6 +606,7 @@ const CATALOG_ITEMS = [
     careDifficulty: 'Zero Maintenance',
     companionTip: 'Adds timeless geological antiquity and rich warm ochre banding to the landscape.',
     nurseryUnit: '1x fossilized stone specimen (250-400g)',
+    usdRange: [8, 14],
     approxCost: '$8 - $14',
     defaultScale: 1.1,
     description: 'Fossilized prehistoric wood with striated rings and rich ochre grain.',
@@ -1233,6 +1328,15 @@ export default function App() {
   // Phase 3: Real-World "BOM" Nursery Shopping List Generator State
   const [isBOMModalOpen, setIsBOMModalOpen] = useState(false);
   const [checkedBOMItems, setCheckedBOMItems] = useState([]);
+  const [selectedCurrency, setSelectedCurrency] = useState(() => detectUserCurrency());
+  const userRegionLabel = useMemo(() => {
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      return tz ? tz.replace(/_/g, ' ') : '';
+    } catch (_) {
+      return '';
+    }
+  }, []);
 
   // Phase 3: Time-Lapse Flora Growth & Sprouting Scrubber (0 = Day 1, 1 = 3 Mo, 2 = 6 Mo, 3 = 1 Yr)
   const [growthStage, setGrowthStage] = useState(0);
@@ -2042,7 +2146,9 @@ export default function App() {
         spec: 'Expanded clay false-bottom pebbles (8-16mm)',
         grams: Math.round(substrates.pebbles * 12.5),
         liters: (substrates.pebbles * 0.02).toFixed(2),
-        costEst: '$3 - $5',
+        usdMin: 3,
+        usdMax: 5,
+        costEst: formatPriceRange(3, 5, selectedCurrency),
         role: 'Drainage basin prevents roots rotting in standing water'
       },
       {
@@ -2051,7 +2157,9 @@ export default function App() {
         spec: 'Steam-activated granular hardwood carbon',
         grams: Math.round(substrates.charcoal * 8.5),
         liters: (substrates.charcoal * 0.012).toFixed(2),
-        costEst: '$2 - $4',
+        usdMin: 2,
+        usdMax: 4,
+        costEst: formatPriceRange(2, 4, selectedCurrency),
         role: 'Absorbs bacterial toxins, sulfur odors and mold spores'
       },
       {
@@ -2060,7 +2168,9 @@ export default function App() {
         spec: 'Dried premium Grade-AAA Sphagnum moss',
         grams: Math.round(substrates.moss * 3.2),
         liters: (substrates.moss * 0.015).toFixed(2),
-        costEst: '$2 - $4',
+        usdMin: 2,
+        usdMax: 4,
+        costEst: formatPriceRange(2, 4, selectedCurrency),
         role: 'Physical mesh barrier separating bio-soil from leca'
       },
       {
@@ -2069,7 +2179,9 @@ export default function App() {
         spec: 'Milled tree fern fiber, peat, fine charcoal & orchid bark',
         grams: Math.round(substrates.soil * 14.5),
         liters: (substrates.soil * 0.025).toFixed(2),
-        costEst: '$4 - $7',
+        usdMin: 4,
+        usdMax: 7,
+        costEst: formatPriceRange(4, 7, selectedCurrency),
         role: 'Airy, bioactive organic rooting matrix'
       },
       ...(substrates.sand > 0 ? [{
@@ -2078,7 +2190,9 @@ export default function App() {
         spec: 'Fine inert quartz sand (0.5-1.0mm)',
         grams: Math.round(substrates.sand * 16.0),
         liters: (substrates.sand * 0.02).toFixed(2),
-        costEst: '$2 - $4',
+        usdMin: 2,
+        usdMax: 4,
+        costEst: formatPriceRange(2, 4, selectedCurrency),
         role: 'Decorative arid top dressing or mineral strata'
       }] : [])
     ];
@@ -2086,17 +2200,24 @@ export default function App() {
     const totalSubstrateGrams = substrateItems.reduce((acc, it) => acc + it.grams, 0);
 
     // 2. Glass Vessel
-    const vesselCost = currentVessel.id === 'wardian' ? '$28 - $42'
-      : currentVessel.id === 'apothecary' ? '$18 - $26'
-      : currentVessel.id === 'flask' ? '$16 - $24'
-      : currentVessel.id === 'globe' ? '$14 - $22'
-      : '$12 - $18';
+    const vesselMin = currentVessel.id === 'wardian' ? 28
+      : currentVessel.id === 'apothecary' ? 18
+      : currentVessel.id === 'flask' ? 16
+      : currentVessel.id === 'globe' ? 14
+      : 12;
+    const vesselMax = currentVessel.id === 'wardian' ? 42
+      : currentVessel.id === 'apothecary' ? 26
+      : currentVessel.id === 'flask' ? 24
+      : currentVessel.id === 'globe' ? 22
+      : 18;
 
     const vesselItem = {
       id: `vessel-${currentVessel.id}`,
       name: currentVessel.name,
       spec: currentVessel.subtitle,
-      costEst: vesselCost,
+      usdMin: vesselMin,
+      usdMax: vesselMax,
+      costEst: formatPriceRange(vesselMin, vesselMax, selectedCurrency),
       type: 'vessel'
     };
 
@@ -2108,6 +2229,8 @@ export default function App() {
 
     const specimenItems = Object.entries(counts).map(([typeId, count]) => {
       const cat = CATALOG_ITEMS.find((c) => c.id === typeId);
+      const uMin = cat?.usdRange ? cat.usdRange[0] : 5;
+      const uMax = cat?.usdRange ? cat.usdRange[1] : 10;
       return {
         id: `specimen-${typeId}`,
         typeId,
@@ -2115,7 +2238,10 @@ export default function App() {
         scientific: cat?.scientific || '',
         count,
         unit: cat?.nurseryUnit || '1x nursery specimen',
-        costEst: cat?.approxCost || '$5 - $10',
+        usdMin: uMin * count,
+        usdMax: uMax * count,
+        costEst: formatPriceRange(uMin, uMax, selectedCurrency),
+        totalCostEst: formatPriceRange(uMin * count, uMax * count, selectedCurrency),
         category: cat?.category || 'plants',
         family: cat?.family || ''
       };
@@ -2123,14 +2249,28 @@ export default function App() {
 
     const allItems = [vesselItem, ...substrateItems, ...specimenItems];
 
+    // Total Estimated Physical Build Budget (Sum of vessel + substrates + all specimens)
+    const totalUSDMin =
+      vesselItem.usdMin +
+      substrateItems.reduce((sum, s) => sum + s.usdMin, 0) +
+      specimenItems.reduce((sum, sp) => sum + sp.usdMin, 0);
+
+    const totalUSDMax =
+      vesselItem.usdMax +
+      substrateItems.reduce((sum, s) => sum + s.usdMax, 0) +
+      specimenItems.reduce((sum, sp) => sum + sp.usdMax, 0);
+
+    const totalBuildCostEst = formatPriceRange(totalUSDMin, totalUSDMax, selectedCurrency);
+
     return {
       vesselItem,
       substrateItems,
       specimenItems,
       totalSubstrateGrams,
+      totalBuildCostEst,
       allItems
     };
-  }, [substrates, items, currentVessel]);
+  }, [substrates, items, currentVessel, selectedCurrency]);
 
   const handleCopyBOMChecklist = async () => {
     try {
@@ -2139,11 +2279,12 @@ export default function App() {
         .join('\n');
 
       const specimenText = bomData.specimenItems
-        .map((sp) => `  - [${checkedBOMItems.includes(sp.id) ? 'x' : ' '}] ${sp.count}x ${sp.name} (${sp.unit}) - Est. ${sp.costEst}`)
+        .map((sp) => `  - [${checkedBOMItems.includes(sp.id) ? 'x' : ' '}] ${sp.count}x ${sp.name} (${sp.unit}) - Est. ${sp.costEst} ea (${sp.totalCostEst} total)`)
         .join('\n');
 
       const text = `🌿 VerdantGlass Studio - Nursery Bill of Materials & Shopping List
 Enclosure: ${bomData.vesselItem.name} (${bomData.vesselItem.spec}) [Est. ${bomData.vesselItem.costEst}]
+Currency: ${CURRENCIES[selectedCurrency]?.name || selectedCurrency} (${CURRENCIES[selectedCurrency]?.flag || ''})
 
 Substrates & Drainage (Total: ~${bomData.totalSubstrateGrams}g):
 ${substrateText}
@@ -2151,10 +2292,11 @@ ${substrateText}
 Living Flora, Hardscape & Fauna:
 ${specimenText}
 
+Total Estimated Physical Build Cost: ${bomData.totalBuildCostEst}
 Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
 
       await navigator.clipboard.writeText(text);
-      showToast('Nursery checklist copied to clipboard!', 'success');
+      showToast(`Checklist copied in ${selectedCurrency}!`, 'success');
     } catch (_) {
       showToast('Checklist ready (Copy failed in this context)', 'info');
     }
@@ -4526,8 +4668,13 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
                         <div className="text-stone-200 font-medium">{activeDossier.origin || 'Global'}</div>
                       </div>
                       <div>
-                        <span className="text-stone-400">Nursery Unit Size:</span>
-                        <div className="text-stone-200 font-medium">{activeDossier.nurseryUnit || '1x unit'}</div>
+                        <span className="text-stone-400">Nursery Procurement:</span>
+                        <div className="text-stone-200 font-medium">
+                          {activeDossier.nurseryUnit || '1x unit'}
+                          <span className="text-emerald-400 ml-1.5 font-mono font-semibold">
+                            ({activeDossier.usdRange ? formatPriceRange(activeDossier.usdRange[0], activeDossier.usdRange[1], selectedCurrency) : activeDossier.approxCost})
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -4569,33 +4716,70 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
               </button>
             </div>
 
+            {/* Currency Selector & Geo-Detection Bar */}
+            <div className="py-2.5 px-3 bg-stone-950/70 border-b border-white/10 flex flex-wrap items-center justify-between gap-2.5 rounded-xl mt-3">
+              <div className="flex items-center gap-2">
+                <Globe className="w-4 h-4 text-emerald-400 shrink-0" aria-hidden="true" />
+                <span className="text-xs text-stone-300 font-medium">Pricing Currency:</span>
+                <select
+                  value={selectedCurrency}
+                  onChange={(e) => {
+                    setSelectedCurrency(e.target.value);
+                    showToast(`Currency switched to ${e.target.value}`, 'info');
+                  }}
+                  className="px-2.5 py-1 text-xs font-semibold bg-stone-900 border border-white/15 rounded-lg text-emerald-300 focus:outline-none focus:border-emerald-400 cursor-pointer"
+                >
+                  {Object.values(CURRENCIES).map((c) => (
+                    <option key={c.code} value={c.code} className="bg-stone-900 text-stone-100">
+                      {c.flag} {c.code} – {c.name} ({c.symbol})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {userRegionLabel && (
+                <div className="flex items-center gap-1.5 text-[11px] text-stone-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Auto-detected: <strong className="text-stone-200">{userRegionLabel}</strong></span>
+                </div>
+              )}
+            </div>
+
             {/* Checklist Content */}
             <div className="flex-1 overflow-y-auto py-4 space-y-4 pr-1">
               {/* Summary Stats Cards */}
-              <div className="grid grid-cols-3 gap-2.5">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 <div className="p-3 rounded-xl bg-stone-950/70 border border-white/10 text-center">
                   <div className="text-[10px] text-stone-400 uppercase tracking-wider">Substrate Mass</div>
-                  <div className="text-lg font-bold text-emerald-400 font-mono mt-0.5">
+                  <div className="text-base sm:text-lg font-bold text-emerald-400 font-mono mt-0.5">
                     {bomData.totalSubstrateGrams}g
                   </div>
-                  <div className="text-[10px] text-stone-500">{(bomData.totalSubstrateGrams / 1000).toFixed(2)} kg dry weight</div>
+                  <div className="text-[10px] text-stone-500">{(bomData.totalSubstrateGrams / 1000).toFixed(2)} kg dry</div>
                 </div>
 
                 <div className="p-3 rounded-xl bg-stone-950/70 border border-white/10 text-center">
-                  <div className="text-[10px] text-stone-400 uppercase tracking-wider">Total Flora & Decor</div>
-                  <div className="text-lg font-bold text-sky-400 font-mono mt-0.5">
+                  <div className="text-[10px] text-stone-400 uppercase tracking-wider">Flora & Decor</div>
+                  <div className="text-base sm:text-lg font-bold text-sky-400 font-mono mt-0.5">
                     {items.length} pcs
                   </div>
-                  <div className="text-[10px] text-stone-500">{bomData.specimenItems.length} unique varieties</div>
+                  <div className="text-[10px] text-stone-500">{bomData.specimenItems.length} varieties</div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-emerald-950/30 border border-emerald-500/40 text-center">
+                  <div className="text-[10px] text-emerald-300 uppercase tracking-wider font-semibold">Est. Total Build</div>
+                  <div className="text-base sm:text-lg font-bold text-emerald-300 font-mono mt-0.5">
+                    {bomData.totalBuildCostEst}
+                  </div>
+                  <div className="text-[10px] text-emerald-400/70">Full physical build</div>
                 </div>
 
                 <div className="p-3 rounded-xl bg-stone-950/70 border border-white/10 text-center">
-                  <div className="text-[10px] text-stone-400 uppercase tracking-wider">Shopping Progress</div>
-                  <div className="text-lg font-bold text-amber-400 font-mono mt-0.5">
+                  <div className="text-[10px] text-stone-400 uppercase tracking-wider">Acquired</div>
+                  <div className="text-base sm:text-lg font-bold text-amber-400 font-mono mt-0.5">
                     {checkedBOMItems.length}/{bomData.allItems.length}
                   </div>
                   <div className="text-[10px] text-stone-500">
-                    {checkedBOMItems.length === bomData.allItems.length && bomData.allItems.length > 0 ? 'All items acquired! 🎉' : 'Checklist active'}
+                    {checkedBOMItems.length === bomData.allItems.length && bomData.allItems.length > 0 ? 'All acquired! 🎉' : 'Checklist active'}
                   </div>
                 </div>
               </div>
@@ -4713,7 +4897,14 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
                             </div>
                           </div>
                           <div className="text-right shrink-0">
-                            <div className="text-xs font-mono font-medium text-stone-300">{specimen.costEst} /ea</div>
+                            <div className="text-xs font-mono font-bold text-emerald-400">
+                              {specimen.count > 1 ? specimen.totalCostEst : specimen.costEst}
+                            </div>
+                            {specimen.count > 1 && (
+                              <div className="text-[10px] text-stone-400 font-mono">
+                                ({specimen.costEst} /ea)
+                              </div>
+                            )}
                           </div>
                         </div>
                       );
