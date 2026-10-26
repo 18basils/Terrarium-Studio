@@ -2,120 +2,310 @@
 
 > **Interactive Botanical Terrarium & Micro-Ecosystem Architect**
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-terrariumstudio.web.app-10b981?style=for-the-badge&logo=firebase&logoColor=white)](https://terrariumstudio.web.app)
-[![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg?style=for-the-badge)](./LICENSE.md)
-[![Security Policy](https://img.shields.io/badge/Security-Policy-blue.svg?style=for-the-badge)](./SECURITY.md)
-[![Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-amber.svg?style=for-the-badge)](./CONTRIBUTING.md)
-[![React](https://img.shields.io/badge/React-19-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Vite](https://img.shields.io/badge/Vite-8-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+![VerdantGlass Studio Banner](./public/og-banner.jpg)
 
-**VerdantGlass Studio** is an interactive, browser-based botanical terrarium simulator and micro-ecosystem architect. Build, layer, and simulate custom bioactive glass enclosures with procedural SVGs, real-time strata layering, micro-climate humidity and temperature control, aquascaping composition guides, and a dynamic ecosystem balance scoring engine.
-
-🌐 **Live URL**: [https://terrariumstudio.web.app](https://terrariumstudio.web.app)  
-📁 **GitHub Repository**: [https://github.com/18basils/Terrarium-Studio](https://github.com/18basils/Terrarium-Studio)
-
----
-
-## ✨ Features
-
-- 🏺 **8 Architectural Glass Vessels**:
-  - *Apothecary Jar*: Classic cylindrical apothecary glass with cork stopper.
-  - *Geometric Wardian*: Victorian faceted brass & glass conservatory case.
-  - *Hanging Aerium Globe*: Spherical suspended glass with front viewing portal.
-  - *Wide Bubble Bowl*: Low-profile open bowl for desert succulents & arid flora.
-  - *Conical Erlenmeyer*: Borosilicate laboratory flask for high-humidity micro-mosses.
-  - *Paludarium Waterfall Tank*: Half-aquatic tank with stone waterfall ledge & mist basin.
-  - *Horizontal Cylinder ("Ship-in-Bottle")*: Panoramic cylinder with side cork neck.
-  - *Hexagonal Conservatory Lantern*: Gothic Victorian lantern with steeple roof & hanging ring.
-
-- 🪟 **Glass Tint Customizer & Pedestal Bases**:
-  - **Glass Tints**: Clear Borosilicate, Apothecary Amber, Emerald Sea-Glass, and Obsidian Noir.
-  - **Pedestal Bases**: Walnut Hardwood, Brushed Brass, Carrara Marble, Illuminated LED Halo, and Bare Glass.
-
-- 🪨 **5-Tier Substrate Strata System with Exploded X-Ray View**:
-  - Leca & Drainage Gravel (false-bottom reservoir preventing root rot)
-  - Horticultural Activated Charcoal (toxin, sulfur odor & mold filtration)
-  - Sphagnum Moss Barrier (separation membrane between soil and hydro-stratum)
-  - ABG Bio-Active Nutrient Soil (organic tropical rooting matrix)
-  - Silica Desert Sand (inert arid accent)
-  - *Exploded X-Ray View*: Vertically separates strata with caliper brackets, millimeter depths, and calculated mass in grams.
-
-- 🌸 **Botanical & Hardscape Catalog with Cultivar Phenotypes**:
-  - **Living Flora**: Fittonia Nerve Plant (Sakura Pink, Ruby Red, White Anne), Polka Dot Plant, Mood Cushion Moss, Crispy Wave Fern, Mini Jewel Orchid, Rosette Echeveria, Zebra Haworthia, Tillandsia Air Plant, Creeping Fig, Venus Flytrap, Drosera Sundew.
-  - **Hardscape & Crystals**: Ohko Dragon Stone, Spiderwood Branch, Crystal Quartz (Amethyst, Rose, Milky, Citrine), Zen River Stones, Volcanic Lava Rock (Basalt, Scoria, Pumice), Petrified Wood, Forest Mushrooms, Aquatic Pool.
-  - **Bioactive Fauna**: Animated isopods and springtails actively cycling nutrients across the substrate surface.
-
-- 📐 **Aquascaping Composition Grids**:
-  - *Rule of Thirds*: 1/3 viewport guidelines with golden focal intersection nodes.
-  - *Golden Spiral*: Fibonacci spiral path directing eye flow to natural focal apex.
-  - *Triangular Depth Slope*: Nature aquarium diagonal slope guide lines.
-
-- 🌡️ **Live Plant Stress, Thermal Control & 1-Click Auto-Fix**:
-  - **Thermal Control**: Micro-climate temperature slider ($15^\circ\text{C}-32^\circ\text{C}$) with color-coded status.
-  - **Visual Flora Stress**: Sub-optimal conditions trigger chlorosis yellowing, desaturation, and wilting transformations.
-  - **1-Click Auto-Fix**: Instantly balances substrates, humidity, vessel, and temperature for a 100/100 score with ascending melodic chime.
-
-- 📖 **Interactive DIY Physical Build Wizard**:
-  - 7-step physical assembly guide with calculated depths (mm) and masses (grams) customized to your exact enclosure design.
-
-- 📜 **Botanical Care Passport & QR Gift Certificate**:
-  - Printable luxury care passport with dedication, artisan attribution, micro-climate manifest, and scannable QR code deep-linking to the exact 3D interactive digital twin.
-
-- 💡 **4 Dynamic Lighting Modes & Procedural Soundscapes**:
-  - Natural Daylight, Sunset Golden Hour, Midnight Moon, and UV Bio-Glow.
-  - Multi-track procedural Web Audio soundscape (canopy wind, gentle mist spray, nocturnal crickets).
-
-- 🎨 **Workflow & Precision Canvas Tools**:
-  - Specimen Pin/Lock (`isLocked`) to prevent accidental movement.
-  - Duplicate Specimen (`Ctrl+D` / `Cmd+D` or inspector button).
-  - Time-lapse growth simulator scrubber (Day 1 through 1 Year).
-  - High-res vector SVG snapshot exporter.
-  - Touch pinch-to-zoom and pan navigation.
+<p align="center">
+  <a href="https://terrariumstudio.web.app">
+    <img src="https://img.shields.io/badge/Live_Demo-terrariumstudio.web.app-10b981?style=for-the-badge&logo=firebase&logoColor=white" alt="Live Demo" />
+  </a>
+  <a href="./LICENSE.md">
+    <img src="https://img.shields.io/badge/License-MIT-emerald.svg?style=for-the-badge" alt="MIT License" />
+  </a>
+  <a href="./SECURITY.md">
+    <img src="https://img.shields.io/badge/Security-Policy-blue.svg?style=for-the-badge" alt="Security Policy" />
+  </a>
+  <a href="./CONTRIBUTING.md">
+    <img src="https://img.shields.io/badge/Contributions-Welcome-amber.svg?style=for-the-badge" alt="Contributions Welcome" />
+  </a>
+  <a href="https://react.dev/">
+    <img src="https://img.shields.io/badge/React-19-61dafb?style=for-the-badge&logo=react&logoColor=black" alt="React 19" />
+  </a>
+  <a href="https://tailwindcss.com/">
+    <img src="https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS v4" />
+  </a>
+  <a href="https://vitejs.dev/">
+    <img src="https://img.shields.io/badge/Vite-8-646cff?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 8" />
+  </a>
+</p>
 
 ---
 
-## 🚀 Getting Started
+**VerdantGlass Studio** is an interactive, browser-based botanical terrarium simulator, bioactive landscape designer, and micro-ecosystem architect. Build, layer, and simulate custom living glass enclosures with procedural SVGs, real-time strata layering, micro-climate humidity and temperature controls, aquascaping composition guides, live plant stress diagnostics, procedural procedural soundscapes, and an automated 1-click ecosystem balancing engine.
+
+- 🌐 **Live Web Application**: [https://terrariumstudio.web.app](https://terrariumstudio.web.app)
+- 📁 **GitHub Repository**: [https://github.com/18basils/Terrarium-Studio](https://github.com/18basils/Terrarium-Studio)
+- 📱 **Installable Progressive Web App (PWA)**: Desktop & mobile offline-first support
+
+---
+
+## 📑 Table of Contents
+
+- [✨ What's New in the Latest Release](#-whats-new-in-the-latest-release)
+- [🏺 Architectural Glass Vessels & Finishes](#-architectural-glass-vessels--finishes)
+- [🪨 Substrate Strata System & Exploded X-Ray View](#-substrate-strata-system--exploded-x-ray-view)
+- [🌸 Living Flora, Mineralia & Cultivar Variegation](#-living-flora-mineralia--cultivar-variegation)
+- [📐 Aquascaping Composition Grids](#-aquascaping-composition-grids)
+- [🌡️ Micro-Climate, Flora Stress & 1-Click Auto-Fix](#-micro-climate-flora-stress--1-click-auto-fix)
+- [📖 Interactive DIY Physical Build Wizard](#-interactive-diy-physical-build-wizard)
+- [📜 Botanical Care Passport & QR Gift Certificate](#-botanical-care-passport--qr-gift-certificate)
+- [🛒 Nursery Bill of Materials (BOM) & Multi-Currency Engine](#-nursery-bill-of-materials-bom--multi-currency-engine)
+- [📚 Botanical Intelligence & Care Encyclopedia](#-botanical-intelligence--care-encyclopedia)
+- [🔊 Multi-Track Procedural Web Audio Soundscape](#-multi-track-procedural-web-audio-soundscape)
+- [💡 Diurnal Day/Night Cycle & 4 Lighting Modes](#-diurnal-daynight-cycle--4-lighting-modes)
+- [⌨️ Keyboard Shortcuts & Canvas Precision Controls](#-keyboard-shortcuts--canvas-precision-controls)
+- [🚀 Quick Start & Local Development](#-quick-start--local-development)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [📄 Community Guidelines & License](#-community-guidelines--license)
+- [👨‍💻 Author & Maintainer](#-author--maintainer)
+
+---
+
+## ✨ What's New in the Latest Release
+
+The latest release brings the complete **Phase 4 Upgrade Suite** to VerdantGlass Studio:
+
+1. **Interactive DIY Physical Build Wizard**: 7-step physical build walkthrough with calculated substrate depths (mm) and masses (grams) tailored to your exact vessel.
+2. **Exploded Strata X-Ray View**: Vertical mechanical separation of subterranean layers with caliper brackets and depth/mass indicators.
+3. **"Inspire Me" Procedural Auto-Scaper**: 6 curated procedural themes with instant balancing and synthesized pentatonic wind-chimes.
+4. **Aquascaping Composition Overlays**: Nature aquascaping guides (*Rule of Thirds*, *Golden Spiral*, *Triangular Depth Slope*).
+5. **Live Flora Stress, Temperature Control ($15^\circ\text{C}-32^\circ\text{C}$) & 1-Click Auto-Fix**: Real-time chlorosis/wilt visual transforms on stressed flora, and a single-click auto-fix button that restores a 100/100 bio-harmony score.
+6. **3 New Architectural Vessels, Glass Tints & Pedestal Bases**: Paludarium Waterfall Tank, Horizontal Cylinder "Ship-in-Bottle", Hexagonal Conservatory Lantern, 4 glass tints, and 5 display pedestals (including illuminated LED Halo).
+7. **Specimen Variegation & Workflow**: Pin/Lock position (`isLocked`), specimen duplication (`Ctrl+D`), and cultivar color chips (Sakura Pink, Ruby Red, White Anne, Amethyst, Citrine, Scoria Red, etc.).
+8. **Printable Botanical Care Passport & QR Gift Certificate**: High-res printable gift certificate with live scannable QR code deep-linking directly to your interactive 3D digital twin.
+
+---
+
+## 🏺 Architectural Glass Vessels & Finishes
+
+VerdantGlass Studio features **8 mathematically proportioned architectural vessels**, each featuring dedicated SVG clipping paths, reflection sheens, and custom lid mechanics:
+
+| Vessel | Style | Enclosure Type | Retention | Distinctive Characteristics |
+| :----- | :---- | :------------- | :-------- | :-------------------------- |
+| **Apothecary Jar** | Victorian Classic | Closed | $1.20\times$ | Cylindrical glass with fitted natural cork lid |
+| **Geometric Wardian** | Victorian Faceted | Semi-Closed | $1.00\times$ | Hand-soldered brass frame & multi-faceted roof |
+| **Hanging Aerium Globe** | Modern Minimalist | Open | $0.85\times$ | Spherical suspended glass with wide front portal & hanging chain |
+| **Wide Bubble Bowl** | Open Air | Open | $0.75\times$ | Low-profile circular basin ideal for desert succulents |
+| **Conical Erlenmeyer** | Laboratory Science | Closed | $1.25\times$ | Tapered borosilicate flask for high-humidity micro-mosses |
+| **Paludarium Waterfall Tank** | Riparian Aquatic | Semi-Closed | $1.15\times$ | Half-aquatic tank with stone waterfall ledge & mist pool |
+| **Horizontal Cylinder** | "Ship-in-Bottle" | Closed | $1.20\times$ | Panoramic horizontal cylinder with side borosilicate cork neck |
+| **Hexagonal Lantern** | Gothic Conservatory | Semi-Closed | $1.05\times$ | 6-sided brass lantern with steeple roof & hanging ring |
+
+### Glass Tints & Display Pedestals
+- **Glass Tints**: *Borosilicate Clear*, *Apothecary Amber*, *Emerald Sea-Glass*, and *Obsidian Noir*.
+- **Pedestal Bases**: *Walnut Hardwood*, *Brushed Brass*, *Carrara Marble*, *Illuminated LED Halo* (with cyan neon glow), and *Bare Glass*.
+
+---
+
+## 🪨 Substrate Strata System & Exploded X-Ray View
+
+A healthy terrarium relies on a functional layered false bottom. The studio simulates a **5-tier bioactive strata system** with dynamic elevation physics: adjusting any substrate slider shifts rooted flora vertically to stay grounded on the soil horizon.
+
+```
+┌──────────────────────────────────────────────┐
+│  5. Silica Desert Sand (Inert arid accent)    │
+├──────────────────────────────────────────────┤
+│  4. ABG Bio-Active Tropical Nutrient Soil    │
+├──────────────────────────────────────────────┤
+│  3. Long-Fiber Sphagnum Separation Mesh       │
+├──────────────────────────────────────────────┤
+│  2. Horticultural Activated Carbon Filter    │
+├──────────────────────────────────────────────┤
+│  1. Leca / Hydro-Pebble Drainage Basin        │
+└──────────────────────────────────────────────┘
+```
+
+- **Exploded Strata X-Ray View**: Click the **X-Ray Strata** button to vertically separate the layers in isometric 3D space, revealing caliper brackets displaying exact millimeter depths and calculated mass in grams.
+
+---
+
+## 🌸 Living Flora, Mineralia & Cultivar Variegation
+
+All botanical and mineral elements are rendered procedurally using clean vector SVG definitions with support for UV fluorescence, time-lapse growth, and cultivar variegation:
+
+- **Living Flora**:
+  - *Fittonia Nerve Plant* (*Fittonia albivenis*): Available in **Sakura Pink**, **Ruby Red**, and **White Anne** cultivars.
+  - *Polka Dot Plant* (*Hypoestes phyllostachya*): High-contrast speckled foliage.
+  - *Mood Cushion Moss* (*Leucobryum glaucum*): Velvety moisture-retaining moss pillow with spore capsules.
+  - *Crispy Wave Fern* (*Asplenium nidus*): Sculptural ruffled fronds with natural epiphyte crown.
+  - *Mini Jewel Orchid* (*Macodes petola*): Electrified gold lightning leaf venation.
+  - *Rosette Echeveria* (*Echeveria elegans*): Symmetrical blue-green desert succulent.
+  - *Zebra Haworthia* (*Haworthiopsis fasciata*): Rigid structural succulent with raised pearl bands.
+  - *Tillandsia Air Plant* (*Tillandsia ionantha*): Rootless epiphyte with trichome moisture scales.
+  - *Creeping Fig* (*Ficus pumila*): Trailing climbing vine with delicate heart-shaped leaves.
+  - *Venus Flytrap* (*Dionaea muscipula*): Carnivorous snapping traps with sensitive trigger cilia.
+  - *Cape Sundew* (*Drosera capensis*): Glistening mucilage tentacles trapping micro-insects.
+- **Mineralia & Hardscape**:
+  - *Ohko Dragon Stone*: Clay-formed perforated rock popular in Iwagumi aquascaping.
+  - *Spiderwood Branch*: Intricate twisting root hardscape for climbing flora.
+  - *Crystal Quartz*: Available in **Amethyst Violet**, **Rose Quartz**, **Milky White**, and **Citrine Gold**.
+  - *Zen River Stones*: Smooth tumbled basalt stones with water line accents.
+  - *Volcanic Lava Rock*: Porous aeration rock available in **Basalt Black**, **Scoria Red**, and **Pumice Grey**.
+  - *Petrified Wood*: Ancient fossilized mineral timber with tree ring stratifications.
+  - *Forest Canopy Fungi*: Glowing bracket mushrooms that fluoresce under nocturnal UV illumination.
+  - *Aquatic Mist Pool*: Shimmering spring basin for paludarium layouts.
+- **Animated Bioactive Fauna**:
+  - Autonomous isopods and springtails that actively roam the substrate surface to cycle nutrients and prevent mold.
+
+---
+
+## 📐 Aquascaping Composition Grids
+
+Align your layout with professional aquascaping and photographic design principles:
+
+- **Rule of Thirds**: Overlays $3\times3$ compositional guidelines with 4 golden intersection nodes highlighting natural visual focal points.
+- **Golden Spiral**: Renders a golden ratio logarithmic Fibonacci spiral directing the viewer's eye along a natural botanical curve to the focal apex.
+- **Triangular Depth Slope**: Provides diagonal elevation slope guides used in nature aquariums to maximize optical depth in enclosed glass.
+
+---
+
+## 🌡️ Micro-Climate, Flora Stress & 1-Click Auto-Fix
+
+- **Thermal Micro-Climate**: Regulate temperature from **$15^\circ\text{C}$ to $32^\circ\text{C}$** with color-coded status badges (Chilly $<18^\circ\text{C}$, Optimal $18^\circ\text{C}-27^\circ\text{C}$, Warm $>27^\circ\text{C}$).
+- **Visual Flora Stress Shaders**: When the ecosystem score drops below 70, or when moisture/temperature conflicts occur, living flora display visual chlorosis (yellowing), desaturation, and wilting transformations.
+- **1-Click Auto-Fix Ecosystem**: Click the glowing **Auto-Fix** button in the canvas toolbar or diagnostics card to automatically calibrate substrate depths, humidity, vessel type, and temperature for a perfect **100/100 Bio-Harmony Score**, accompanied by an ascending 4-note melodic chime.
+
+---
+
+## 📖 Interactive DIY Physical Build Wizard
+
+Step-by-step physical assembly guide tailored to your exact vessel and selected materials:
+
+1. **Vessel Prep**: Sterilization with 70% isopropanol and streak-free lint-free microfiber buffing.
+2. **Drainage Leca**: False-bottom reservoir depth and mass calculation (e.g. `~38mm` / `~312g`).
+3. **Charcoal Shield**: Horticultural steam-activated carbon layer to filter anaerobic toxins and odors.
+4. **Sphagnum Mesh**: Dampened Grade-AAA sphagnum barrier preventing soil infiltration into the reservoir.
+5. **Tropical Soil**: Atlanta Botanical Garden (ABG) bioactive substrate sloped for depth.
+6. **Hardscape & Flora**: Tweezers positioning for structural hardscape, roots divots, and dowel tamping.
+7. **Hydration & Seal**: Acclimation misting protocol, target humidity, and morning condensation monitoring.
+
+---
+
+## 📜 Botanical Care Passport & QR Gift Certificate
+
+Create an artisan gift certificate ready to print or export to PDF:
+
+- **Custom Dedication**: Enclosure title, recipient name, and artisan signature.
+- **Micro-Climate Manifest**: Target humidity, optimal temperature, glass tint, and vessel type.
+- **Botanical Registry Table**: Complete species list, scientific taxonomy, cultivars, and watering schedule.
+- **Interactive QR Code**: Scannable cryptographic QR code generated directly from your build state that deep-links to [https://terrariumstudio.web.app](https://terrariumstudio.web.app) and loads your exact living 3D digital twin.
+- **Print Optimization**: Dedicated `@media print` stylesheets isolate the certificate on clean white parchment with crisp gold borders.
+
+---
+
+## 🛒 Nursery Bill of Materials (BOM) & Multi-Currency Engine
+
+- **Automated Local Currency Detection**: Automatically formats all pricing in your local currency (**USD, EUR, GBP, JPY, CAD, AUD, INR, CHF, SGD, AED**) based on browser timezone and internationalization APIs.
+- **Material Mass & Volume**: Live grams and liters calculations for all substrates.
+- **Interactive Shopping Checklist**: Check off items as you source them, with 1-click clipboard export and print formatting.
+
+---
+
+## 📚 Botanical Intelligence & Care Encyclopedia
+
+Integrated encyclopedia featuring **14 detailed botanical dossiers**:
+- Taxonomy, family, and common names
+- Light exposure requirements & photoperiods
+- Watering intervals & humidity tolerances
+- Temperature bounds & dormancy cycles
+- Propagation techniques (cuttings, division, spores)
+- Live search query and biome filtering (Tropical, Arid, Epiphyte, Carnivorous)
+
+---
+
+## 🔊 Multi-Track Procedural Web Audio Soundscape
+
+Synthesized directly in the browser using the Web Audio API without pre-recorded MP3 samples:
+- **432 Hz Zen Singing Bowl**: Resonant harmonic bell played upon launch and template selection.
+- **Canopy Wind Breeze**: Pink noise generator routed through a resonant lowpass filter ($420\text{ Hz}$, $Q=2.2$).
+- **Nocturnal Crickets**: Frequency-modulated dual-oscillator chirps ($4650\text{ Hz}$, $12\text{ Hz}$ LFO) active during dusk, night, and UV modes.
+- **Micro-Mist Spray**: High-frequency white-noise burst simulating aerosol droplets.
+- **Ascending Chord Chime**: Uplifting harmonic sequence played when achieving 100% ecosystem balance.
+
+---
+
+## 💡 Diurnal Day/Night Cycle & 4 Lighting Modes
+
+- **Automatic Diurnal Cycle**: 24-minute accelerated day/night progression simulating sunrise, midday, sunset, and dusk.
+- **Manual Lighting Overrides**:
+  - **Daylight**: Crisp sunlit illumination ($5500\text{ K}$).
+  - **Golden Hour**: Warm amber sunset tones with low-angle light rays.
+  - **Moonlight**: Nocturnal deep indigo ambiance with soft glass reflections.
+  - **UV Bio-Glow**: Fluorescent blacklight exciting neon minerals, crystals, and mushroom caps.
+
+---
+
+## ⌨️ Keyboard Shortcuts & Canvas Precision Controls
+
+| Shortcut | Action | Description |
+| :------- | :----- | :---------- |
+| `Ctrl + Z` / `Cmd + Z` | **Undo** | Step backward in your 30-snapshot history stack |
+| `Ctrl + Y` / `Cmd + Shift + Z` | **Redo** | Step forward in history |
+| `Ctrl + D` / `Cmd + D` | **Duplicate** | Clone the currently selected item with offset |
+| `Space` | **Mist Spray** | Spritz micro-droplets and increase humidity by 3% |
+| `P` | **Pin / Lock** | Toggle position lock (`isLocked`) on selected item |
+| `Z` | **Zen Mode** | Toggle distraction-free full-canvas view |
+| `+` / `-` | **Zoom** | Scale canvas viewport from 75% to 200% |
+
+---
+
+## 🚀 Quick Start & Local Development
 
 ### Prerequisites
-- Node.js (v18+)
-- npm or yarn
+- **Node.js**: v18.0 or higher
+- **npm**: v9.0 or higher
 
 ### Installation
 
 ```bash
-# Clone the repository
+# 1. Clone the repository
 git clone https://github.com/18basils/Terrarium-Studio.git
 cd Terrarium-Studio
 
-# Install dependencies
+# 2. Install dependencies
 npm install
 
-# Start development server
+# 3. Start the Vite development server
 npm run dev
 ```
 
-### Production Build & Deploy
+Open `http://localhost:5173/` in your browser.
+
+### Production Build & Linting
 
 ```bash
-# Build production bundle
+# Static linting with Oxlint
+npm run lint
+
+# Compile production bundle
 npm run build
 
-# Deploy to Firebase Hosting
-firebase deploy --only hosting
+# Preview production build locally
+npm run preview
+```
+
+### Deployment to Firebase Hosting
+
+```bash
+# Login to Firebase CLI
+npx firebase-tools login
+
+# Deploy production assets to Google Cloud CDN
+npx firebase-tools deploy --only hosting --project terrariumstudio
 ```
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Framework**: React 19 + Vite
-- **Styling**: Tailwind CSS v4
-- **Icons**: Lucide React
-- **QR Engine**: QRCode generator
-- **Graphics**: Procedural vector SVG engine
-- **Audio**: Web Audio API procedural synthesizer
-- **Hosting**: Firebase Hosting (Google Cloud CDN)
+- **Core Framework**: [React 19](https://react.dev/) + [Vite 8](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Iconography**: [Lucide React](https://lucide.dev/)
+- **QR Code Engine**: [QRCode](https://github.com/soldair/node-qrcode)
+- **Vector Graphics**: Procedural SVG Virtual DOM Engine
+- **Audio Synthesizer**: Native Web Audio API (`AudioContext`, `BiquadFilterNode`, `OscillatorNode`)
+- **Persistence**: LocalStorage Engine + Base64 Compressed URL Hash Deep-Linking
+- **PWA Runtime**: Service Worker + Web App Manifest
+- **Hosting**: [Firebase Hosting](https://firebase.google.com/docs/hosting) (Global SSD CDN with automated SSL)
 
 ---
 
@@ -123,8 +313,8 @@ firebase deploy --only hosting
 
 | Document | Purpose | Link |
 | :------- | :------ | :--- |
-| ⚖️ **License** | Permissive open-source usage terms | [`LICENSE.md`](./LICENSE.md) |
-| 🛡️ **Security Policy** | Vulnerability disclosure & supported versions | [`SECURITY.md`](./SECURITY.md) |
+| ⚖️ **License** | Official MIT permissive open-source license | [`LICENSE.md`](./LICENSE.md) |
+| 🛡️ **Security Policy** | Vulnerability disclosure, response timeline & architecture | [`SECURITY.md`](./SECURITY.md) |
 | 🤝 **Contributing Guide** | Development setup, code conventions & PR workflow | [`CONTRIBUTING.md`](./CONTRIBUTING.md) |
 
 ---
@@ -132,3 +322,6 @@ firebase deploy --only hosting
 ## 👨‍💻 Author & Maintainer
 
 Crafted with care by **Basil Shaji** ([@18basils](https://github.com/18basils)).
+
+- GitHub: [https://github.com/18basils](https://github.com/18basils)
+- Live Project: [https://terrariumstudio.web.app](https://terrariumstudio.web.app)
