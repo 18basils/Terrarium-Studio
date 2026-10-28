@@ -8,6 +8,9 @@
   <a href="https://terrariumstudio.web.app">
     <img src="https://img.shields.io/badge/Live_Demo-terrariumstudio.web.app-10b981?style=for-the-badge&logo=firebase&logoColor=white" alt="Live Demo" />
   </a>
+  <a href="https://github.com/18basils/Terrarium-Studio/releases/tag/v1.0.0">
+    <img src="https://img.shields.io/badge/Release-v1.0.0-emerald.svg?style=for-the-badge&logo=github&logoColor=white" alt="Latest Release v1.0.0" />
+  </a>
   <a href="./LICENSE.md">
     <img src="https://img.shields.io/badge/License-Terms_of_Use-blue.svg?style=for-the-badge" alt="License Terms" />
   </a>
@@ -30,10 +33,11 @@
 
 ---
 
-**VerdantGlass Studio** is an interactive, browser-based botanical terrarium simulator, bioactive landscape designer, and micro-ecosystem architect. Build, layer, and simulate custom living glass enclosures with procedural SVGs, real-time strata layering, micro-climate humidity and temperature controls, aquascaping composition guides, live plant stress diagnostics, procedural procedural soundscapes, and an automated 1-click ecosystem balancing engine.
+**VerdantGlass Studio** is an interactive, browser-based botanical terrarium simulator, bioactive landscape designer, and micro-ecosystem architect. Build, layer, and simulate custom living glass enclosures with procedural SVGs, real-time strata layering, micro-climate humidity and temperature controls, aquascaping composition guides, live plant stress diagnostics, procedural soundscapes, and an automated 1-click ecosystem balancing engine.
 
 - 🌐 **Live Web Application**: [https://terrariumstudio.web.app](https://terrariumstudio.web.app)
 - 📁 **GitHub Repository**: [https://github.com/18basils/Terrarium-Studio](https://github.com/18basils/Terrarium-Studio)
+- 🚀 **Latest Release**: [`v1.0.0`](https://github.com/18basils/Terrarium-Studio/releases/tag/v1.0.0)
 - 📱 **Installable Progressive Web App (PWA)**: Desktop & mobile offline-first support
 
 ---
@@ -42,6 +46,7 @@
 
 - [✨ What's New in the Latest Release](#-whats-new-in-the-latest-release)
 - [🏺 Architectural Glass Vessels & Finishes](#-architectural-glass-vessels--finishes)
+- [🌿 "Inspire Me" Procedural Auto-Scaper](#-inspire-me-procedural-auto-scaper)
 - [🪨 Substrate Strata System & Exploded X-Ray View](#-substrate-strata-system--exploded-x-ray-view)
 - [🌸 Living Flora, Mineralia & Cultivar Variegation](#-living-flora-mineralia--cultivar-variegation)
 - [📐 Aquascaping Composition Grids](#-aquascaping-composition-grids)
@@ -52,6 +57,7 @@
 - [📚 Botanical Intelligence & Care Encyclopedia](#-botanical-intelligence--care-encyclopedia)
 - [🔊 Multi-Track Procedural Web Audio Soundscape](#-multi-track-procedural-web-audio-soundscape)
 - [💡 Diurnal Day/Night Cycle & 4 Lighting Modes](#-diurnal-daynight-cycle--4-lighting-modes)
+- [💾 Local Enclosure Archives & URL Deep-Linking](#-local-enclosure-archives--url-deep-linking)
 - [⌨️ Keyboard Shortcuts & Canvas Precision Controls](#-keyboard-shortcuts--canvas-precision-controls)
 - [🚀 Quick Start & Local Development](#-quick-start--local-development)
 - [🛠️ Tech Stack](#️-tech-stack)
@@ -96,6 +102,23 @@ VerdantGlass Studio features **8 mathematically proportioned architectural vesse
 
 ---
 
+## 🌿 "Inspire Me" Procedural Auto-Scaper
+
+Stuck on a blank canvas? Click the **"Inspire Me"** button in the header toolbar to trigger procedural auto-scaping. The generator randomly balances vessel geometry, substrate ratios, lighting schedules, and complementary flora and hardscape across 6 curated biomes:
+
+| Theme | Recommended Vessel | Humidity & Climate | Bio-Harmony Focus |
+| :---- | :----------------- | :----------------- | :---------------- |
+| **Amazonian Canopy** | Apothecary Jar | $82\%\text{ RH}$ • $24^\circ\text{C}$ | Tropical high-canopy fern and jewel orchid symbiosis |
+| **Carnivorous Mist Bog** | Conical Flask | $90\%\text{ RH}$ • $22^\circ\text{C}$ | Sphagnum-heavy bog environment for Dionaea & Drosera |
+| **Kyoto Zen Moss Garden** | Geometric Wardian | $72\%\text{ RH}$ • $20^\circ\text{C}$ | Minimalist Japanese cushion moss, Ohko dragon stone, and river pebbles |
+| **Sonoran Obsidian Canyon** | Wide Bubble Bowl | $28\%\text{ RH}$ • $26^\circ\text{C}$ | Porous volcanic lava rock with drought-tolerant desert succulents |
+| **Bioluminescent Cavern** | Apothecary Jar | $76\%\text{ RH}$ • $21^\circ\text{C}$ | Shimmering spring basin, amethyst quartz crystals, and UV glowing fungi |
+| **Cloud Forest Epiphyte Wall** | Paludarium Tank | $88\%\text{ RH}$ • $23^\circ\text{C}$ | Cascading riparian rock ledge with weeping epiphyte foliage |
+
+Each auto-scape generation plays an uplifting pentatonic wind-chime synthesized in real time via the Web Audio API.
+
+---
+
 ## 🪨 Substrate Strata System & Exploded X-Ray View
 
 A healthy terrarium relies on a functional layered false bottom. The studio simulates a **5-tier bioactive strata system** with dynamic elevation physics: adjusting any substrate slider shifts rooted flora vertically to stay grounded on the soil horizon.
@@ -114,7 +137,7 @@ A healthy terrarium relies on a functional layered false bottom. The studio simu
 └──────────────────────────────────────────────┘
 ```
 
-- **Exploded Strata X-Ray View**: Click the **X-Ray Strata** button to vertically separate the layers in isometric 3D space, revealing caliper brackets displaying exact millimeter depths and calculated mass in grams.
+- **Exploded Strata X-Ray View**: Click the **X-Ray Strata** button to vertically separate the layers in isometric space, revealing caliper brackets displaying exact millimeter depths and calculated mass in grams.
 
 ---
 
@@ -231,6 +254,14 @@ Synthesized directly in the browser using the Web Audio API without pre-recorded
   - **Golden Hour**: Warm amber sunset tones with low-angle light rays.
   - **Moonlight**: Nocturnal deep indigo ambiance with soft glass reflections.
   - **UV Bio-Glow**: Fluorescent blacklight exciting neon minerals, crystals, and mushroom caps.
+
+---
+
+## 💾 Local Enclosure Archives & URL Deep-Linking
+
+- **Named Enclosure Archives**: Save unlimited custom designs locally to your browser (`localStorage`) with custom labels and timestamps.
+- **URL Hash Compression (`#build=...`)**: Encodes the complete enclosure state (vessel, substrate depths, item positions, rotation, scaling, lighting, and climate) into a Base64-compressed URL hash for instant sharing.
+- **30-Step Undo / Redo History**: Full state snapshots tracking every placement, rotation, and slider adjustment.
 
 ---
 
