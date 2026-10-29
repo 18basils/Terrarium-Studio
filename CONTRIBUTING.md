@@ -66,7 +66,8 @@ Adhere to the existing code standards:
 - **Lucide Icons**: Use icons consistently from `lucide-react`.
 - **Procedural SVG Botanical Artwork**: When authoring new flora, fauna, or mineral hardscape, construct them as scalable procedural SVG paths within `RenderBotanicalArtwork` supporting UV glow, cultivar phenotypes, and time-lapse growth stages.
 - **Micro-Climate & Bio-Harmony**: When introducing new flora or vessels, register their botanical family, humidity requirements, and biome compatibility in `CATALOG_ITEMS` and `ecosystemReport`.
-- **Accessibility (a11y)**: Ensure interactive elements include descriptive `aria-label`, valid semantic button/dialog roles, and accessible focus outlines.
+- **Accessibility (a11y) & WCAG 2.5.3**: Ensure all interactive buttons include accessible names that match or contain their visible text labels (`aria-label`), progress bars define `aria-valuenow` with accessible titles, and focus states are keyboard-navigable.
+- **Cryptographic Security (CodeQL CWE-338)**: Always generate unique element UIDs, IDs, or security-sensitive identifiers using `crypto.randomUUID()` or `window.crypto.getRandomValues()` rather than raw `Math.random()`.
 
 ### 3. Verify Code Quality & Build
 Before committing, ensure your code passes static linting and builds cleanly without warnings:

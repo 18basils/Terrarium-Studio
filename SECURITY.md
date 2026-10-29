@@ -56,6 +56,10 @@ VerdantGlass Terrarium Studio is a client-side Single Page Application (SPA) des
 - **Client-Side Enclosure Storage**: Terrarium saves are persisted locally within the user's browser `localStorage` and never sent to a remote database without explicit user action.
 - **Safe State Serialization**: State sharing URLs use standard Base64-encoded JSON payloads with schema verification and type bounds checking on deserialization to mitigate prototype pollution or injection.
 - **Sanitized Vector Graphics**: SVG elements are generated deterministically through React's virtual DOM without `dangerouslySetInnerHTML`.
+- **Continuous CodeQL Static Analysis**: Automated deep code scanning analyzing all PRs and commits against CWE security rules (including CWE-338 cryptographically secure randomness, injection, and prototype pollution).
+- **Automated Dependabot CVE Monitoring**: Continuous security alerts and automated dependency update PRs protecting against known npm vulnerabilities.
+- **Secret Scanning & Push Protection**: Real-time git push scanning intercepting accidental API key, token, or credential leakage before reaching the repository.
+- **Immutable Branch Protection**: Strict GitHub rulesets preventing accidental force pushes (`non_fast_forward`) and branch deletion on the `main` production branch.
 - **Content Security & Hosting**: Production assets are served over HTTPS via Firebase Hosting / Google Cloud CDN with secure HTTP response headers and caching controls.
 
 Thank you for helping keep VerdantGlass Terrarium Studio safe and resilient! 🌿

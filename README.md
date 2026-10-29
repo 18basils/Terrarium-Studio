@@ -20,6 +20,9 @@
   <a href="./CONTRIBUTING.md">
     <img src="https://img.shields.io/badge/Contributions-Welcome-amber.svg?style=for-the-badge" alt="Contributions Welcome" />
   </a>
+  <a href="https://github.com/18basils/Terrarium-Studio/security/code-scanning">
+    <img src="https://img.shields.io/badge/CodeQL-Protected-blueviolet.svg?style=for-the-badge&logo=github&logoColor=white" alt="CodeQL Protected" />
+  </a>
   <a href="https://react.dev/">
     <img src="https://img.shields.io/badge/React-19-61dafb?style=for-the-badge&logo=react&logoColor=black" alt="React 19" />
   </a>
@@ -56,7 +59,7 @@
 - [🛒 Nursery Bill of Materials (BOM) & Multi-Currency Engine](#-nursery-bill-of-materials-bom--multi-currency-engine)
 - [📚 Botanical Intelligence & Care Encyclopedia](#-botanical-intelligence--care-encyclopedia)
 - [🔊 Multi-Track Procedural Web Audio Soundscape](#-multi-track-procedural-web-audio-soundscape)
-- [💡 Diurnal Day/Night Cycle & 4 Lighting Modes](#-diurnal-daynight-cycle--4-lighting-modes)
+- [💡 Diurnal Day/Night Cycle & 6 Lighting Modes](#-diurnal-daynight-cycle--6-lighting-modes)
 - [💾 Local Enclosure Archives & URL Deep-Linking](#-local-enclosure-archives--url-deep-linking)
 - [⌨️ Keyboard Shortcuts & Canvas Precision Controls](#-keyboard-shortcuts--canvas-precision-controls)
 - [🚀 Quick Start & Local Development](#-quick-start--local-development)
@@ -147,26 +150,26 @@ All botanical and mineral elements are rendered procedurally using clean vector 
 
 - **Living Flora**:
   - *Fittonia Nerve Plant* (*Fittonia albivenis*): Available in **Sakura Pink**, **Ruby Red**, and **White Anne** cultivars.
-  - *Polka Dot Plant* (*Hypoestes phyllostachya*): High-contrast speckled foliage.
+  - *Polka Dot Plant* (*Hypoestes phyllostachya*): High-contrast speckled foliage with vibrant pink and magenta leaves.
   - *Mood Cushion Moss* (*Leucobryum glaucum*): Velvety moisture-retaining moss pillow with spore capsules.
-  - *Crispy Wave Fern* (*Asplenium nidus*): Sculptural ruffled fronds with natural epiphyte crown.
-  - *Mini Jewel Orchid* (*Macodes petola*): Electrified gold lightning leaf venation.
+  - *Crispy Wave Bird Fern* (*Nephrolepis exaltata*): Sculptural ruffled fronds with natural epiphyte crown.
+  - *Mini Jewel Orchid* (*Phalaenopsis minima*): Electrified gold lightning leaf venation.
   - *Rosette Echeveria* (*Echeveria elegans*): Symmetrical blue-green desert succulent.
-  - *Zebra Haworthia* (*Haworthiopsis fasciata*): Rigid structural succulent with raised pearl bands.
-  - *Tillandsia Air Plant* (*Tillandsia ionantha*): Rootless epiphyte with trichome moisture scales.
-  - *Creeping Fig* (*Ficus pumila*): Trailing climbing vine with delicate heart-shaped leaves.
+  - *Zebra Haworthia* (*Haworthiopsis attenuata*): Rigid structural succulent with raised pearl bands.
+  - *Blushing Air Plant* (*Tillandsia ionantha*): Rootless epiphyte with trichome moisture scales.
   - *Venus Flytrap* (*Dionaea muscipula*): Carnivorous snapping traps with sensitive trigger cilia.
   - *Cape Sundew* (*Drosera capensis*): Glistening mucilage tentacles trapping micro-insects.
+  - *String of Turtles* (*Peperomia prostrata*): Cascading succulent vine with intricate turtle-shell leaf markings.
 - **Mineralia & Hardscape**:
   - *Ohko Dragon Stone*: Clay-formed perforated rock popular in Iwagumi aquascaping.
   - *Spiderwood Branch*: Intricate twisting root hardscape for climbing flora.
-  - *Crystal Quartz*: Available in **Amethyst Violet**, **Rose Quartz**, **Milky White**, and **Citrine Gold**.
-  - *Zen River Stones*: Smooth tumbled basalt stones with water line accents.
+  - *Crystal Quartz*: Available in **Amethyst Purple**, **Rose Quartz**, **Milky White**, and **Citrine Gold**.
+  - *Zen River Pebbles*: Smooth tumbled basalt stones with water line accents.
   - *Volcanic Lava Rock*: Porous aeration rock available in **Basalt Black**, **Scoria Red**, and **Pumice Grey**.
-  - *Petrified Wood*: Ancient fossilized mineral timber with tree ring stratifications.
-  - *Forest Canopy Fungi*: Glowing bracket mushrooms that fluoresce under nocturnal UV illumination.
-  - *Aquatic Mist Pool*: Shimmering spring basin for paludarium layouts.
-- **Animated Bioactive Fauna**:
+  - *Ancient Petrified Wood*: Fossilized prehistoric timber with striated rings and rich ochre grain.
+  - *Canopy Forest Fungi*: Glowing bracket mushrooms that fluoresce under nocturnal UV illumination.
+  - *Subterranean Crystal Pool*: Shimmering spring basin providing natural humidity buffering and water caustics.
+- **Animated Bioactive Clean-Up Crew**:
   - Autonomous isopods and springtails that actively roam the substrate surface to cycle nutrients and prevent mold.
 
 ---
@@ -217,7 +220,7 @@ Create an artisan gift certificate ready to print or export to PDF:
 
 ## 🛒 Nursery Bill of Materials (BOM) & Multi-Currency Engine
 
-- **Automated Local Currency Detection**: Automatically formats all pricing in your local currency (**USD, EUR, GBP, JPY, CAD, AUD, INR, CHF, SGD, AED**) based on browser timezone and internationalization APIs.
+- **Automated Local Currency Detection**: Automatically formats all pricing in your local currency across **16 global currencies** (**USD, AED, EUR, GBP, INR, CAD, AUD, SAR, QAR, KWD, OMR, BHD, SGD, JPY, CHF, BRL**) based on browser locale, timezone, and internationalization APIs.
 - **Material Mass & Volume**: Live grams and liters calculations for all substrates.
 - **Interactive Shopping Checklist**: Check off items as you source them, with 1-click clipboard export and print formatting.
 
@@ -225,7 +228,7 @@ Create an artisan gift certificate ready to print or export to PDF:
 
 ## 📚 Botanical Intelligence & Care Encyclopedia
 
-Integrated encyclopedia featuring **14 detailed botanical dossiers**:
+Integrated encyclopedia featuring **20 detailed botanical & mineral dossiers**:
 - Taxonomy, family, and common names
 - Light exposure requirements & photoperiods
 - Watering intervals & humidity tolerances
@@ -246,19 +249,22 @@ Synthesized directly in the browser using the Web Audio API without pre-recorded
 
 ---
 
-## 💡 Diurnal Day/Night Cycle & 4 Lighting Modes
+## 💡 Diurnal Day/Night Cycle & 6 Lighting Modes
 
-- **Automatic Diurnal Cycle**: 24-minute accelerated day/night progression simulating sunrise, midday, sunset, and dusk.
+- **Automatic Diurnal Cycle**: 24-minute accelerated day/night progression simulating sunrise, midday, sunset, dusk, midnight, and dawn.
 - **Manual Lighting Overrides**:
-  - **Daylight**: Crisp sunlit illumination ($5500\text{ K}$).
-  - **Golden Hour**: Warm amber sunset tones with low-angle light rays.
-  - **Moonlight**: Nocturnal deep indigo ambiance with soft glass reflections.
-  - **UV Bio-Glow**: Fluorescent blacklight exciting neon minerals, crystals, and mushroom caps.
+  - **Dawn** (06:30 Sunrise): Warm rose-gold ambient glow and horizon morning light rays.
+  - **Daylight** (12:00 Solar Noon): Crisp sunlit illumination ($5500\text{ K}$) with clean glass reflection sheens.
+  - **Golden Hour** (17:45 Sunset): Warm amber and orange sunset tones with dramatic low-angle light rays.
+  - **Twilight** (20:15 Dusk): Soft violet and indigo evening ambiance.
+  - **Moonlight** (23:30 Midnight): Nocturnal deep indigo and celestial blue rays.
+  - **UV Bio-Glow** (02:45 Phosphor): Fluorescent blacklight exciting neon minerals, crystals, and glowing mushroom caps.
 
 ---
 
 ## 💾 Local Enclosure Archives & URL Deep-Linking
 
+- **Continuous Auto-Save**: Background state synchronization to local browser storage (`verdantglass_autosave`) ensuring zero loss of work on page reload or accidental tab closure.
 - **Named Enclosure Archives**: Save unlimited custom designs locally to your browser (`localStorage`) with custom labels and timestamps.
 - **URL Hash Compression (`#build=...`)**: Encodes the complete enclosure state (vessel, substrate depths, item positions, rotation, scaling, lighting, and climate) into a Base64-compressed URL hash for instant sharing.
 - **30-Step Undo / Redo History**: Full state snapshots tracking every placement, rotation, and slider adjustment.
@@ -272,9 +278,9 @@ Synthesized directly in the browser using the Web Audio API without pre-recorded
 | `Ctrl + Z` / `Cmd + Z` | **Undo** | Step backward in your 30-snapshot history stack |
 | `Ctrl + Y` / `Cmd + Shift + Z` | **Redo** | Step forward in history |
 | `Ctrl + D` / `Cmd + D` | **Duplicate** | Clone the currently selected item with offset |
+| `F` / `Esc` | **Zen Mode** | Toggle distraction-free full-canvas sanctuary view (or press Esc to exit) |
 | `Space` | **Mist Spray** | Spritz micro-droplets and increase humidity by 3% |
 | `P` | **Pin / Lock** | Toggle position lock (`isLocked`) on selected item |
-| `Z` | **Zen Mode** | Toggle distraction-free full-canvas view |
 | `+` / `-` | **Zoom** | Scale canvas viewport from 75% to 200% |
 
 ---
@@ -328,15 +334,16 @@ npx firebase-tools deploy --only hosting --project terrariumstudio
 
 ## 🛠️ Tech Stack
 
-- **Core Framework**: [React 19](https://react.dev/) + [Vite 8](https://vitejs.dev/)
+- **Core Framework**: [React 19](https://react.dev/) + [Vite 8](https://vitejs.dev/) (Multi-Chunk Parallel Code Splitting)
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
 - **Iconography**: [Lucide React](https://lucide.dev/)
 - **QR Code Engine**: [QRCode](https://github.com/soldair/node-qrcode)
 - **Vector Graphics**: Procedural SVG Virtual DOM Engine
 - **Audio Synthesizer**: Native Web Audio API (`AudioContext`, `BiquadFilterNode`, `OscillatorNode`)
-- **Persistence**: LocalStorage Engine + Base64 Compressed URL Hash Deep-Linking
+- **Persistence**: LocalStorage Engine (Continuous Auto-Save) + Base64 Compressed URL Hash Deep-Linking
 - **PWA Runtime**: Service Worker + Web App Manifest
-- **Hosting**: [Firebase Hosting](https://firebase.google.com/docs/hosting) (Global SSD CDN with automated SSL)
+- **Code Security & Auditing**: GitHub CodeQL Static Analysis + Dependabot Automated CVE Fixes
+- **Hosting**: [Firebase Hosting](https://firebase.google.com/docs/hosting) (Global SSD CDN with automated SSL & Hardened CSP)
 
 ---
 
