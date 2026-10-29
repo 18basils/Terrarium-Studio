@@ -3284,7 +3284,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
           <span className="text-xs text-stone-300 mr-1 hidden md:inline">Templates:</span>
           <button
             onClick={() => handleLoadPreset('rainforest')}
-            aria-label="Load Tropical Rainforest preset"
+            aria-label="Tropical Rainforest - Load preset"
             className="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-950/80 hover:bg-emerald-900/90 text-emerald-200 border border-emerald-700/50 transition flex items-center gap-1.5 active:scale-95 cursor-pointer"
           >
             <Sprout className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
@@ -3292,7 +3292,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
           </button>
           <button
             onClick={() => handleLoadPreset('desert')}
-            aria-label="Load Desert Oasis preset"
+            aria-label="Desert Oasis - Load preset"
             className="px-3 py-1.5 rounded-lg text-xs font-medium bg-amber-950/80 hover:bg-amber-900/90 text-amber-200 border border-amber-700/50 transition flex items-center gap-1.5 active:scale-95 cursor-pointer"
           >
             <Sun className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
@@ -3300,7 +3300,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
           </button>
           <button
             onClick={() => handleLoadPreset('zen')}
-            aria-label="Load Zen Moss Garden preset"
+            aria-label="Zen Moss Garden - Load preset"
             className="px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-950/80 hover:bg-purple-900/90 text-purple-200 border border-purple-700/50 transition flex items-center gap-1.5 active:scale-95 cursor-pointer"
           >
             <Sparkles className="w-3.5 h-3.5 text-purple-400" aria-hidden="true" />
@@ -3310,7 +3310,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
           {/* Inspire Me Auto-Scaper Button */}
           <button
             onClick={() => handleAutoScape()}
-            aria-label="Inspire Me procedural auto-scaper"
+            aria-label="Inspire Me - Procedural auto-scaper"
             className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-amber-500/20 via-purple-500/20 to-emerald-500/20 text-amber-200 border border-amber-500/40 hover:border-amber-400 transition flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm"
             title="Generate Procedural Terrarium Theme (Inspire Me)"
           >
@@ -3355,7 +3355,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
           {/* Saved Enclosures Archives */}
           <button
             onClick={() => setIsSavedModalOpen(true)}
-            aria-label="Open Saved Enclosures Archives"
+            aria-label="Archives - Open Saved Enclosures"
             className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-stone-700 text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer relative active:scale-95"
             title="Saved Terrarium Enclosures"
           >
@@ -3371,7 +3371,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
           {/* Share Deep-Link */}
           <button
             onClick={() => setIsShareModalOpen(true)}
-            aria-label="Share this Terrarium via interactive link"
+            aria-label="Share - Interactive Terrarium Link"
             className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-stone-700 text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
             title="Share Interactive Link"
           >
@@ -3385,7 +3385,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
               setSelectedCareItem(null);
               setIsCareModalOpen(true);
             }}
-            aria-label="Open Botanical Field Guide & Care Encyclopedia"
+            aria-label="Field Guide - Open Botanical Care Encyclopedia"
             className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-stone-700 text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
             title="Botanical Field Guide & Care Encyclopedia"
           >
@@ -3396,7 +3396,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
           {/* Nursery BOM & Shopping List Generator */}
           <button
             onClick={() => setIsBOMModalOpen(true)}
-            aria-label="Generate Nursery Bill of Materials & Shopping List"
+            aria-label="Nursery BOM - Generate Nursery Bill of Materials & Shopping List"
             className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-stone-700 text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
             title="Real-World Nursery Shopping List & Substrate Masses"
           >
@@ -3410,7 +3410,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
               setBuildWizardStep(0);
               setIsBuildWizardOpen(true);
             }}
-            aria-label="Open DIY Physical Build Guide"
+            aria-label="Build Guide - Open DIY Physical Build Instructions"
             className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-stone-700 text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
             title="7-Step DIY Physical Build Walkthrough & Caliper Guide"
           >
@@ -3421,7 +3421,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
           {/* Botanical Care Passport & QR Gift Certificate */}
           <button
             onClick={() => setIsPassportModalOpen(true)}
-            aria-label="Open Botanical Care Passport & QR Gift Certificate"
+            aria-label="Passport & QR - Open Botanical Care Passport & Gift Certificate"
             className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-stone-700 text-stone-200 border border-white/10 transition flex items-center gap-1.5 cursor-pointer active:scale-95"
             title="Printable Botanical Care Passport & QR Gift Certificate"
           >
@@ -3439,7 +3439,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
                 return next;
               });
             }}
-            aria-label="Toggle ambient procedural soundscape"
+            aria-label="Breeze - Toggle ambient procedural soundscape"
             className={`p-1.5 rounded-lg text-xs border transition flex items-center gap-1.5 cursor-pointer min-w-[32px] min-h-[32px] justify-center ${
               isAmbientSoundActive && !isSoundMuted
                 ? 'bg-sky-500/20 text-sky-300 border-sky-500/40'
@@ -3467,7 +3467,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
 
           <button
             onClick={handleClearTerrarium}
-            aria-label="Clear all placed items"
+            aria-label="Empty - Clear all placed items"
             className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-stone-800/80 hover:bg-rose-950/80 hover:text-rose-200 hover:border-rose-700/50 text-stone-200 border border-white/10 transition flex items-center gap-1 cursor-pointer active:scale-95"
             title="Clear all plants and decor"
           >
@@ -3484,7 +3484,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
                 return next;
               });
             }}
-            aria-label="Toggle Zen Sanctuary ambient full-screen mode"
+            aria-label="Zen Mode - Toggle ambient full-screen sanctuary"
             className={`px-2.5 py-1.5 rounded-lg text-xs font-medium border transition flex items-center gap-1.5 cursor-pointer active:scale-95 ${
               isZenMode
                 ? 'bg-purple-500/25 text-purple-200 border-purple-400/50 shadow-sm'
@@ -3498,7 +3498,7 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
 
           <button
             onClick={() => setIsPhotoStudioOpen(true)}
-            aria-label="Open Botanical Photo Studio & Archival Export"
+            aria-label="Photo Studio - High-resolution snapshot & archival export"
             className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 hover:bg-emerald-400 text-stone-950 transition flex items-center gap-1.5 shadow-lg shadow-emerald-950/50 active:scale-95 cursor-pointer"
             title="High-Res Photo Studio"
           >
@@ -3561,7 +3561,6 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
                     return (
                       <button
                         key={v.id}
-                        aria-label={`Select ${v.name} (${v.type})`}
                         onClick={() => handleSelectVessel(v.id)}
                         className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3 cursor-pointer ${
                           isSelected
@@ -4949,7 +4948,14 @@ Generated from VerdantGlass Studio: https://terrariumstudio.web.app/`;
             </div>
 
             {/* Score Progress Bar */}
-            <div className="w-full h-2 rounded-full bg-stone-950 overflow-hidden" role="progressbar" aria-valuenow={ecosystemReport.score} aria-valuemin={0} aria-valuemax={100}>
+            <div
+              className="w-full h-2 rounded-full bg-stone-950 overflow-hidden"
+              role="progressbar"
+              aria-valuenow={ecosystemReport.score}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label={`Ecosystem bio-harmony balance: ${ecosystemReport.score}%`}
+            >
               <div
                 className={`h-full transition-all duration-500 ${ecosystemReport.barColor}`}
                 style={{ width: `${ecosystemReport.score}%` }}
