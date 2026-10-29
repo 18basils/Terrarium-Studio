@@ -20,6 +20,9 @@
   <a href="./CONTRIBUTING.md">
     <img src="https://img.shields.io/badge/Contributions-Welcome-amber.svg?style=for-the-badge" alt="Contributions Welcome" />
   </a>
+  <a href="./CHANGELOG.md">
+    <img src="https://img.shields.io/badge/Changelog-Keep_a_Changelog-teal.svg?style=for-the-badge" alt="Changelog" />
+  </a>
   <a href="https://github.com/18basils/Terrarium-Studio/security/code-scanning">
     <img src="https://img.shields.io/badge/CodeQL-Protected-blueviolet.svg?style=for-the-badge&logo=github&logoColor=white" alt="CodeQL Protected" />
   </a>
@@ -354,6 +357,7 @@ npx firebase-tools deploy --only hosting --project terrariumstudio
 | ⚖️ **License Terms** | Proprietary ownership, terms of use & restrictions | [`LICENSE.md`](./LICENSE.md) |
 | 🛡️ **Security Policy** | Vulnerability disclosure, response timeline & architecture | [`SECURITY.md`](./SECURITY.md) |
 | 🤝 **Contributing Guide** | Development setup, code conventions & PR workflow | [`CONTRIBUTING.md`](./CONTRIBUTING.md) |
+| 📜 **Changelog** | Version history, releases & notable changes | [`CHANGELOG.md`](./CHANGELOG.md) |
 
 ---
 

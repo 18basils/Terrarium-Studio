@@ -1,0 +1,46 @@
+name: "✨ Feature Request"
+description: "Suggest an idea, botanical specimen, or architectural capability for VerdantGlass Terrarium Studio"
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: "Have an idea for a new terrarium vessel, plant specimen, soundscape, or simulation feature? We'd love to hear it! 🪴"
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: "Feature Category"
+      description: "Which area of the studio does this idea relate to?"
+      options:
+        - "New Botanical Specimen (Fern, Moss, Carnivorous, Epiphyte, Succulent)"
+        - "New Architectural Glass Vessel (Wardian, Prism, Sphere, Custom Geometry)"
+        - "Ecosystem Engine & Bio-Harmony Simulation (Micro-climate, Light, Drainage)"
+        - "Web Audio Procedural Soundscapes (Rain, Stream, Wind, Forest)"
+        - "Export & Sharing Tools (4K Posters, QR Codes, Local Nursery Checklist)"
+        - "User Interface, Theming & Accessibility (WCAG, Touch, Keyboard Navigation)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: "Problem or Need"
+      description: "Is your request related to a missing workflow, botanical family, or enclosure design?"
+      placeholder: "I would like to model arid desert terrariums with succulent species..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: "Proposed Solution"
+      description: "Describe what you would like to see and how it should look or behave."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: "Alternative Solutions"
+      description: "Describe any alternative solutions or workarounds you have considered."

@@ -1,0 +1,15 @@
+# ==============================================================================
+# UNIVERSAL DEPENDABOT CONFIGURATION (.github/dependabot.yml)
+# ==============================================================================
+
+version: 2
+updates:
+  # Node.js / Web Packages (npm)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "npm"
