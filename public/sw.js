@@ -1,5 +1,5 @@
 // VerdantGlass Studio Service Worker (PWA Offline Engine)
-const CACHE_NAME = 'verdantglass-v3';
+const CACHE_NAME = 'verdantglass-v4';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

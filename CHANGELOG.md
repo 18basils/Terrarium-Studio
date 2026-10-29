@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automated Dependabot weekly configuration for npm dependencies.
 - Structured GitHub Issue Forms for Bug Reports and Feature Requests with private vulnerability advisory routing.
 - Comprehensive Pull Request review template with security and WCAG quality checklists.
+- Added DNS prefetch hints for Google Analytics telemetry and QR code generation endpoints.
+- Upgraded PWA service worker cache version to `verdantglass-v4`.
+
+### Performance
+- Targeted modern ES2022 JavaScript runtime in Vite 8 bundler for optimized vendor execution.
 
 ### Security
 - Hardened Content Security Policy with `object-src 'none';` to neutralize plugin and object injection risks.
