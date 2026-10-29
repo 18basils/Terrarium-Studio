@@ -1493,7 +1493,21 @@ const RenderBotanicalArtwork = ({ type, uvActive, growthStage = 0, cultivar = nu
 // 3. MAIN APPLICATION COMPONENT
 // ==========================================
 
-// Cryptographically secure UID generator for terrarium specimen items (CodeQL / CWE-338 compliant)
+// Cryptographically secure UID generator and random helpers (CodeQL / CWE-338 compliant)
+const getRandomFloat = () => {
+  if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+    const arr = new Uint32Array(1);
+    crypto.getRandomValues(arr);
+    return arr[0] / (0xffffffff + 1);
+  }
+  return Math.random();
+};
+
+const getRandomInt = (max) => {
+  if (max <= 1) return 0;
+  return Math.floor(getRandomFloat() * max);
+};
+
 const generateItemUid = () => {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return `item-${crypto.randomUUID()}`;
@@ -2353,7 +2367,7 @@ export default function App() {
 
   const handleAddItem = (catalogItem) => {
     const newUid = generateItemUid();
-    const randomOffsetX = Math.floor((Math.random() - 0.5) * 70);
+    const randomOffsetX = Math.floor((getRandomFloat() - 0.5) * 70);
     const spawnY = Math.min(435, Math.max(220, substrateStack.surfaceY + 6));
 
     const newItem = {
@@ -2363,7 +2377,7 @@ export default function App() {
       y: spawnY,
       scale: catalogItem.defaultScale || 1,
       rotation: 0,
-      flipX: Math.random() > 0.5,
+      flipX: getRandomFloat() > 0.5,
       zIndex: items.length + 1
     };
 
@@ -2520,8 +2534,8 @@ export default function App() {
     if (!theme) {
       const remaining = AUTO_SCAPES.filter((t) => t.vesselId !== vesselId);
       theme = remaining.length > 0
-        ? remaining[Math.floor(Math.random() * remaining.length)]
-        : AUTO_SCAPES[Math.floor(Math.random() * AUTO_SCAPES.length)];
+        ? remaining[getRandomInt(remaining.length)]
+        : AUTO_SCAPES[getRandomInt(AUTO_SCAPES.length)];
     }
     setVesselId(theme.vesselId);
     setSubstrates({ ...theme.substrates });
