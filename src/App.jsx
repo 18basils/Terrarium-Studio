@@ -1493,6 +1493,19 @@ const RenderBotanicalArtwork = ({ type, uvActive, growthStage = 0, cultivar = nu
 // 3. MAIN APPLICATION COMPONENT
 // ==========================================
 
+// Cryptographically secure UID generator for terrarium specimen items (CodeQL / CWE-338 compliant)
+const generateItemUid = () => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return `item-${crypto.randomUUID()}`;
+  }
+  if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+    const bytes = new Uint32Array(2);
+    crypto.getRandomValues(bytes);
+    return `item-${Date.now()}-${bytes[0].toString(36)}${bytes[1].toString(36)}`;
+  }
+  return `item-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+};
+
 export default function App() {
   // Core Terrarium State
   const [vesselId, setVesselId] = useState('apothecary');
@@ -2339,7 +2352,7 @@ export default function App() {
   };
 
   const handleAddItem = (catalogItem) => {
-    const newUid = `item-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+    const newUid = generateItemUid();
     const randomOffsetX = Math.floor((Math.random() - 0.5) * 70);
     const spawnY = Math.min(435, Math.max(220, substrateStack.surfaceY + 6));
 
@@ -2425,7 +2438,7 @@ export default function App() {
     if (!selectedItemId) return;
     const target = items.find((it) => it.uid === selectedItemId);
     if (!target) return;
-    const newUid = `item-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+    const newUid = generateItemUid();
     const newItem = {
       ...target,
       uid: newUid,
@@ -2514,7 +2527,7 @@ export default function App() {
     setSubstrates({ ...theme.substrates });
     const freshItems = theme.items.map((it) => ({
       ...it,
-      uid: `item-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`
+      uid: generateItemUid()
     }));
     setItems(freshItems);
     setHumidity(theme.humidity);
